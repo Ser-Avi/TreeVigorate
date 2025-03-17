@@ -2,9 +2,10 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <string>
 #include "ecosyslab_export.h"
 
-using namespace UniEngine;
+// using namespace UniEngine;
 
 namespace EcoSysLab
 {

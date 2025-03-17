@@ -6,8 +6,10 @@
 #pragma once
 
 #include "ecosyslab_export.h"
+#include <glm/glm.hpp>
+#include <vector>
 
-using namespace UniEngine;
+// using namespace UniEngine;
 namespace EcoSysLab
 {
     struct MarchingCubeCell

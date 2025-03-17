@@ -1,6 +1,11 @@
 // PlantFactory.cpp : This file contains the 'main' function. Program execution
 // begins and ends there.
 //
+
+
+// Maybe we do need UniEngine
+// Commented out by Avi, this will probs cause issues
+/*
 #include <Application.hpp>
 
 #ifdef RAYTRACERFACILITY
@@ -115,3 +120,4 @@ void EngineSetup() {
 
     });
 }
+*/

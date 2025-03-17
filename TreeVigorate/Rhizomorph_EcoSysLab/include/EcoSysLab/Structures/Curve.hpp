@@ -1,8 +1,10 @@
 #pragma once
 
 #include "ecosyslab_export.h"
+#include <yaml-cpp/yaml.h>
+#include <glm/glm.hpp>
 
-using namespace UniEngine;
+// using namespace UniEngine;
 namespace EcoSysLab {
 	class ICurve {
 	public:

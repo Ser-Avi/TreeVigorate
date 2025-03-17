@@ -18,6 +18,7 @@
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
 #pragma once
+#include <cstdint>
 
 struct ANativeWindow;
 struct AInputEvent;

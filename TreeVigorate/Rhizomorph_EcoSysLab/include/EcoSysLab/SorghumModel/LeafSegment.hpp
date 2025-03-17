@@ -1,6 +1,9 @@
 #pragma once
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
-using namespace UniEngine;
+//using namespace UniEngine; // commented out by Avi
 namespace EcoSysLab {
 class LeafSegment {
 public:

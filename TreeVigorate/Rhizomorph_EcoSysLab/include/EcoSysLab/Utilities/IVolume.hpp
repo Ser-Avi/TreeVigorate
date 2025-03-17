@@ -2,9 +2,10 @@
 
 #include "ecosyslab_export.h"
 
-using namespace UniEngine;
+//using namespace UniEngine;
 namespace EcoSysLab {
-    class IVolume : public IAsset {
+    // Commented out, might cause issues - Avi
+    /*class IVolume : public IAsset {
     public:
         virtual glm::vec3 GetRandomPoint() { return glm::vec3(0.0f); }
 
@@ -23,5 +24,5 @@ namespace EcoSysLab {
         bool InVolume(const GlobalTransform& globalTransform,
             const glm::vec3& position) override;
         bool InVolume(const glm::vec3& position) override;
-    };
+    };*/
 } // namespace EcoSysLab

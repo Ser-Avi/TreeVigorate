@@ -1724,32 +1724,37 @@ void stbds_unit_tests(void)
   strreset(&sa);
 
   {
-    s.key = "a", s.value = 1;
+      // had to include strdup here, so freed it up at the bottom
+      // which might cause errors, idek - Avi
+    s.key = _strdup("a"), s.value = 1;
     shputs(strmap, s);
     STBDS_ASSERT(*strmap[0].key == 'a');
     STBDS_ASSERT(strmap[0].key == s.key);
     STBDS_ASSERT(strmap[0].value == s.value);
     shfree(strmap);
+    free(s.key);
   }
 
   {
-    s.key = "a", s.value = 1;
+    s.key = _strdup("a"), s.value = 1;
     sh_new_strdup(strmap);
     shputs(strmap, s);
     STBDS_ASSERT(*strmap[0].key == 'a');
     STBDS_ASSERT(strmap[0].key != s.key);
     STBDS_ASSERT(strmap[0].value == s.value);
     shfree(strmap);
+    free(s.key);
   }
 
   {
-    s.key = "a", s.value = 1;
+    s.key = _strdup("a"), s.value = 1;
     sh_new_arena(strmap);
     shputs(strmap, s);
     STBDS_ASSERT(*strmap[0].key == 'a');
     STBDS_ASSERT(strmap[0].key != s.key);
     STBDS_ASSERT(strmap[0].value == s.value);
     shfree(strmap);
+    free(s.key);
   }
 
   for (j=0; j < 2; ++j) {

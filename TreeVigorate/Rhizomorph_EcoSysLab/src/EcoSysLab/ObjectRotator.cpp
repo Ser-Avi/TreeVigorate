@@ -2,6 +2,7 @@
 // Created by lllll on 8/16/2021.
 //
 
+/* See .hpp
 #include "ObjectRotator.hpp"
 using namespace EcoSysLab;
 void ObjectRotator::FixedUpdate() {
@@ -26,3 +27,4 @@ void ObjectRotator::Deserialize(const YAML::Node& in) {
     m_rotateSpeed = in["m_rotateSpeed"].as<float>();
     m_rotation = in["m_rotation"].as<glm::vec3>();
 }
+*/

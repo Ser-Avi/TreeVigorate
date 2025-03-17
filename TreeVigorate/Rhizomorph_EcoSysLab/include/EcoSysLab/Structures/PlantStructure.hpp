@@ -1,6 +1,10 @@
 #pragma once
 
 #include "ecosyslab_export.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <vector>
+#include <queue>
 
 namespace EcoSysLab {
     typedef int NodeHandle;

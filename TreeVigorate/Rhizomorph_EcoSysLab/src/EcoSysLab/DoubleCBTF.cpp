@@ -2,6 +2,8 @@
 // Created by lllll on 11/16/2022.
 //
 
+// Commented out - Avi
+/*
 #include "DoubleCBTF.hpp"
 #ifdef RAYTRACERFACILITY
 #include "CompressedBTF.hpp"
@@ -26,3 +28,4 @@ void DoubleCBTF::Deserialize(const YAML::Node &in) {
   m_top.Load("m_top", in);
   m_bottom.Load("m_bottom", in);
 }
+*/
