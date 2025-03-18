@@ -1,7 +1,7 @@
 #pragma once
 #include "TreeGrowthData.hpp"
 
-using namespace UniEngine;
+//using namespace UniEngine;
 namespace EcoSysLab
 {
 	class RootGrowthController {

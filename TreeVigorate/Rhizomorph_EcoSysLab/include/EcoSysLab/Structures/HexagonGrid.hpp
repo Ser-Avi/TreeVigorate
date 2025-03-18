@@ -349,7 +349,7 @@ namespace EcoSysLab
 	{
 		if (m_cellMap.find({ coordinate.x, coordinate.y }) != m_cellMap.end())
 		{
-			UNIENGINE_ERROR("Cell exists!");
+			// UNIENGINE_ERROR("Cell exists!");
 			return -1;
 		}
 		CellHandle newCellHandle;

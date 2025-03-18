@@ -4,6 +4,8 @@
 #include <vector>
 #include "ecosyslab_export.h"
 #include "Noises.hpp"
+#include <Engine/ECS/AssetRef.hpp>
+#include <Engine/Core/IAsset.hpp>
 using namespace UniEngine;
 
 namespace EcoSysLab

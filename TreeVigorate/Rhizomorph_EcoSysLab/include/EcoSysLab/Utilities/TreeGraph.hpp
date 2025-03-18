@@ -2,6 +2,8 @@
 
 #include "ecosyslab_export.h"
 #include "PlantStructure.hpp"
+#include <memory>
+#include <Engine/ECS/AssetRef.hpp>
 using namespace UniEngine;
 namespace EcoSysLab
 {

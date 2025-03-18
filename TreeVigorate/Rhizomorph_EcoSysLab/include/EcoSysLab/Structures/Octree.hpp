@@ -3,6 +3,7 @@
 #include "ecosyslab_export.h"
 #include "glm/gtx/quaternion.hpp"
 #include "MarchingCubes.hpp"
+#include <Engine/Rendering/Vertex.hpp>
 using namespace UniEngine;
 namespace EcoSysLab
 {

@@ -8,7 +8,7 @@
 #include <map>
 #include "ecosyslab_export.h"
 
-using namespace UniEngine;
+// using namespace UniEngine;
 
 namespace EcoSysLab {
 
@@ -259,7 +259,9 @@ namespace EcoSysLab {
 		glm::ivec3 m_voxelResolution = glm::ivec3(64, 64, 64);
 		float m_deltaX = 0.1f;
 		float m_deltaTime = 0.001f; // delta t, time between steps
-		glm::vec3& m_boundingBoxMin = glm::vec3(-3.2, -4.8, -3.2);
+		//this line is added by Avi, because the line below gave errors
+		glm::vec3 bbmin = glm::vec3(-3.2, -4.8, -3.2);
+		glm::vec3& m_boundingBoxMin = bbmin; //glm::vec3(-3.2, -4.8, -3.2);
 
 		SoilModel::Boundary m_boundary_x = SoilModel::Boundary::absorb;
 		SoilModel::Boundary m_boundary_y = SoilModel::Boundary::absorb;

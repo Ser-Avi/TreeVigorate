@@ -8,6 +8,10 @@
 #include "LSystemString.hpp"
 #include "TreeGraph.hpp"
 
+// from UniEngine
+#include "Engine/Core/IAsset.hpp"
+#include "Engine/Core/IHandle.hpp"
+
 using namespace UniEngine;
 namespace EcoSysLab {
 	class RootGrowthParameters {

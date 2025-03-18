@@ -1,7 +1,7 @@
 #pragma once
 #include "SoilModel.hpp"
 #include "ClimateModel.hpp"
-#include "Octree.hpp"
+// #include "Octree.hpp"
 #include "TreeGrowthController.hpp"
 #include <string>
 #include <glm/gtc/matrix_transform.hpp>
@@ -206,6 +206,9 @@ namespace EcoSysLab {
 		void Reverse(int iteration);
 	};
 
+	// This method below was commented out to make things work, we will do our own Collision Detection with PBD I think. - Avi
+
+	/*
 	template <typename SkeletonData, typename FlowData, typename NodeData>
 	void TreeModel::CollisionDetection(float minRadius, Octree<TreeVoxelData>& octree,
 		Skeleton<SkeletonData, FlowData, NodeData>& skeleton)
@@ -291,5 +294,5 @@ namespace EcoSysLab {
 		if (appendStat.empty()) appendStat = "No collision";
 
 		// UNIENGINE_LOG(report + appendStat);
-	}
+	}*/
 }
