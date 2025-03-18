@@ -251,14 +251,11 @@
     <ClCompile Include="3rdPartyLibs\yaml-cpp\src\singledocparser.cpp" />
     <ClCompile Include="3rdPartyLibs\yaml-cpp\src\stream.cpp" />
     <ClCompile Include="3rdPartyLibs\yaml-cpp\src\tag.cpp" />
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\util\api.cpp" />
     <ClCompile Include="3rdPartyLibs\yaml-cpp\util\parse.cpp" />
     <ClCompile Include="3rdPartyLibs\yaml-cpp\util\read.cpp" />
     <ClCompile Include="3rdPartyLibs\yaml-cpp\util\sandbox.cpp" />
     <ClCompile Include="pluginMain.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\app\Application.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\AutoTreeGenerationPipeline.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\CBTFGroup.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Climate.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\ClimateModel.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Curve.cpp" />
@@ -268,22 +265,14 @@
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\IVolume.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\LeafData.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\LeafSegment.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\LSystemString.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\MarchingCubes.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Noises.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\ObjectRotator.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\PanicleData.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\PARSensorGroup.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\PipeModel.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\ProceduralSorghum.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\RadialBoundingVolume.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SkyIlluminance.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Soil.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SoilModel.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SorghumData.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SorghumField.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SorghumLayer.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SorghumStateGenerator.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Spline.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\StemData.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Tree.cpp" />
@@ -291,9 +280,7 @@
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\TreeIlliminationEstimator.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\TreeMeshGenerator.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\TreeModel.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\TreePointCloud.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Trees.cpp" />
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\TreeVisualizer.cpp" />
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\VigorSink.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -1163,31 +1150,14 @@
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\PipeModel\PipeModel.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\PipeModel\PipeModelData.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\PipeModel\PipeModelParameters.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Reconstruction\TreePointCloud.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Soil.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SoilModel\HeightField.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SoilModel\SoilModel.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\CBTFGroup.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\DoubleCBTF.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\LeafData.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\LeafSegment.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\PanicleData.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\PARSensorGroup.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\ProceduralSorghum.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\rapidcsv.h" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SkyIlluminance.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SorghumData.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SorghumField.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SorghumLayer.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SorghumStateGenerator.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\Spline.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\StemData.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\Curve.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\HexagonGrid.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\Octree.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\PipeStructure.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\PlantStructure.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\VoxelGrid.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Tree.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\TreeModel\TreeGrowthController.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\TreeModel\TreeGrowthData.hpp" />
@@ -1197,7 +1167,6 @@
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Trees.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\AutoTreeGenerationPipeline.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\IVolume.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\LSystemString.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\MarchingCubes.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\Noises.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\ObjectRotator.hpp" />
@@ -1205,7 +1174,6 @@
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\rapidcsv.h" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\TreeGraph.hpp" />
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\TreeMeshGenerator.hpp" />
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\TreeVisualizer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="3rdPartyLibs\assimp\include\assimp\color4.inl" />

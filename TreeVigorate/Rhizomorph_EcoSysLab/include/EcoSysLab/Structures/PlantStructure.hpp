@@ -5,6 +5,7 @@
 #include <glm/gtc/quaternion.hpp>
 #include <vector>
 #include <queue>
+#include <functional>
 
 namespace EcoSysLab {
     typedef int NodeHandle;

@@ -24,12 +24,6 @@
     <ClCompile Include="Rhizomorph_EcoSysLab\src\app\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\AutoTreeGenerationPipeline.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\CBTFGroup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Climate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,12 +51,6 @@
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\LeafSegment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\LSystemString.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\MarchingCubes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Noises.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,31 +66,13 @@
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\PipeModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\ProceduralSorghum.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\RadialBoundingVolume.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SkyIlluminance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Soil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SoilModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SorghumData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SorghumField.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SorghumLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SorghumStateGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Spline.cpp">
@@ -126,13 +96,7 @@
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\TreeModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\TreePointCloud.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\Trees.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\TreeVisualizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\VigorSink.cpp">
@@ -450,9 +414,6 @@
     <ClCompile Include="3rdPartyLibs\yaml-cpp\src\tag.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\util\api.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="3rdPartyLibs\yaml-cpp\util\parse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -476,58 +437,10 @@
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\PipeModel\PipeModelParameters.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Reconstruction\TreePointCloud.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SoilModel\HeightField.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SoilModel\SoilModel.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\CBTFGroup.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\DoubleCBTF.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\LeafData.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\LeafSegment.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\PanicleData.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\PARSensorGroup.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\ProceduralSorghum.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\rapidcsv.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SkyIlluminance.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SorghumData.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SorghumField.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SorghumLayer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\SorghumStateGenerator.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\Spline.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SorghumModel\StemData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\Curve.hpp">
@@ -543,9 +456,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\PlantStructure.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\VoxelGrid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\TreeModel\TreeGrowthController.hpp">
@@ -569,9 +479,6 @@
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\IVolume.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\LSystemString.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\MarchingCubes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -591,9 +498,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\TreeMeshGenerator.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\TreeVisualizer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Climate.hpp">

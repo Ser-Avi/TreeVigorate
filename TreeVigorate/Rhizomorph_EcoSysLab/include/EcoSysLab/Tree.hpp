@@ -341,7 +341,7 @@ namespace EcoSysLab {
 		void ClearStrands() const;
 		void GenerateMeshes(const TreeMeshGeneratorSettings& meshGeneratorSettings, int iteration = -1);
 
-		void FromLSystemString(const std::shared_ptr<LSystemString>& lSystemString);
+		// void FromLSystemString(const std::shared_ptr<LSystemString>& lSystemString);		// I commented out this functionality - Avi
 		void FromTreeGraph(const std::shared_ptr<TreeGraph>& treeGraph);
 		void FromTreeGraphV2(const std::shared_ptr<TreeGraphV2>& treeGraphV2);
 	};

@@ -2,7 +2,7 @@
 
 #include "ecosyslab_export.h"
 #include "PlantStructure.hpp"
-using namespace UniEngine;
+// using namespace UniEngine;
 namespace EcoSysLab
 {
     enum class LSystemCommandType {

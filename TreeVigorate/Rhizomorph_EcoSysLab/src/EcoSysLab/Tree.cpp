@@ -1090,9 +1090,9 @@ void Tree::GenerateMeshes(const TreeMeshGeneratorSettings& meshGeneratorSettings
 	}
 }
 
-void Tree::FromLSystemString(const std::shared_ptr<LSystemString>& lSystemString)
-{
-}
+//void Tree::FromLSystemString(const std::shared_ptr<LSystemString>& lSystemString)
+//{
+//}
 
 void Tree::FromTreeGraph(const std::shared_ptr<TreeGraph>& treeGraph)
 {

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ecosyslab_export.h"
+#include <map>
+#include <set>
 
 namespace EcoSysLab
 {

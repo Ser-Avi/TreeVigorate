@@ -3,7 +3,11 @@
 #include "ClimateModel.hpp"
 #include "Octree.hpp"
 #include "TreeGrowthController.hpp"
-using namespace UniEngine;
+#include <string>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtc/random.hpp>
+// using namespace UniEngine;
 namespace EcoSysLab {
 	struct TreeGrowthSettings
 	{
@@ -286,6 +290,6 @@ namespace EcoSysLab {
 		}
 		if (appendStat.empty()) appendStat = "No collision";
 
-		UNIENGINE_LOG(report + appendStat);
+		// UNIENGINE_LOG(report + appendStat);
 	}
 }

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "ecosyslab_export.h"
+#include <yaml-cpp/emitter.h>
 
 // using namespace UniEngine;
 
