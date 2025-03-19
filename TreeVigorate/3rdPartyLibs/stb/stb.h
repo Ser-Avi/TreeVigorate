@@ -7154,14 +7154,14 @@ static void stb__dirtree_scandir(char *path, time_t last_time, stb_dirtree *acti
    // confusingly, Windows Kits\10 needs to go down this path?!?
    // except now it doesn't, I don't know what changed
    if (has_slash)
-      swprintf(full_path, L"%s*", stb__from_utf8(path));
+       swprintf_s(full_path, L"%s*", stb__from_utf8(path));
    else
-      swprintf(full_path, L"%s/*", stb__from_utf8(path));
+       swprintf_s(full_path, L"%s/*", stb__from_utf8(path));
 #else
    if (has_slash)
-      swprintf((wchar_t *) full_path, (size_t) 1024, L"%s*", (wchar_t *) stb__from_utf8(path));
+      swprintf_s((wchar_t *) full_path, (size_t) 1024, L"%s*", (wchar_t *) stb__from_utf8(path));
    else
-      swprintf((wchar_t *) full_path, (size_t) 1024, L"%s/*", (wchar_t *) stb__from_utf8(path));
+       swprintf_s((wchar_t *) full_path, (size_t) 1024, L"%s/*", (wchar_t *) stb__from_utf8(path));
 #endif
 
    // it's possible this directory is already present: that means it was in the

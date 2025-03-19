@@ -35,9 +35,9 @@ int main(int argc, char  **argv)
          fprintf(f, "%s", tokens[0]);
       } else {
          char buffer[256];
-         strncpy(buffer, s3, 18);
+         strncpy_s(buffer, s3, 18);
          buffer[18] = 0;   
-         strcat(buffer, "...");
+         strcat_s(buffer, "...");
          fprintf(f, "%s", buffer);
       }
       fprintf(f, "](%s)**", tokens[0]);

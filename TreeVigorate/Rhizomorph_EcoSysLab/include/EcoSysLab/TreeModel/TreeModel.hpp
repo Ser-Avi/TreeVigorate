@@ -1,7 +1,7 @@
 #pragma once
 #include "SoilModel.hpp"
 #include "ClimateModel.hpp"
-// #include "Octree.hpp"
+#include "Octree.hpp"
 #include "TreeGrowthController.hpp"
 #include <string>
 #include <glm/gtc/matrix_transform.hpp>

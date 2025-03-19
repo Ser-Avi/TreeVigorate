@@ -6,7 +6,7 @@ int run_command(char *batch_file, char *command)
 {
    char buffer[4096];
    if (batch_file[0]) {
-      sprintf(buffer, "%s && %s", batch_file, command);
+       sprintf_s(buffer, "%s && %s", batch_file, command);
       return system(buffer) == 0;
    } else {
       return system(command) == 0;
@@ -64,9 +64,9 @@ int main(int argc, char **argv)
                if (count > 3) stb_fatal("Expecting name and batch file name at line %d.", i+1);
                batch = (count==1 ? tokens[0] : tokens[1]);
                if (strlen(batch)) 
-                  sprintf(buffer, "c:\\%s.bat", batch);
+                   sprintf_s(buffer, "c:\\%s.bat", batch);
                else
-                  strcpy(buffer, "");
+                  strcpy_s(buffer, "");
                ci.compiler_name = strdup(tokens[0]);
                ci.batchfile     = strdup(buffer);
                ci.compiler      = count==3 ? strdup(tokens[2]) : "cl";
@@ -108,13 +108,13 @@ int main(int argc, char **argv)
          int r;
          _mkdir(stb_sprintf("obj/%s", compilers[j].objdir));
          if (stb_suffix(compilers[j].compiler, "cl"))
-            sprintf(command, "%s %.*s %s /link %.*s",
+             sprintf_s(command, "%s %.*s %s /link %.*s",
                                      compilers[j].compiler,
                                      stb_arr_len(compilers[j].args), compilers[j].args,
                                      projects[i].filelist,
                                      stb_arr_len(compilers[j].link), compilers[j].link);
          else
-            sprintf(command, "%s %.*s %s %.*s",
+             sprintf_s(command, "%s %.*s %s %.*s",
                                      compilers[j].compiler,
                                      stb_arr_len(compilers[j].args), compilers[j].args,
                                      projects[i].filelist,

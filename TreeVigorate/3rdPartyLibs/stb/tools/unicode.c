@@ -200,7 +200,7 @@ void output_table(char *name1, char *name2, uval *data, int length, int sign, ch
       else
          maxv = stb_max(maxv, data[i]);
    bytes = size_for_max_number_aligned(maxv);
-   sprintf(temp, "%d", maxv);
+   sprintf_s(temp, "%d", maxv);
    numlen=strlen(temp);
    if (sign)
       ++numlen;
@@ -285,9 +285,9 @@ void output_table_with_trims(char *name1, char *name2, uval *data, int length)
       numlen = 0;
       for (i=0; i < length; ++i) {
          if (count == 2)
-            sprintf(temp, "{%d,%d}", d ? data[i] : (trims[i]>>8), trims[i]&255);
+             sprintf_s(temp, "{%d,%d}", d ? data[i] : (trims[i]>>8), trims[i]&255);
          else
-            sprintf(temp, "{%d,%d,%d}", data[i], trims[i]>>8, trims[i]&255);
+             sprintf_s(temp, "{%d,%d,%d}", data[i], trims[i]>>8, trims[i]&255);
          len = strlen(temp);
          numlen = stb_max(len, numlen);
       }
@@ -308,9 +308,9 @@ void output_table_with_trims(char *name1, char *name2, uval *data, int length)
             ++pos;
          }
          if (count == 2)
-            sprintf(temp, "{%d,%d}", d ? data[i] : (trims[i]>>8), trims[i]&255);
+             sprintf_s(temp, "{%d,%d}", d ? data[i] : (trims[i]>>8), trims[i]&255);
          else
-            sprintf(temp, "{%d,%d,%d}", data[i], trims[i]>>8, trims[i]&255);
+             sprintf_s(temp, "{%d,%d,%d}", data[i], trims[i]>>8, trims[i]&255);
          printf("%*s,", numlen, temp);
          pos += numlen+1;
       }
@@ -661,7 +661,7 @@ void optimize_table(table *t, char *table_name)
    s = *t;
    while (num_modes > 0) {
       char name[256];
-      sprintf(name, "%s_%d", table_name, num_modes+1);
+      sprintf_s(name, "%s_%d", table_name, num_modes+1);
       --num_modes;
       s = pack_for_mode(&s, modes[num_modes], name);
    }
