@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ecosyslab_export.h"
+#include <unordered_map>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <vector>
@@ -786,7 +787,8 @@ namespace EcoSysLab {
     template<typename SkeletonData, typename FlowData, typename NodeData>
     FlowHandle Skeleton<SkeletonData, FlowData, NodeData>::AllocateFlow() {
         if (m_flowPool.empty()) {
-            auto newBranch = m_flows.emplace_back(m_flows.size());
+            m_flows.emplace_back(m_flows.size());
+            auto newBranch = m_flows.back();
             return newBranch.m_handle;
         }
         auto handle = m_flowPool.front();
@@ -833,7 +835,8 @@ namespace EcoSysLab {
     template<typename SkeletonData, typename FlowData, typename NodeData>
     NodeHandle Skeleton<SkeletonData, FlowData, NodeData>::AllocateNode() {
         if (m_nodePool.empty()) {
-            return m_nodes.emplace_back(m_nodes.size()).m_handle;
+            m_nodes.emplace_back(m_nodes.size());
+            return m_nodes.back().m_handle;
         }
         auto handle = m_nodePool.front();
         m_nodePool.pop();

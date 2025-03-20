@@ -193,7 +193,7 @@ void output_table(char *name1, char *name2, uval *data, int length, int sign, ch
    uval maxv = 0;
    int bytes, numlen, at_newline;
    int linelen = 79; // @TODO: make table more readable by choosing a length that's a multiple?
-   int i,pos, do_split=0;
+   int i, pos = 0, do_split = 0;
    for (i=0; i < length; ++i)
       if (sign)
          maxv = stb_max(maxv, (uval)abs((int)data[i]));
@@ -281,7 +281,7 @@ void output_table_with_trims(char *name1, char *name2, uval *data, int length)
       uval maxv = 0;
       int numlen, at_newline, len;
       int linelen = 79; // @TODO: make table more readable by choosing a length that's a multiple?
-      int i,pos, do_split=0;
+      int i,pos=0, do_split=0;
       numlen = 0;
       for (i=0; i < length; ++i) {
          if (count == 2)
@@ -325,7 +325,7 @@ table pack_for_mode(table *t, int mode, char *table_name)
 {
    size_t extra_size;
    int i;
-   uval maxv;
+   uval maxv =0;
    mode_info mi = modes[mode % MODECOUNT];
    int size = 8 << (mode / MODECOUNT);
    table newtab;
@@ -476,7 +476,7 @@ table pack_for_mode(table *t, int mode, char *table_name)
    
    if (t->has_sign) {
       // 'packed' contains two values, which should be packed positive & negative for size
-      uval maxv2;
+      uval maxv2=0;
       for (i=0; i < stb_arr_len(packed); ++i)
          if (packed[i] & 0x80000000)
             maxv2 = stb_max(maxv2, packed[i]);

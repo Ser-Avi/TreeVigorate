@@ -66,7 +66,7 @@ int main(int argc, char **argv)
                if (strlen(batch)) 
                    sprintf_s(buffer, "c:\\%s.bat", batch);
                else
-                  strcpy_s(buffer, "");
+                  strcpy(buffer, "");
                ci.compiler_name = strdup(tokens[0]);
                ci.batchfile     = strdup(buffer);
                ci.compiler      = count==3 ? strdup(tokens[2]) : "cl";

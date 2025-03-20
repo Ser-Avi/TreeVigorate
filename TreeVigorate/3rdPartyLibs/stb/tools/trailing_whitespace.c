@@ -24,7 +24,7 @@ int main(int argc, char **argv)
          while (src < end && (*src == '\n' || *src == '\r'))
             *dest++ = *src++;
       }
-      f = fopen_s(argv[i], "wb");
+      f = fopen(argv[i], "wb");
       fwrite(s, 1, dest-s, f);
       fclose(f);
    }

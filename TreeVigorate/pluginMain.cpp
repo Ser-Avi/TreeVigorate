@@ -2,8 +2,8 @@
 #include <maya/MGlobal.h>
 
 MStatus initializePlugin(MObject obj) {
-	const char* pluginVendor = "Avi and Eli";
-	const char* pluginVersion = "0.1";
+	const char* pluginVendor = "Avi and Eli :)";
+	const char* pluginVersion = "0.2";
 
 	MFnPlugin fnPlugin(obj, pluginVendor, pluginVersion);
 
