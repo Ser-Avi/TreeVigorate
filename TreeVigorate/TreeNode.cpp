@@ -1,5 +1,17 @@
 #include "TreeNode.h"
 
+/*
+MEL Script to initialize this with:
+global proc createTreeNode() {
+	createNode transform -n TSys1;
+	createNode mesh -n TShape1 -p TSys1;
+	sets -add initialShadingGroup TShape1;
+	createNode TreeNode -n TN1;
+	connectAttr TN1.outputMesh TShape1.inMesh;
+};
+createTreeNode
+*/
+
 MObject TreeNode::outputMesh;
 MTypeId TreeNode::id(0x80000);
 
@@ -114,7 +126,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 
 		MPoint start(0.0, 0.0, 0.0);
 		MPoint end(0.3, 1, 0.2);
-		CylinderMesh curr(start, end);
+		CylinderMesh curr(start, end * fDTime);
 		curr.appendToMesh(points, faceCounts, faceConns);
 
 		MFnMesh mesh;
