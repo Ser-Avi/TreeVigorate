@@ -5,6 +5,7 @@
 #include "TreeGrowthController.hpp"
 #include <deque>
 #include <string>
+#include <iostream>
 // using namespace UniEngine;
 namespace EcoSysLab {
 	struct TreeGrowthSettings
@@ -288,6 +289,7 @@ namespace EcoSysLab {
 		}
 		if (appendStat.empty()) appendStat = "No collision";
 
-		// UNIENGINE_LOG(report + appendStat);	// Commented out by Avi
+		// UNIENGINE_LOG(report + appendStat);	// replaced by the print statement below by Avi
+		std::cout << report + appendStat << std::endl;
 	}
 }
