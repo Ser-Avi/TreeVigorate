@@ -1,13 +1,20 @@
 #include <maya/MFnPlugin.h>
 #include <maya/MGlobal.h>
+#include "TreeCommand.h"
 
 MStatus initializePlugin(MObject obj) {
 	const char* pluginVendor = "Avi and Eli :)";
 	const char* pluginVersion = "0.2";
 
-	MFnPlugin fnPlugin(obj, pluginVendor, pluginVersion);
+	MFnPlugin plugin(obj, pluginVendor, pluginVersion);
 
 	MGlobal::displayInfo("Plugin initialized successfully!");
+
+    // Registering TreeCmd
+    MStatus status;
+    status = plugin.registerCommand("TreeCmd", TreeCmd::creator, TreeCmd::newSyntax);
+
+    MGlobal::displayInfo("Registered Cmd");
 
 	std::string windowCommand = R"(
 global proc browseTreeDataFile() {
@@ -103,6 +110,9 @@ menuItem
     -command("createTreeGeneratorWindow")
         systemItem;
 )";
+
+    MGlobal::executeCommand(windowCommand.c_str());
+    MGlobal::executeCommand(menuCommand.c_str());
 
 
 	return (MS::kSuccess);
