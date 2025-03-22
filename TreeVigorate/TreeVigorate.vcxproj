@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="glm\detail\glm.cpp" />
     <ClCompile Include="pluginMain.cpp" />
     <ClCompile Include="RhizoCode\ClimateModel.cpp" />
@@ -156,8 +157,10 @@
     <ClCompile Include="RhizoCode\TreeModel.cpp" />
     <ClCompile Include="RhizoCode\VigorSink.cpp" />
     <ClCompile Include="TreeCommand.cpp" />
+    <ClCompile Include="TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cylinder.h" />
     <ClInclude Include="glm\common.hpp" />
     <ClInclude Include="glm\detail\compute_common.hpp" />
     <ClInclude Include="glm\detail\compute_vector_relational.hpp" />
@@ -441,6 +444,7 @@
     <ClInclude Include="glm\vec4.hpp" />
     <ClInclude Include="glm\vector_relational.hpp" />
     <ClInclude Include="TreeCommand.h" />
+    <ClInclude Include="TreeNode.h" />
     <ClInclude Include="RhizoCode\ClimateModel.hpp" />
     <ClInclude Include="RhizoCode\ecosyslab_export.h" />
     <ClInclude Include="RhizoCode\MarchingCubes.hpp" />
