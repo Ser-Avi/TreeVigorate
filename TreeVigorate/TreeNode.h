@@ -24,6 +24,10 @@
 
 #include "Rhizocode/TreeModel.hpp"
 #include <maya/MGlobal.h>
+#include <list>
+#include <glm/gtc/random.hpp>
+
+using namespace EcoSysLab;
 
 #define McheckErr(stat,msg)         \
     if ( MS::kSuccess != stat ) {   \
@@ -32,6 +36,16 @@
     }
 
 class TreeNode : public MPxNode {
+private:
+	void SetSoilLayer(SoilLayer& sl);
+	void InitializeMVars(SoilModel &m_soilModel, ClimateModel& m_climateModel, 
+		RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters);
+	TreeModel treeModel;
+	bool addNodePositionPairs(Node<InternodeGrowthData>& currentNode, MPointArray& vertices, MIntArray& tris, MIntArray& edges, ShootSkeleton& skeleton);
+	//static SoilModel m_soilModel;
+	//static ClimateModel m_climateModel;
+	//static RootGrowthController m_rootGrowthParameters;
+	//static ShootGrowthController m_shootGrowthParameters;
 public:
 	TreeNode() {};
 	~TreeNode() override {};
@@ -43,6 +57,7 @@ public:
 	static MTypeId	id;
 
 	static MObject deltaTime;
+	static MObject numGrows;
 	//static MObject stepSize;
 	//static MObject grammar;
 };
