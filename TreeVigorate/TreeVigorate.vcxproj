@@ -155,6 +155,7 @@
     <ClCompile Include="RhizoCode\TreeIlliminationEstimator.cpp" />
     <ClCompile Include="RhizoCode\TreeModel.cpp" />
     <ClCompile Include="RhizoCode\VigorSink.cpp" />
+    <ClCompile Include="TreeCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glm\common.hpp" />
@@ -439,6 +440,7 @@
     <ClInclude Include="glm\vec3.hpp" />
     <ClInclude Include="glm\vec4.hpp" />
     <ClInclude Include="glm\vector_relational.hpp" />
+    <ClInclude Include="TreeCommand.h" />
     <ClInclude Include="RhizoCode\ClimateModel.hpp" />
     <ClInclude Include="RhizoCode\ecosyslab_export.h" />
     <ClInclude Include="RhizoCode\MarchingCubes.hpp" />
