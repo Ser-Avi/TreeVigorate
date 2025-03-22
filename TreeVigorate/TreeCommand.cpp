@@ -24,6 +24,28 @@ MSyntax TreeCmd::newSyntax() {
 	return syntax;
 }
 
+void SetSoilLayer(SoilLayer& sl) {
+
+	sl.m_mat = SoilPhysicalMaterial({ 1,
+		[](const glm::vec3& pos) { return 1.0f; },
+		[](const glm::vec3& pos) { return 0.0f; },
+		[](const glm::vec3& pos) { return 0.0f; },
+		[](const glm::vec3& pos) { return 0.0f; },
+		[](const glm::vec3& pos) { return 0.0f; } });
+	sl.m_mat.m_soilMaterialTexture = std::make_shared<SoilMaterialTexture>();
+	sl.m_mat.m_soilMaterialTexture->m_color_map.resize(2*2);
+	std::fill(sl.m_mat.m_soilMaterialTexture->m_color_map.begin(), sl.m_mat.m_soilMaterialTexture->m_color_map.end(), glm::vec4(0, 0, 0, 1));
+	sl.m_mat.m_soilMaterialTexture->m_height_map.resize(4);
+	std::fill(sl.m_mat.m_soilMaterialTexture->m_height_map.begin(), sl.m_mat.m_soilMaterialTexture->m_height_map.end(), 1.0f);
+	sl.m_mat.m_soilMaterialTexture->m_metallic_map.resize(4);
+	std::fill(sl.m_mat.m_soilMaterialTexture->m_metallic_map.begin(), sl.m_mat.m_soilMaterialTexture->m_metallic_map.end(), 0.2f);
+	sl.m_mat.m_soilMaterialTexture->m_roughness_map.resize(4);
+	std::fill(sl.m_mat.m_soilMaterialTexture->m_roughness_map.begin(), sl.m_mat.m_soilMaterialTexture->m_roughness_map.end(), 0.8f);
+	sl.m_mat.m_soilMaterialTexture->m_normal_map.resize(4);
+	std::fill(sl.m_mat.m_soilMaterialTexture->m_normal_map.begin(), sl.m_mat.m_soilMaterialTexture->m_normal_map.end(), glm::vec3(0, 0, 1));
+	sl.m_thickness = [](const glm::vec2& position) {return 1000.f; };
+}
+
 MStatus TreeCmd::doIt(const MArgList& args)
 {
 
@@ -43,7 +65,7 @@ MStatus TreeCmd::doIt(const MArgList& args)
 		{
 			return 1.0f;
 		};
-	sl.m_mat = SoilPhysicalMaterial();
+	SetSoilLayer(sl);
 	std::vector<SoilLayer> sls = { sl };
 	m_soilModel.Initialize(sp, sf, sls);
 
@@ -76,11 +98,11 @@ MStatus TreeCmd::doIt(const MArgList& args)
 			// glm::pow(1.0 / glm::max(rootNodeData.m_soilDensity * m_environmentalFritcion, 1.0), m_environmentalFrictionFactor)
 			return 1.0f - glm::pow(1.0f / glm::max(rootNodeData.m_soilDensity * 0.5, 1.0), 1.0);
 		};
-	m_rootGrowthParameters.m_fineRootApicalAngleVariance = 0;
+	m_rootGrowthParameters.m_fineRootApicalAngleVariance = 0.3;
 	m_rootGrowthParameters.m_fineRootBranchingAngle = 30;
 	m_rootGrowthParameters.m_fineRootMinNodeThickness = 0.1;
-	m_rootGrowthParameters.m_fineRootNodeCount = 0;
-	m_rootGrowthParameters.m_fineRootSegmentLength = 0;
+	m_rootGrowthParameters.m_fineRootNodeCount = 2;
+	m_rootGrowthParameters.m_fineRootSegmentLength = 0.2;
 	m_rootGrowthParameters.m_fineRootThickness = 0.1;
 	m_rootGrowthParameters.m_rollAngle = [=](const Node<RootNodeGrowthData>& rootNode)
 		{
@@ -226,10 +248,26 @@ MStatus TreeCmd::doIt(const MArgList& args)
 		{
 			return 3;
 		};
+	m_shootGrowthParameters.m_pruningFactor = [=](const Node<InternodeGrowthData>& internode)
+		{
+			return 0.0;
+		};
 
 	//bool Grow(float deltaTime, const glm::mat4 & globalTransform, SoilModel & soilModel, ClimateModel & climateModel,
 	//const RootGrowthController & rootGrowthParameters, const ShootGrowthController & shootGrowthParameters);
 	MGlobal::displayInfo("Abt to Grow, stand back!!");
+	treeModel.Grow(.1f, glm::mat4(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
+
+	roots = treeModel.RefShootSkeleton().RefSortedNodeList().size();
+	MGlobal::displayInfo("Run 1: ");
+	MGlobal::displayInfo(MString(std::to_string(roots).c_str()));
+
+	treeModel.Grow(.1f, glm::mat4(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
+
+	roots = treeModel.RefShootSkeleton().RefSortedNodeList().size();
+	MGlobal::displayInfo("Run 2: ");
+	MGlobal::displayInfo(MString(std::to_string(roots).c_str()));
+
 	treeModel.Grow(.1f, glm::mat4(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
 
 	roots = treeModel.RefShootSkeleton().RefSortedNodeList().size();
