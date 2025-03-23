@@ -26,6 +26,8 @@
 #include <maya/MGlobal.h>
 #include <list>
 #include <glm/gtc/random.hpp>
+#include <string>
+#include <fstream>
 
 using namespace EcoSysLab;
 
@@ -38,10 +40,10 @@ using namespace EcoSysLab;
 class TreeNode : public MPxNode {
 private:
 	void SetSoilLayer(SoilLayer& sl);
-	void InitializeMVars(SoilModel &m_soilModel, ClimateModel& m_climateModel, 
+	void InitializeMVars(const std::string& treeFilePath, SoilModel &m_soilModel, ClimateModel& m_climateModel,
 		RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters);
 	TreeModel treeModel;
-	bool addNodePositionPairs(Node<InternodeGrowthData>& currentNode, MPointArray& vertices, MIntArray& tris, MIntArray& edges, ShootSkeleton& skeleton);
+	bool addNodePositionPairs(Node<InternodeGrowthData>& currentNode, MPointArray& vertices, MIntArray& tris, MIntArray& edges, ShootSkeleton& skeleton, double rad);
 	//static SoilModel m_soilModel;
 	//static ClimateModel m_climateModel;
 	//static RootGrowthController m_rootGrowthParameters;
@@ -53,11 +55,13 @@ public:
 	static  void* creator();
 	static  MStatus initialize();
 
+	bool ReadTreeFile(const std::string& fileName, RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters, ClimateModel& cm);
+
 	static MObject	outputMesh;
 	static MTypeId	id;
 
 	static MObject deltaTime;
 	static MObject numGrows;
-	//static MObject stepSize;
-	//static MObject grammar;
+	static MObject radius;
+	static MObject treeDataFile;
 };

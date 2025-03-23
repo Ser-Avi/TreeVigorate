@@ -55,16 +55,26 @@ global proc browseTreeSpeciesFile() {
     }
 }
 
+global proc createTreeNode() {
+	createNode transform -n TSys1;
+	createNode mesh -n TShape1 -p TSys1;
+	sets -add initialShadingGroup TShape1;
+	createNode TreeNode -n TN1;
+	connectAttr TN1.outputMesh TShape1.inMesh;
+};
+
 global proc generateTree() {
-    string $treeData = `textField -q -text treeDataField`;
+    //string $treeData = `textField -q -text treeDataField`;
     string $treeSpecies = `textField -q -text treeSpeciesField`;
 
-    if ($treeData == "" || $treeSpecies == "") {
-        warning "Please select both a tree data JSON and a tree species file.";
-        return;
-    }
+    //if ($treeData == "" || $treeSpecies == "") {
+    //    warning "Please select both a tree data JSON and a tree species file.";
+    //    return;
+    //}
 
-    print ("Generating tree with:\nTree Data: " + $treeData + "\nTree Species: " + $treeSpecies + "\n");
+    //print ("Generating tree with:\nTree Data: " + $treeData + "\nTree Species: " + $treeSpecies + "\n");
+    print("Generating tree node");
+    createTreeNode;
     
     // Replace the print statement with the actual tree generation logic
 }
