@@ -12,13 +12,13 @@ namespace EcoSysLab {
 	{
 		int m_flowNodeLimit = 10;
 
-		bool m_enableRoot = true;
+		bool m_enableRoot = false;
 		bool m_enableShoot = true;
 
 		bool m_autoBalance = true;
-		bool m_collectLight = true;
-		bool m_collectWater = true;
-		bool m_collectNitrite = true;
+		bool m_collectLight = false;
+		bool m_collectWater = false;
+		bool m_collectNitrite = false;
 
 		float m_leafMaintenanceVigorFillingRate = 1.0f;
 		float m_leafDevelopmentalVigorFillingRate = 1.0f;

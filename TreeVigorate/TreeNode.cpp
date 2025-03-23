@@ -69,7 +69,8 @@ void TreeNode::InitializeMVars(SoilModel& m_soilModel, ClimateModel& m_climateMo
 			// This is from apicalAngleMeanVariance
 			return glm::gaussRand(0, 3);
 		};
-	m_rootGrowthParameters.m_apicalControl = 0;
+	// 1 + apicalControl * glm::exp(-apicalControlAgeFactor * m_age)
+	m_rootGrowthParameters.m_apicalControl = 1 + 0;
 	m_rootGrowthParameters.m_apicalDominance = [=](const Node<RootNodeGrowthData>& rootNode)
 		{
 			// apicalDominance * glm::exp(-apicalDominanceAgeFactor, m_age)
@@ -95,9 +96,9 @@ void TreeNode::InitializeMVars(SoilModel& m_soilModel, ClimateModel& m_climateMo
 	m_rootGrowthParameters.m_fineRootApicalAngleVariance = 0.3;
 	m_rootGrowthParameters.m_fineRootBranchingAngle = 30;
 	m_rootGrowthParameters.m_fineRootMinNodeThickness = 0.1;
-	m_rootGrowthParameters.m_fineRootNodeCount = 2;
-	m_rootGrowthParameters.m_fineRootSegmentLength = 0.2;
-	m_rootGrowthParameters.m_fineRootThickness = 0.1;
+	m_rootGrowthParameters.m_fineRootNodeCount = 5;
+	m_rootGrowthParameters.m_fineRootSegmentLength = 1.2;
+	m_rootGrowthParameters.m_fineRootThickness = 0.5;
 	m_rootGrowthParameters.m_rollAngle = [=](const Node<RootNodeGrowthData>& rootNode)
 		{
 			//m_rollAngleMeanVariance
@@ -185,7 +186,7 @@ void TreeNode::InitializeMVars(SoilModel& m_soilModel, ClimateModel& m_climateMo
 	//m_shootGrowthParameters.m_lateralBudLightingFactor = 1															;
 	//m_shootGrowthParameters.m_leafBudLightingFactor = 1																;
 	//m_shootGrowthParameters.m_fruitBudLightingFactor = 1															;
-	m_shootGrowthParameters.m_apicalControl = 0.75;
+	// m_shootGrowthParameters.m_apicalControl = 0.75;
 
 	m_shootGrowthParameters.m_apicalControl =
 		1.0f + 0.75 * glm::exp(-0.159999996 * treeModel.m_age);
@@ -349,12 +350,23 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 
 		MGlobal::displayInfo("Abt to Grow, stand back!!");
 		for (int i = 0; i < nGrows; ++i) {
+			int nodes = treeModel.RefShootSkeleton().RefSortedNodeList().size();
+			for (int j = 0; j < nodes; ++j) {
+				auto& snode = treeModel.RefShootSkeleton().RefNode(j);
+				//for (auto& bud : snode.m_data.m_buds) {
+				//	bud.m_vigorSink.AddVigor(1.0);
+				//}
+			}
 			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
 			MGlobal::displayInfo("Growth successful, iteration: ");
 			MGlobal::displayInfo(std::to_string(i).c_str());
-			int nodes = treeModel.RefShootSkeleton().RefSortedNodeList().size();
+			
 			MGlobal::displayInfo("Shoot nodes: ");
 			MGlobal::displayInfo(MString(std::to_string(nodes).c_str()));
+			int rnodes = treeModel.RefRootSkeleton().RefSortedNodeList().size();
+
+			MGlobal::displayInfo("Root nodes: ");
+			MGlobal::displayInfo(MString(std::to_string(rnodes).c_str()));
 		}
 
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
@@ -385,10 +397,11 @@ bool TreeNode::addNodePositionPairs(Node<InternodeGrowthData>& currentNode, MPoi
 	{
 		auto childNode = skeleton.RefNode(currentNode.RefChildHandles()[i]);
 		glm::vec3 childPos = childNode.m_info.m_globalPosition;
+		float rad = childNode.m_info.m_thickness * 10;
 
-		MPoint start(rootPos[0], rootPos[2], rootPos[1]);
-		MPoint end(childPos[0], childPos[2], childPos[1]);
-		CylinderMesh curr(start, end);
+		MPoint start(rootPos[0], -rootPos[1], rootPos[2]);
+		MPoint end(childPos[0], -childPos[1], childPos[2]);
+		CylinderMesh curr(start, end, rad);
 		curr.appendToMesh(points, faceCounts, faceConns);
 
 		bool isRecurse = addNodePositionPairs(childNode, points, faceCounts, faceConns, skeleton);
