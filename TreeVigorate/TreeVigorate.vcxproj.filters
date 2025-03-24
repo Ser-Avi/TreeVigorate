@@ -21,3191 +21,1337 @@
     <ClCompile Include="pluginMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\ClimateModel.cpp">
+    <ClCompile Include="cylinder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\SoilModel.cpp">
+    <ClCompile Include="glm\detail\glm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rhizomorph_EcoSysLab\src\EcoSysLab\TreeModel.cpp">
+    <ClCompile Include="RhizoCode\ClimateModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="3rdPartyLibs\flow\shared\NvFlowPreprocessor.cpp">
+    <ClCompile Include="RhizoCode\MarchingCubes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="3rdPartyLibs\flow\shared\NvFlowString.cpp">
+    <ClCompile Include="RhizoCode\SoilModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="3rdPartyLibs\glad\src\glad.cpp">
+    <ClCompile Include="RhizoCode\TreeIlliminationEstimator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="3rdPartyLibs\glm\detail\glm.cpp">
+    <ClCompile Include="RhizoCode\TreeModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGui\misc\cpp\imgui_stdlib.cpp">
+    <ClCompile Include="RhizoCode\VigorSink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGui\misc\fonts\binary_to_compressed_c.cpp">
+    <ClCompile Include="TreeNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGui\imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGuizmo\ImCurveEdit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGuizmo\ImGradient.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGuizmo\ImGuizmo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\ImGuizmo\ImSequencer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\tinyobjloader\tiny_obj_loader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\contrib\graphbuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\contrib\graphbuilderadapter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\binary.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\convert.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\depthguard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\directives.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\emit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\emitfromevents.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\emitter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\emitterstate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\emitterutils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\exceptions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\exp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\memory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\node.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\node_data.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\nodebuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\nodeevents.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\null.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\ostream_wrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\parse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\regex_yaml.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\scanner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\scanscalar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\scantag.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\scantoken.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\simplekey.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\singledocparser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\stream.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\src\tag.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\util\parse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\util\read.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\yaml-cpp\util\sandbox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\stb\deprecated\stb_image.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\stb\tools\build_matrix.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\stb\tools\easy_font_maker.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\stb\tools\make_readme.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\stb\tools\trailing_whitespace.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\stb\tools\unicode.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="3rdPartyLibs\stb\stb_vorbis.c">
+    <ClCompile Include="TreeCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\ClimateModel\ClimateModel.hpp">
+    <ClInclude Include="cylinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\SoilModel\SoilModel.hpp">
+    <ClInclude Include="glm\common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\TreeModel\TreeGrowthController.hpp">
+    <ClInclude Include="glm\detail\compute_common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\TreeModel\TreeModel.hpp">
+    <ClInclude Include="glm\detail\compute_vector_relational.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\TreeMeshGenerator.hpp">
+    <ClInclude Include="glm\detail\qualifier.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Compiler\poppack1.h">
+    <ClInclude Include="glm\detail\setup.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Compiler\pstdint.h">
+    <ClInclude Include="glm\detail\type_float.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Compiler\pushpack1.h">
+    <ClInclude Include="glm\detail\type_half.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\port\AndroidJNI\AndroidJNIIOSystem.h">
+    <ClInclude Include="glm\detail\type_mat2x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\port\AndroidJNI\BundledAssetIOSystem.h">
+    <ClInclude Include="glm\detail\type_mat2x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\aabb.h">
+    <ClInclude Include="glm\detail\type_mat2x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\ai_assert.h">
+    <ClInclude Include="glm\detail\type_mat3x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\anim.h">
+    <ClInclude Include="glm\detail\type_mat3x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Base64.hpp">
+    <ClInclude Include="glm\detail\type_mat3x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\BaseImporter.h">
+    <ClInclude Include="glm\detail\type_mat4x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Bitmap.h">
+    <ClInclude Include="glm\detail\type_mat4x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\BlobIOSystem.h">
+    <ClInclude Include="glm\detail\type_mat4x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\ByteSwapper.h">
+    <ClInclude Include="glm\detail\type_quat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\camera.h">
+    <ClInclude Include="glm\detail\type_vec1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\cexport.h">
+    <ClInclude Include="glm\detail\type_vec2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\cfileio.h">
+    <ClInclude Include="glm\detail\type_vec3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\cimport.h">
+    <ClInclude Include="glm\detail\type_vec4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\ColladaMetaData.h">
+    <ClInclude Include="glm\detail\_features.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\color4.h">
+    <ClInclude Include="glm\detail\_fixes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\commonMetaData.h">
+    <ClInclude Include="glm\detail\_noise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\config.h">
+    <ClInclude Include="glm\detail\_swizzle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\CreateAnimMesh.h">
+    <ClInclude Include="glm\detail\_swizzle_func.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\DefaultIOStream.h">
+    <ClInclude Include="glm\detail\_vectorize.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\DefaultIOSystem.h">
+    <ClInclude Include="glm\exponential.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\DefaultLogger.hpp">
+    <ClInclude Include="glm\ext.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\defs.h">
+    <ClInclude Include="glm\ext\matrix_clip_space.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Exceptional.h">
+    <ClInclude Include="glm\ext\matrix_common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Exporter.hpp">
+    <ClInclude Include="glm\ext\matrix_double2x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\fast_atof.h">
+    <ClInclude Include="glm\ext\matrix_double2x2_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\GenericProperty.h">
+    <ClInclude Include="glm\ext\matrix_double2x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\GltfMaterial.h">
+    <ClInclude Include="glm\ext\matrix_double2x3_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Hash.h">
+    <ClInclude Include="glm\ext\matrix_double2x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Importer.hpp">
+    <ClInclude Include="glm\ext\matrix_double2x4_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\importerdesc.h">
+    <ClInclude Include="glm\ext\matrix_double3x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\IOStream.hpp">
+    <ClInclude Include="glm\ext\matrix_double3x2_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\IOStreamBuffer.h">
+    <ClInclude Include="glm\ext\matrix_double3x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\IOSystem.hpp">
+    <ClInclude Include="glm\ext\matrix_double3x3_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\light.h">
+    <ClInclude Include="glm\ext\matrix_double3x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\LineSplitter.h">
+    <ClInclude Include="glm\ext\matrix_double3x4_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\LogAux.h">
+    <ClInclude Include="glm\ext\matrix_double4x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Logger.hpp">
+    <ClInclude Include="glm\ext\matrix_double4x2_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\LogStream.hpp">
+    <ClInclude Include="glm\ext\matrix_double4x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\material.h">
+    <ClInclude Include="glm\ext\matrix_double4x3_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\MathFunctions.h">
+    <ClInclude Include="glm\ext\matrix_double4x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\matrix3x3.h">
+    <ClInclude Include="glm\ext\matrix_double4x4_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\matrix4x4.h">
+    <ClInclude Include="glm\ext\matrix_float2x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\MemoryIOWrapper.h">
+    <ClInclude Include="glm\ext\matrix_float2x2_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\mesh.h">
+    <ClInclude Include="glm\ext\matrix_float2x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\metadata.h">
+    <ClInclude Include="glm\ext\matrix_float2x3_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\NullLogger.hpp">
+    <ClInclude Include="glm\ext\matrix_float2x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\ObjMaterial.h">
+    <ClInclude Include="glm\ext\matrix_float2x4_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\ParsingUtils.h">
+    <ClInclude Include="glm\ext\matrix_float3x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\pbrmaterial.h">
+    <ClInclude Include="glm\ext\matrix_float3x2_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\postprocess.h">
+    <ClInclude Include="glm\ext\matrix_float3x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Profiler.h">
+    <ClInclude Include="glm\ext\matrix_float3x3_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\ProgressHandler.hpp">
+    <ClInclude Include="glm\ext\matrix_float3x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\qnan.h">
+    <ClInclude Include="glm\ext\matrix_float3x4_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\quaternion.h">
+    <ClInclude Include="glm\ext\matrix_float4x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\RemoveComments.h">
+    <ClInclude Include="glm\ext\matrix_float4x2_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\scene.h">
+    <ClInclude Include="glm\ext\matrix_float4x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\SceneCombiner.h">
+    <ClInclude Include="glm\ext\matrix_float4x3_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\SGSpatialSort.h">
+    <ClInclude Include="glm\ext\matrix_float4x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\SkeletonMeshBuilder.h">
+    <ClInclude Include="glm\ext\matrix_float4x4_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\SmallVector.h">
+    <ClInclude Include="glm\ext\matrix_int2x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\SmoothingGroups.h">
+    <ClInclude Include="glm\ext\matrix_int2x2_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\SpatialSort.h">
+    <ClInclude Include="glm\ext\matrix_int2x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\StandardShapes.h">
+    <ClInclude Include="glm\ext\matrix_int2x3_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\StreamReader.h">
+    <ClInclude Include="glm\ext\matrix_int2x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\StreamWriter.h">
+    <ClInclude Include="glm\ext\matrix_int2x4_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\StringComparison.h">
+    <ClInclude Include="glm\ext\matrix_int3x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\StringUtils.h">
+    <ClInclude Include="glm\ext\matrix_int3x2_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Subdivision.h">
+    <ClInclude Include="glm\ext\matrix_int3x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\texture.h">
+    <ClInclude Include="glm\ext\matrix_int3x3_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\TinyFormatter.h">
+    <ClInclude Include="glm\ext\matrix_int3x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\types.h">
+    <ClInclude Include="glm\ext\matrix_int3x4_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\vector2.h">
+    <ClInclude Include="glm\ext\matrix_int4x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\vector3.h">
+    <ClInclude Include="glm\ext\matrix_int4x2_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\version.h">
+    <ClInclude Include="glm\ext\matrix_int4x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\Vertex.h">
+    <ClInclude Include="glm\ext\matrix_int4x3_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\XMLTools.h">
+    <ClInclude Include="glm\ext\matrix_int4x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\assimp\include\assimp\ZipArchiveIOSystem.h">
+    <ClInclude Include="glm\ext\matrix_int4x4_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflow\shaders\NvFlowShaderTypes.h">
+    <ClInclude Include="glm\ext\matrix_projection.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflow\shaders\PNanoVDB.h">
+    <ClInclude Include="glm\ext\matrix_relational.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflow\shaders\PNanoVDBWrite.h">
+    <ClInclude Include="glm\ext\matrix_transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflow\NvFlow.h">
+    <ClInclude Include="glm\ext\matrix_uint2x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflow\NvFlowContext.h">
+    <ClInclude Include="glm\ext\matrix_uint2x2_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflow\NvFlowReflect.h">
+    <ClInclude Include="glm\ext\matrix_uint2x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflow\NvFlowTypes.h">
+    <ClInclude Include="glm\ext\matrix_uint2x3_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflowext\shaders\NvFlowRayMarchParams.h">
+    <ClInclude Include="glm\ext\matrix_uint2x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflowext\shaders\NvFlowRayMarchUtils.h">
+    <ClInclude Include="glm\ext\matrix_uint2x4_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflowext\NvFlowExt.h">
+    <ClInclude Include="glm\ext\matrix_uint3x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\include\nvflowext\NvFlowLoader.h">
+    <ClInclude Include="glm\ext\matrix_uint3x2_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowArray.h">
+    <ClInclude Include="glm\ext\matrix_uint3x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowArrayBuffer.h">
+    <ClInclude Include="glm\ext\matrix_uint3x3_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowBufferVariable.h">
+    <ClInclude Include="glm\ext\matrix_uint3x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowDatabase.h">
+    <ClInclude Include="glm\ext\matrix_uint3x4_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowDeepCopy.h">
+    <ClInclude Include="glm\ext\matrix_uint4x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowDynamicBuffer.h">
+    <ClInclude Include="glm\ext\matrix_uint4x2_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowLocationHashTable.h">
+    <ClInclude Include="glm\ext\matrix_uint4x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowMath.h">
+    <ClInclude Include="glm\ext\matrix_uint4x3_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowPreprocessor.h">
+    <ClInclude Include="glm\ext\matrix_uint4x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowReadbackBuffer.h">
+    <ClInclude Include="glm\ext\matrix_uint4x4_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowResourceCPU.h">
+    <ClInclude Include="glm\ext\quaternion_common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowString.h">
+    <ClInclude Include="glm\ext\quaternion_double.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowStringHash.h">
+    <ClInclude Include="glm\ext\quaternion_double_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowTextureVariable.h">
+    <ClInclude Include="glm\ext\quaternion_exponential.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowTimer.h">
+    <ClInclude Include="glm\ext\quaternion_float.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\flow\shared\NvFlowUploadBuffer.h">
+    <ClInclude Include="glm\ext\quaternion_float_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glad\include\glad\glad.h">
+    <ClInclude Include="glm\ext\quaternion_geometric.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glad\include\KHR\khrplatform.h">
+    <ClInclude Include="glm\ext\quaternion_relational.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glfw\include\GLFW\glfw3.h">
+    <ClInclude Include="glm\ext\quaternion_transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glfw\include\GLFW\glfw3native.h">
+    <ClInclude Include="glm\ext\quaternion_trigonometric.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\_features.hpp">
+    <ClInclude Include="glm\ext\scalar_common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\_fixes.hpp">
+    <ClInclude Include="glm\ext\scalar_constants.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\_noise.hpp">
+    <ClInclude Include="glm\ext\scalar_integer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\_swizzle.hpp">
+    <ClInclude Include="glm\ext\scalar_int_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\_swizzle_func.hpp">
+    <ClInclude Include="glm\ext\scalar_packing.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\_vectorize.hpp">
+    <ClInclude Include="glm\ext\scalar_relational.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\compute_common.hpp">
+    <ClInclude Include="glm\ext\scalar_uint_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\compute_vector_relational.hpp">
+    <ClInclude Include="glm\ext\scalar_ulp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\qualifier.hpp">
+    <ClInclude Include="glm\ext\vector_bool1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\setup.hpp">
+    <ClInclude Include="glm\ext\vector_bool1_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_float.hpp">
+    <ClInclude Include="glm\ext\vector_bool2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_half.hpp">
+    <ClInclude Include="glm\ext\vector_bool2_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_mat2x2.hpp">
+    <ClInclude Include="glm\ext\vector_bool3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_mat2x3.hpp">
+    <ClInclude Include="glm\ext\vector_bool3_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_mat2x4.hpp">
+    <ClInclude Include="glm\ext\vector_bool4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_mat3x2.hpp">
+    <ClInclude Include="glm\ext\vector_bool4_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_mat3x3.hpp">
+    <ClInclude Include="glm\ext\vector_common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_mat3x4.hpp">
+    <ClInclude Include="glm\ext\vector_double1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_mat4x2.hpp">
+    <ClInclude Include="glm\ext\vector_double1_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_mat4x3.hpp">
+    <ClInclude Include="glm\ext\vector_double2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_mat4x4.hpp">
+    <ClInclude Include="glm\ext\vector_double2_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_quat.hpp">
+    <ClInclude Include="glm\ext\vector_double3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_vec1.hpp">
+    <ClInclude Include="glm\ext\vector_double3_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_vec2.hpp">
+    <ClInclude Include="glm\ext\vector_double4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_vec3.hpp">
+    <ClInclude Include="glm\ext\vector_double4_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\detail\type_vec4.hpp">
+    <ClInclude Include="glm\ext\vector_float1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_clip_space.hpp">
+    <ClInclude Include="glm\ext\vector_float1_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_common.hpp">
+    <ClInclude Include="glm\ext\vector_float2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double2x2.hpp">
+    <ClInclude Include="glm\ext\vector_float2_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double2x2_precision.hpp">
+    <ClInclude Include="glm\ext\vector_float3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double2x3.hpp">
+    <ClInclude Include="glm\ext\vector_float3_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double2x3_precision.hpp">
+    <ClInclude Include="glm\ext\vector_float4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double2x4.hpp">
+    <ClInclude Include="glm\ext\vector_float4_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double2x4_precision.hpp">
+    <ClInclude Include="glm\ext\vector_int1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double3x2.hpp">
+    <ClInclude Include="glm\ext\vector_int1_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double3x2_precision.hpp">
+    <ClInclude Include="glm\ext\vector_int2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double3x3.hpp">
+    <ClInclude Include="glm\ext\vector_int2_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double3x3_precision.hpp">
+    <ClInclude Include="glm\ext\vector_int3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double3x4.hpp">
+    <ClInclude Include="glm\ext\vector_int3_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double3x4_precision.hpp">
+    <ClInclude Include="glm\ext\vector_int4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double4x2.hpp">
+    <ClInclude Include="glm\ext\vector_int4_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double4x2_precision.hpp">
+    <ClInclude Include="glm\ext\vector_integer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double4x3.hpp">
+    <ClInclude Include="glm\ext\vector_packing.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double4x3_precision.hpp">
+    <ClInclude Include="glm\ext\vector_relational.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double4x4.hpp">
+    <ClInclude Include="glm\ext\vector_uint1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_double4x4_precision.hpp">
+    <ClInclude Include="glm\ext\vector_uint1_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float2x2.hpp">
+    <ClInclude Include="glm\ext\vector_uint2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float2x2_precision.hpp">
+    <ClInclude Include="glm\ext\vector_uint2_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float2x3.hpp">
+    <ClInclude Include="glm\ext\vector_uint3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float2x3_precision.hpp">
+    <ClInclude Include="glm\ext\vector_uint3_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float2x4.hpp">
+    <ClInclude Include="glm\ext\vector_uint4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float2x4_precision.hpp">
+    <ClInclude Include="glm\ext\vector_uint4_sized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float3x2.hpp">
+    <ClInclude Include="glm\ext\vector_ulp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float3x2_precision.hpp">
+    <ClInclude Include="glm\fwd.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float3x3.hpp">
+    <ClInclude Include="glm\geometric.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float3x3_precision.hpp">
+    <ClInclude Include="glm\glm.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float3x4.hpp">
+    <ClInclude Include="glm\gtc\bitfield.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float3x4_precision.hpp">
+    <ClInclude Include="glm\gtc\color_space.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float4x2.hpp">
+    <ClInclude Include="glm\gtc\constants.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float4x2_precision.hpp">
+    <ClInclude Include="glm\gtc\epsilon.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float4x3.hpp">
+    <ClInclude Include="glm\gtc\integer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float4x3_precision.hpp">
+    <ClInclude Include="glm\gtc\matrix_access.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float4x4.hpp">
+    <ClInclude Include="glm\gtc\matrix_integer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_float4x4_precision.hpp">
+    <ClInclude Include="glm\gtc\matrix_inverse.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int2x2.hpp">
+    <ClInclude Include="glm\gtc\matrix_transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int2x2_sized.hpp">
+    <ClInclude Include="glm\gtc\noise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int2x3.hpp">
+    <ClInclude Include="glm\gtc\packing.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int2x3_sized.hpp">
+    <ClInclude Include="glm\gtc\quaternion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int2x4.hpp">
+    <ClInclude Include="glm\gtc\random.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int2x4_sized.hpp">
+    <ClInclude Include="glm\gtc\reciprocal.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int3x2.hpp">
+    <ClInclude Include="glm\gtc\round.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int3x2_sized.hpp">
+    <ClInclude Include="glm\gtc\type_aligned.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int3x3.hpp">
+    <ClInclude Include="glm\gtc\type_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int3x3_sized.hpp">
+    <ClInclude Include="glm\gtc\type_ptr.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int3x4.hpp">
+    <ClInclude Include="glm\gtc\ulp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int3x4_sized.hpp">
+    <ClInclude Include="glm\gtc\vec1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int4x2.hpp">
+    <ClInclude Include="glm\gtx\associated_min_max.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int4x2_sized.hpp">
+    <ClInclude Include="glm\gtx\bit.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int4x3.hpp">
+    <ClInclude Include="glm\gtx\closest_point.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int4x3_sized.hpp">
+    <ClInclude Include="glm\gtx\color_encoding.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int4x4.hpp">
+    <ClInclude Include="glm\gtx\color_space.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_int4x4_sized.hpp">
+    <ClInclude Include="glm\gtx\color_space_YCoCg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_projection.hpp">
+    <ClInclude Include="glm\gtx\common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_relational.hpp">
+    <ClInclude Include="glm\gtx\compatibility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_transform.hpp">
+    <ClInclude Include="glm\gtx\component_wise.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint2x2.hpp">
+    <ClInclude Include="glm\gtx\dual_quaternion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint2x2_sized.hpp">
+    <ClInclude Include="glm\gtx\easing.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint2x3.hpp">
+    <ClInclude Include="glm\gtx\euler_angles.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint2x3_sized.hpp">
+    <ClInclude Include="glm\gtx\extend.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint2x4.hpp">
+    <ClInclude Include="glm\gtx\extended_min_max.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint2x4_sized.hpp">
+    <ClInclude Include="glm\gtx\exterior_product.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint3x2.hpp">
+    <ClInclude Include="glm\gtx\fast_exponential.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint3x2_sized.hpp">
+    <ClInclude Include="glm\gtx\fast_square_root.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint3x3.hpp">
+    <ClInclude Include="glm\gtx\fast_trigonometry.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint3x3_sized.hpp">
+    <ClInclude Include="glm\gtx\functions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint3x4.hpp">
+    <ClInclude Include="glm\gtx\gradient_paint.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint3x4_sized.hpp">
+    <ClInclude Include="glm\gtx\handed_coordinate_space.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint4x2.hpp">
+    <ClInclude Include="glm\gtx\hash.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint4x2_sized.hpp">
+    <ClInclude Include="glm\gtx\integer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint4x3.hpp">
+    <ClInclude Include="glm\gtx\intersect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint4x3_sized.hpp">
+    <ClInclude Include="glm\gtx\io.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint4x4.hpp">
+    <ClInclude Include="glm\gtx\log_base.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\matrix_uint4x4_sized.hpp">
+    <ClInclude Include="glm\gtx\matrix_cross_product.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_common.hpp">
+    <ClInclude Include="glm\gtx\matrix_decompose.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_double.hpp">
+    <ClInclude Include="glm\gtx\matrix_factorisation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_double_precision.hpp">
+    <ClInclude Include="glm\gtx\matrix_interpolation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_exponential.hpp">
+    <ClInclude Include="glm\gtx\matrix_major_storage.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_float.hpp">
+    <ClInclude Include="glm\gtx\matrix_operation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_float_precision.hpp">
+    <ClInclude Include="glm\gtx\matrix_query.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_geometric.hpp">
+    <ClInclude Include="glm\gtx\matrix_transform_2d.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_relational.hpp">
+    <ClInclude Include="glm\gtx\mixed_product.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_transform.hpp">
+    <ClInclude Include="glm\gtx\norm.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\quaternion_trigonometric.hpp">
+    <ClInclude Include="glm\gtx\normal.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\scalar_common.hpp">
+    <ClInclude Include="glm\gtx\normalize_dot.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\scalar_constants.hpp">
+    <ClInclude Include="glm\gtx\number_precision.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\scalar_int_sized.hpp">
+    <ClInclude Include="glm\gtx\optimum_pow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\scalar_integer.hpp">
+    <ClInclude Include="glm\gtx\orthonormalize.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\scalar_packing.hpp">
+    <ClInclude Include="glm\gtx\perpendicular.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\scalar_relational.hpp">
+    <ClInclude Include="glm\gtx\polar_coordinates.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\scalar_uint_sized.hpp">
+    <ClInclude Include="glm\gtx\projection.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\scalar_ulp.hpp">
+    <ClInclude Include="glm\gtx\quaternion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_bool1.hpp">
+    <ClInclude Include="glm\gtx\range.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_bool1_precision.hpp">
+    <ClInclude Include="glm\gtx\raw_data.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_bool2.hpp">
+    <ClInclude Include="glm\gtx\rotate_normalized_axis.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_bool2_precision.hpp">
+    <ClInclude Include="glm\gtx\rotate_vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_bool3.hpp">
+    <ClInclude Include="glm\gtx\scalar_multiplication.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_bool3_precision.hpp">
+    <ClInclude Include="glm\gtx\scalar_relational.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_bool4.hpp">
+    <ClInclude Include="glm\gtx\spline.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_bool4_precision.hpp">
+    <ClInclude Include="glm\gtx\std_based_type.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_common.hpp">
+    <ClInclude Include="glm\gtx\string_cast.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_double1.hpp">
+    <ClInclude Include="glm\gtx\texture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_double1_precision.hpp">
+    <ClInclude Include="glm\gtx\transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_double2.hpp">
+    <ClInclude Include="glm\gtx\transform2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_double2_precision.hpp">
+    <ClInclude Include="glm\gtx\type_aligned.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_double3.hpp">
+    <ClInclude Include="glm\gtx\type_trait.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_double3_precision.hpp">
+    <ClInclude Include="glm\gtx\vector_angle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_double4.hpp">
+    <ClInclude Include="glm\gtx\vector_query.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_double4_precision.hpp">
+    <ClInclude Include="glm\gtx\vec_swizzle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_float1.hpp">
+    <ClInclude Include="glm\gtx\wrap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_float1_precision.hpp">
+    <ClInclude Include="glm\integer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_float2.hpp">
+    <ClInclude Include="glm\mat2x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_float2_precision.hpp">
+    <ClInclude Include="glm\mat2x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_float3.hpp">
+    <ClInclude Include="glm\mat2x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_float3_precision.hpp">
+    <ClInclude Include="glm\mat3x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_float4.hpp">
+    <ClInclude Include="glm\mat3x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_float4_precision.hpp">
+    <ClInclude Include="glm\mat3x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_int1.hpp">
+    <ClInclude Include="glm\mat4x2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_int1_sized.hpp">
+    <ClInclude Include="glm\mat4x3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_int2.hpp">
+    <ClInclude Include="glm\mat4x4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_int2_sized.hpp">
+    <ClInclude Include="glm\matrix.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_int3.hpp">
+    <ClInclude Include="glm\packing.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_int3_sized.hpp">
+    <ClInclude Include="glm\simd\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_int4.hpp">
+    <ClInclude Include="glm\simd\exponential.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_int4_sized.hpp">
+    <ClInclude Include="glm\simd\geometric.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_integer.hpp">
+    <ClInclude Include="glm\simd\integer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_packing.hpp">
+    <ClInclude Include="glm\simd\matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_relational.hpp">
+    <ClInclude Include="glm\simd\neon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_uint1.hpp">
+    <ClInclude Include="glm\simd\packing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_uint1_sized.hpp">
+    <ClInclude Include="glm\simd\platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_uint2.hpp">
+    <ClInclude Include="glm\simd\trigonometric.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_uint2_sized.hpp">
+    <ClInclude Include="glm\simd\vector_relational.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_uint3.hpp">
+    <ClInclude Include="glm\trigonometric.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_uint3_sized.hpp">
+    <ClInclude Include="glm\vec2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_uint4.hpp">
+    <ClInclude Include="glm\vec3.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_uint4_sized.hpp">
+    <ClInclude Include="glm\vec4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext\vector_ulp.hpp">
+    <ClInclude Include="glm\vector_relational.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\bitfield.hpp">
+    <ClInclude Include="TreeNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\color_space.hpp">
+    <ClInclude Include="RhizoCode\ClimateModel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\constants.hpp">
+    <ClInclude Include="RhizoCode\ecosyslab_export.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\epsilon.hpp">
+    <ClInclude Include="RhizoCode\MarchingCubes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\integer.hpp">
+    <ClInclude Include="RhizoCode\Octree.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\matrix_access.hpp">
+    <ClInclude Include="RhizoCode\PlantStructure.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\matrix_integer.hpp">
+    <ClInclude Include="RhizoCode\SoilModel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\matrix_inverse.hpp">
+    <ClInclude Include="RhizoCode\TreeGrowthController.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\matrix_transform.hpp">
+    <ClInclude Include="RhizoCode\TreeGrowthData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\noise.hpp">
+    <ClInclude Include="RhizoCode\TreeIlluminationEstimator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\packing.hpp">
+    <ClInclude Include="RhizoCode\TreeModel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\quaternion.hpp">
+    <ClInclude Include="RhizoCode\VigorSink.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\random.hpp">
+    <ClInclude Include="RhizoCode\VoxelGrid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\reciprocal.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\round.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\type_aligned.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\type_precision.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\type_ptr.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\ulp.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtc\vec1.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\associated_min_max.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\bit.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\closest_point.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\color_encoding.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\color_space.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\color_space_YCoCg.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\common.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\compatibility.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\component_wise.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\dual_quaternion.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\easing.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\euler_angles.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\extend.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\extended_min_max.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\exterior_product.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\fast_exponential.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\fast_square_root.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\fast_trigonometry.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\functions.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\gradient_paint.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\handed_coordinate_space.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\hash.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\integer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\intersect.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\io.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\log_base.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\matrix_cross_product.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\matrix_decompose.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\matrix_factorisation.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\matrix_interpolation.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\matrix_major_storage.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\matrix_operation.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\matrix_query.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\matrix_transform_2d.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\mixed_product.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\norm.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\normal.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\normalize_dot.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\number_precision.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\optimum_pow.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\orthonormalize.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\perpendicular.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\polar_coordinates.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\projection.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\quaternion.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\range.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\raw_data.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\rotate_normalized_axis.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\rotate_vector.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\scalar_multiplication.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\scalar_relational.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\spline.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\std_based_type.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\string_cast.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\texture.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\transform.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\transform2.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\type_aligned.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\type_trait.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\vec_swizzle.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\vector_angle.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\vector_query.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\gtx\wrap.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\exponential.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\geometric.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\integer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\matrix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\neon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\packing.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\platform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\trigonometric.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\simd\vector_relational.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\common.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\exponential.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\ext.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\fwd.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\geometric.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\glm.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\integer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\mat2x2.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\mat2x3.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\mat2x4.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\mat3x2.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\mat3x3.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\mat3x4.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\mat4x2.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\mat4x3.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\mat4x4.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\matrix.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\packing.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\trigonometric.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\vec2.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\vec3.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\vec4.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\glm\vector_relational.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGui\misc\cpp\imgui_stdlib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGui\misc\single_file\imgui_single_file.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGui\imconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGui\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGui\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGuizmo\ImCurveEdit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGuizmo\ImGradient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGuizmo\ImGuizmo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGuizmo\ImSequencer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\ImGuizmo\ImZoomSlider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\characterkinematic\PxBoxController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\characterkinematic\PxCapsuleController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\characterkinematic\PxController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\characterkinematic\PxControllerBehavior.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\characterkinematic\PxControllerManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\characterkinematic\PxControllerObstacles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\characterkinematic\PxExtended.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\collision\PxCollisionDefs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\windows\PxWindowsDelayLoadHook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxCollection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxCoreUtilityTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxInsertionCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxMetaData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxMetaDataFlags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxPhysXCommonConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxProfileZone.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxRenderBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxRenderOutput.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxSerialFramework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxSerializer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxStringTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxTolerancesScale.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\common\PxTypeInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxBVH33MidphaseDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxBVH34MidphaseDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxBVHDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\Pxc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxConvexMeshDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxCooking.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxCookingInternal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxMidphaseDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxSDFDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxTetrahedronMeshDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cooking\PxTriangleMeshDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cudamanager\PxCudaContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cudamanager\PxCudaContextManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\cudamanager\PxCudaTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxBinaryConverter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxBroadPhaseExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxCollectionExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxConstraintExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxContactJoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxConvexMeshExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxCustomGeometryExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxCustomSceneQuerySystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxD6Joint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxD6JointCreate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxDefaultAllocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxDefaultCpuDispatcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxDefaultErrorCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxDefaultSimulationFilterShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxDefaultStreams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxDistanceJoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxExtensionsAPI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxFixedJoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxGearJoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxGjkQueryExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxJoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxJointLimit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxMassProperties.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxParticleClothCooker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxParticleExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxPrismaticJoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxRackAndPinionJoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxRaycastCCD.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxRemeshingExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxRepXSerializer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxRepXSimpleType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxRevoluteJoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxRigidActorExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxRigidBodyExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxSamplingExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxSceneQueryExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxSceneQuerySystemExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxSerialization.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxShapeExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxSimpleFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxSmoothNormals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxSoftBodyExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxSphericalJoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxStringTableExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxTetMakerExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxTetrahedronMeshAnalysisResult.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxTetrahedronMeshExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxTriangleMeshAnalysisResult.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\extensions\PxTriangleMeshExt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\filebuf\PxFileBuf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\neon\PxUnixNeonAoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\neon\PxUnixNeonInlineAoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\sse2\PxUnixSse2AoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\sse2\PxUnixSse2InlineAoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\PxUnixAoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\PxUnixFPU.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\PxUnixInlineAoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\PxUnixIntrinsics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\PxUnixMathIntrinsics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\unix\PxUnixTrigConstants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\windows\PxWindowsAoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\windows\PxWindowsFPU.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\windows\PxWindowsInclude.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\windows\PxWindowsInlineAoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\windows\PxWindowsIntrinsics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\windows\PxWindowsMathIntrinsics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\windows\PxWindowsTrigConstants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\Px.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxAlignedMalloc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxAlloca.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxAllocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxAllocatorCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxAoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxAssert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxAtomic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxBasicTemplates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxBitAndData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxBitMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxBitUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxBounds3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxBroadcast.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxErrorCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxErrors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxFlags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxFoundation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxFoundationConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxFPU.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxHash.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxHashInternals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxHashMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxHashSet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxInlineAllocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxInlineAoS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxInlineArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxIntrinsics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxIO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxMat33.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxMat34.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxMat44.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxMathIntrinsics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxMathUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxMemory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxMutex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxPhysicsVersion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxPinnedArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxPlane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxPreprocessor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxProfiler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxQuat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxSIMDHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxSimpleTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxSList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxSocket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxSort.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxSortInternals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxStrideIterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxString.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxSync.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxTempAllocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxThread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxTime.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxTransform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxUnionCast.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxUserAllocated.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxUtilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxVec2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxVec3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxVec4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxVecMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxVecMathAoSScalar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxVecMathAoSScalarInline.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxVecMathSSE.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxVecQuat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\foundation\PxVecTransform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxBoxGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxBVH.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxBVHBuildStrategy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxCapsuleGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxConvexMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxConvexMeshGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxCustomGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxGeometryHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxGeometryHit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxGeometryInternal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxGeometryQuery.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxGeometryQueryContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxGeometryQueryFlags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxGjkQuery.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxHairSystemDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxHairSystemGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxHeightField.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxHeightFieldDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxHeightFieldFlag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxHeightFieldGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxHeightFieldSample.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxMeshQuery.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxMeshScale.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxParticleSystemGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxPlaneGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxReportCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxSimpleTriangleMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxSphereGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxTetrahedron.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxTetrahedronMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxTetrahedronMeshGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxTriangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxTriangleMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geometry\PxTriangleMeshGeometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geomutils\PxContactBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\geomutils\PxContactPoint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\gpu\PxGpu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\omnipvd\PxOmniPvd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\pvd\PxPvd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\pvd\PxPvdSceneClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\pvd\PxPvdTransport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\solver\PxSolverDefs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\task\PxCpuDispatcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\task\PxTask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\task\PxTaskManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleDrive.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleDrive4W.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleDriveNW.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleDriveTank.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleNoDrive.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleSDK.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleShaders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleTireFriction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleUpdate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleUtilControl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleUtilSetup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleUtilTelemetry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle\PxVehicleWheels.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\braking\PxVehicleBrakingFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\braking\PxVehicleBrakingParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\commands\PxVehicleCommandHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\commands\PxVehicleCommandParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\commands\PxVehicleCommandStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\drivetrain\PxVehicleDrivetrainComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\drivetrain\PxVehicleDrivetrainFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\drivetrain\PxVehicleDrivetrainHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\drivetrain\PxVehicleDrivetrainParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\drivetrain\PxVehicleDrivetrainStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxActor\PxVehiclePhysXActorComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxActor\PxVehiclePhysXActorFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxActor\PxVehiclePhysXActorHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxActor\PxVehiclePhysXActorStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\pvd\PxVehiclePvdComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\pvd\PxVehiclePvdFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\pvd\PxVehiclePvdHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\rigidBody\PxVehicleRigidBodyComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\rigidBody\PxVehicleRigidBodyFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\rigidBody\PxVehicleRigidBodyParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\rigidBody\PxVehicleRigidBodyStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\roadGeometry\PxVehicleRoadGeometryState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\steering\PxVehicleSteeringFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\steering\PxVehicleSteeringParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\suspension\PxVehicleSuspensionComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\suspension\PxVehicleSuspensionFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\suspension\PxVehicleSuspensionHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\suspension\PxVehicleSuspensionParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\suspension\PxVehicleSuspensionStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\tire\PxVehicleTireComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\tire\PxVehicleTireFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\tire\PxVehicleTireHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\tire\PxVehicleTireParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\tire\PxVehicleTireStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\wheel\PxVehicleWheelComponents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\wheel\PxVehicleWheelFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\wheel\PxVehicleWheelHelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\wheel\PxVehicleWheelParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\wheel\PxVehicleWheelStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\PxVehicleAPI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\PxVehicleComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\PxVehicleComponentSequence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\PxVehicleFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\PxVehicleLimits.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\PxVehicleMaths.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\vehicle2\PxVehicleParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxActor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxActorData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxAggregate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxArticulationFlag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxArticulationJointReducedCoordinate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxArticulationLink.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxArticulationReducedCoordinate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxArticulationTendon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxArticulationTendonData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxAttachment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxBaseMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxBroadPhase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxConeLimitedConstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxConstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxConstraintDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxContact.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxContactModifyCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxCustomParticleSystemSolverCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxDeletionListener.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxFEMClothFlags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxFEMClothMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxFEMMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxFEMParameter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxFEMSoftBodyMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxFiltering.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxFLIPMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxForceMode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxHairSystemFlag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxImmediateMode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxLockedData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxMPMMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxNodeIndex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxParticleBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxParticleGpu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxParticleMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxParticleSolverType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxParticleSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxParticleSystemFlag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxPBDMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxPBDParticleSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxPhysics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxPhysicsAPI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxPhysicsSerialization.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxPhysXConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxPruningStructure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxQueryFiltering.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxQueryReport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxRigidActor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxRigidBody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxRigidDynamic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxRigidStatic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxSceneDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxSceneLock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxSceneQueryDesc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxSceneQuerySystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxShape.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxSimulationEventCallback.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxSimulationStatistics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxSoftBody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxSoftBodyFlag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxSparseGridParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\physx\include\PxVisualizationParameter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\tinyobjloader\tiny_obj_loader.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\contrib\anchordict.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\contrib\graphbuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\detail\impl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\detail\iterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\detail\iterator_fwd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\detail\memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\detail\node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\detail\node_data.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\detail\node_iterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\detail\node_ref.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\convert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\emit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\impl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\iterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\parse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\ptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\node\type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\anchor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\binary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\depthguard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\dll.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\emitfromevents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\emitter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\emitterdef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\emittermanip.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\emitterstyle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\eventhandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\exceptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\mark.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\noexcept.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\null.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\ostream_wrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\stlemitter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\traits.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\include\yaml-cpp\yaml.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\contrib\graphbuilderadapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\collectionstack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\directives.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\emitterstate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\emitterutils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\exp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\indentation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\nodebuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\nodeevents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\ptr_vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\regex_yaml.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\regeximpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\scanner.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\scanscalar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\scantag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\setting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\singledocparser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\stream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\streamcharsource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\stringsource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\tag.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\yaml-cpp\src\token.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Utilities\ecosyslab_export.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_UniEngine\include\lib\Engine\Rendering\Vertex.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_UniEngine\include\lib\uniengine_export.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rhizomorph_EcoSysLab\include\EcoSysLab\Structures\Octree.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\deprecated\rrsprintf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_c_lexer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_connected_components.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_divide.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_ds.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_dxt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_easy_font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_herringbone_wang_tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_image_resize.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_image_write.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_include.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_leakcheck.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_perlin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_rect_pack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_sprintf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_tilemap_editor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stb_voxel_render.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="3rdPartyLibs\stb\stretchy_buffer.h">
+    <ClInclude Include="TreeCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="3rdPartyLibs\assimp\include\assimp\color4.inl">
+    <None Include="glm\detail\func_common.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\assimp\include\assimp\material.inl">
+    <None Include="glm\detail\func_common_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\assimp\include\assimp\matrix3x3.inl">
+    <None Include="glm\detail\func_exponential.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\assimp\include\assimp\matrix4x4.inl">
+    <None Include="glm\detail\func_exponential_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\assimp\include\assimp\quaternion.inl">
+    <None Include="glm\detail\func_geometric.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\assimp\include\assimp\SmoothingGroups.inl">
+    <None Include="glm\detail\func_geometric_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\assimp\include\assimp\vector2.inl">
+    <None Include="glm\detail\func_integer.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\assimp\include\assimp\vector3.inl">
+    <None Include="glm\detail\func_integer_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_common.inl">
+    <None Include="glm\detail\func_matrix.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_common_simd.inl">
+    <None Include="glm\detail\func_matrix_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_exponential.inl">
+    <None Include="glm\detail\func_packing.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_exponential_simd.inl">
+    <None Include="glm\detail\func_packing_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_geometric.inl">
+    <None Include="glm\detail\func_trigonometric.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_geometric_simd.inl">
+    <None Include="glm\detail\func_trigonometric_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_integer.inl">
+    <None Include="glm\detail\func_vector_relational.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_integer_simd.inl">
+    <None Include="glm\detail\func_vector_relational_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_matrix.inl">
+    <None Include="glm\detail\type_half.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_matrix_simd.inl">
+    <None Include="glm\detail\type_mat2x2.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_packing.inl">
+    <None Include="glm\detail\type_mat2x3.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_packing_simd.inl">
+    <None Include="glm\detail\type_mat2x4.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_trigonometric.inl">
+    <None Include="glm\detail\type_mat3x2.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_trigonometric_simd.inl">
+    <None Include="glm\detail\type_mat3x3.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_vector_relational.inl">
+    <None Include="glm\detail\type_mat3x4.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\func_vector_relational_simd.inl">
+    <None Include="glm\detail\type_mat4x2.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_half.inl">
+    <None Include="glm\detail\type_mat4x3.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat2x2.inl">
+    <None Include="glm\detail\type_mat4x4.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat2x3.inl">
+    <None Include="glm\detail\type_mat4x4_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat2x4.inl">
+    <None Include="glm\detail\type_quat.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat3x2.inl">
+    <None Include="glm\detail\type_quat_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat3x3.inl">
+    <None Include="glm\detail\type_vec1.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat3x4.inl">
+    <None Include="glm\detail\type_vec2.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat4x2.inl">
+    <None Include="glm\detail\type_vec3.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat4x3.inl">
+    <None Include="glm\detail\type_vec4.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat4x4.inl">
+    <None Include="glm\detail\type_vec4_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_mat4x4_simd.inl">
+    <None Include="glm\ext\matrix_clip_space.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_quat.inl">
+    <None Include="glm\ext\matrix_common.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_quat_simd.inl">
+    <None Include="glm\ext\matrix_projection.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_vec1.inl">
+    <None Include="glm\ext\matrix_relational.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_vec2.inl">
+    <None Include="glm\ext\matrix_transform.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_vec3.inl">
+    <None Include="glm\ext\quaternion_common.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_vec4.inl">
+    <None Include="glm\ext\quaternion_common_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\detail\type_vec4_simd.inl">
+    <None Include="glm\ext\quaternion_exponential.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\matrix_clip_space.inl">
+    <None Include="glm\ext\quaternion_geometric.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\matrix_common.inl">
+    <None Include="glm\ext\quaternion_relational.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\matrix_projection.inl">
+    <None Include="glm\ext\quaternion_transform.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\matrix_relational.inl">
+    <None Include="glm\ext\quaternion_trigonometric.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\matrix_transform.inl">
+    <None Include="glm\ext\scalar_common.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\quaternion_common.inl">
+    <None Include="glm\ext\scalar_constants.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\quaternion_common_simd.inl">
+    <None Include="glm\ext\scalar_integer.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\quaternion_exponential.inl">
+    <None Include="glm\ext\scalar_packing.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\quaternion_geometric.inl">
+    <None Include="glm\ext\scalar_relational.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\quaternion_relational.inl">
+    <None Include="glm\ext\scalar_ulp.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\quaternion_transform.inl">
+    <None Include="glm\ext\vector_common.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\quaternion_trigonometric.inl">
+    <None Include="glm\ext\vector_integer.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\scalar_common.inl">
+    <None Include="glm\ext\vector_packing.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\scalar_constants.inl">
+    <None Include="glm\ext\vector_relational.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\scalar_integer.inl">
+    <None Include="glm\ext\vector_ulp.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\scalar_packing.inl">
+    <None Include="glm\gtc\bitfield.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\scalar_relational.inl">
+    <None Include="glm\gtc\color_space.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\scalar_ulp.inl">
+    <None Include="glm\gtc\constants.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\vector_common.inl">
+    <None Include="glm\gtc\epsilon.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\vector_integer.inl">
+    <None Include="glm\gtc\integer.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\vector_packing.inl">
+    <None Include="glm\gtc\matrix_access.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\vector_relational.inl">
+    <None Include="glm\gtc\matrix_inverse.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\ext\vector_ulp.inl">
+    <None Include="glm\gtc\matrix_transform.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\bitfield.inl">
+    <None Include="glm\gtc\noise.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\color_space.inl">
+    <None Include="glm\gtc\packing.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\constants.inl">
+    <None Include="glm\gtc\quaternion.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\epsilon.inl">
+    <None Include="glm\gtc\quaternion_simd.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\integer.inl">
+    <None Include="glm\gtc\random.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\matrix_access.inl">
+    <None Include="glm\gtc\reciprocal.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\matrix_inverse.inl">
+    <None Include="glm\gtc\round.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\matrix_transform.inl">
+    <None Include="glm\gtc\type_precision.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\noise.inl">
+    <None Include="glm\gtc\type_ptr.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\packing.inl">
+    <None Include="glm\gtc\ulp.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\quaternion.inl">
+    <None Include="glm\gtx\associated_min_max.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\quaternion_simd.inl">
+    <None Include="glm\gtx\bit.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\random.inl">
+    <None Include="glm\gtx\closest_point.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\reciprocal.inl">
+    <None Include="glm\gtx\color_encoding.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\round.inl">
+    <None Include="glm\gtx\color_space.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\type_precision.inl">
+    <None Include="glm\gtx\color_space_YCoCg.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\type_ptr.inl">
+    <None Include="glm\gtx\common.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtc\ulp.inl">
+    <None Include="glm\gtx\compatibility.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\associated_min_max.inl">
+    <None Include="glm\gtx\component_wise.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\bit.inl">
+    <None Include="glm\gtx\dual_quaternion.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\closest_point.inl">
+    <None Include="glm\gtx\easing.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\color_encoding.inl">
+    <None Include="glm\gtx\euler_angles.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\color_space.inl">
+    <None Include="glm\gtx\extend.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\color_space_YCoCg.inl">
+    <None Include="glm\gtx\extended_min_max.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\common.inl">
+    <None Include="glm\gtx\exterior_product.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\compatibility.inl">
+    <None Include="glm\gtx\fast_exponential.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\component_wise.inl">
+    <None Include="glm\gtx\fast_square_root.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\dual_quaternion.inl">
+    <None Include="glm\gtx\fast_trigonometry.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\easing.inl">
+    <None Include="glm\gtx\float_notmalize.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\euler_angles.inl">
+    <None Include="glm\gtx\functions.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\extend.inl">
+    <None Include="glm\gtx\gradient_paint.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\extended_min_max.inl">
+    <None Include="glm\gtx\handed_coordinate_space.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\exterior_product.inl">
+    <None Include="glm\gtx\hash.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\fast_exponential.inl">
+    <None Include="glm\gtx\integer.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\fast_square_root.inl">
+    <None Include="glm\gtx\intersect.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\fast_trigonometry.inl">
+    <None Include="glm\gtx\io.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\float_notmalize.inl">
+    <None Include="glm\gtx\log_base.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\functions.inl">
+    <None Include="glm\gtx\matrix_cross_product.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\gradient_paint.inl">
+    <None Include="glm\gtx\matrix_decompose.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\handed_coordinate_space.inl">
+    <None Include="glm\gtx\matrix_factorisation.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\hash.inl">
+    <None Include="glm\gtx\matrix_interpolation.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\integer.inl">
+    <None Include="glm\gtx\matrix_major_storage.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\intersect.inl">
+    <None Include="glm\gtx\matrix_operation.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\io.inl">
+    <None Include="glm\gtx\matrix_query.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\log_base.inl">
+    <None Include="glm\gtx\matrix_transform_2d.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\matrix_cross_product.inl">
+    <None Include="glm\gtx\mixed_product.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\matrix_decompose.inl">
+    <None Include="glm\gtx\norm.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\matrix_factorisation.inl">
+    <None Include="glm\gtx\normal.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\matrix_interpolation.inl">
+    <None Include="glm\gtx\normalize_dot.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\matrix_major_storage.inl">
+    <None Include="glm\gtx\number_precision.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\matrix_operation.inl">
+    <None Include="glm\gtx\optimum_pow.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\matrix_query.inl">
+    <None Include="glm\gtx\orthonormalize.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\matrix_transform_2d.inl">
+    <None Include="glm\gtx\perpendicular.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\mixed_product.inl">
+    <None Include="glm\gtx\polar_coordinates.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\norm.inl">
+    <None Include="glm\gtx\projection.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\normal.inl">
+    <None Include="glm\gtx\quaternion.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\normalize_dot.inl">
+    <None Include="glm\gtx\raw_data.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\number_precision.inl">
+    <None Include="glm\gtx\rotate_normalized_axis.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\optimum_pow.inl">
+    <None Include="glm\gtx\rotate_vector.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\orthonormalize.inl">
+    <None Include="glm\gtx\scalar_relational.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\perpendicular.inl">
+    <None Include="glm\gtx\spline.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\polar_coordinates.inl">
+    <None Include="glm\gtx\std_based_type.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\projection.inl">
+    <None Include="glm\gtx\string_cast.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\quaternion.inl">
+    <None Include="glm\gtx\texture.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\raw_data.inl">
+    <None Include="glm\gtx\transform.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\rotate_normalized_axis.inl">
+    <None Include="glm\gtx\transform2.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\rotate_vector.inl">
+    <None Include="glm\gtx\type_aligned.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\scalar_relational.inl">
+    <None Include="glm\gtx\type_trait.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\spline.inl">
+    <None Include="glm\gtx\vector_angle.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\std_based_type.inl">
+    <None Include="glm\gtx\vector_query.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="3rdPartyLibs\glm\gtx\string_cast.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="3rdPartyLibs\glm\gtx\texture.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="3rdPartyLibs\glm\gtx\transform.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="3rdPartyLibs\glm\gtx\transform2.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="3rdPartyLibs\glm\gtx\type_aligned.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="3rdPartyLibs\glm\gtx\type_trait.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="3rdPartyLibs\glm\gtx\vector_angle.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="3rdPartyLibs\glm\gtx\vector_query.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="3rdPartyLibs\glm\gtx\wrap.inl">
+    <None Include="glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
