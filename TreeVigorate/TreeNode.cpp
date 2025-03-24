@@ -19,6 +19,7 @@ MObject TreeNode::deltaTime;
 MObject TreeNode::numGrows;
 MObject TreeNode::radius;
 MObject TreeNode::treeDataFile;
+MObject TreeNode::makeGrow;
 
 void* TreeNode::creator()
 {
@@ -44,6 +45,9 @@ MStatus TreeNode::initialize()
 
 	TreeNode::treeDataFile = typedAttr.create("treeDataFile", "f", MFnData::kString, MObject::kNullObj, &returnStatus);
 	McheckErr(returnStatus, "Error creating treeDataFile attribute \n");
+
+	TreeNode::makeGrow = numAttr.create("makeGrow", "mg", MFnNumericData::kBoolean, false, &returnStatus);
+	McheckErr(returnStatus, "Error creating makeGrow attribute\n");
 
 	//TreeNode::time = unitAttr.create("time", "tm",
 	//	MFnUnitAttribute::kTime,
@@ -74,22 +78,16 @@ MStatus TreeNode::initialize()
 	McheckErr(returnStatus, "ERROR adding radius attribute\n");
 
 	returnStatus = addAttribute(TreeNode::treeDataFile);
-	McheckErr(returnStatus, "ERROR adding radius attribute\n");
+	McheckErr(returnStatus, "ERROR adding treeDataFile attribute\n");
+
+	returnStatus = addAttribute(TreeNode::makeGrow);
+	McheckErr(returnStatus, "ERROR adding makeGrow attribute\n");
 
 	//returnStatus = attributeAffects(TreeNode::time,
 	//	TreeNode::outputMesh);
 	//McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
-	returnStatus = attributeAffects(TreeNode::deltaTime,
-		TreeNode::outputMesh);
-	McheckErr(returnStatus, "ERROR in attributeAffects\n");
-	returnStatus = attributeAffects(TreeNode::numGrows,
-		TreeNode::outputMesh);
-	McheckErr(returnStatus, "ERROR in attributeAffects\n");
-	returnStatus = attributeAffects(TreeNode::radius,
-		TreeNode::outputMesh);
-	McheckErr(returnStatus, "ERROR in attributeAffects\n");
-	returnStatus = attributeAffects(TreeNode::treeDataFile,
+	returnStatus = attributeAffects(TreeNode::makeGrow,
 		TreeNode::outputMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
@@ -162,6 +160,9 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			MGlobal::displayInfo(MString(std::to_string(flows).c_str()));
 		}
 
+		MGlobal::displayInfo("Rad:");
+		MGlobal::displayInfo(std::to_string(r).c_str());
+
 		// Creating cylinders
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
 		if (shoots.RefSortedNodeList().size() != 0) {
@@ -183,20 +184,19 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 	return MS::kSuccess;
 }
 
-bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double r) {
+bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double radius) {
 	for (int i = 1; i < skeleton.RefSortedNodeList().size(); ++i)
 	{
 		int currHandle = skeleton.RefSortedNodeList()[i];
 		auto& curr = skeleton.PeekNode(currHandle);
 		glm::vec3 currPos = curr.m_info.m_globalPosition;
-		float rad = curr.m_info.m_thickness * r;
 		int parentHandle = curr.GetParentHandle();
 		auto& parent = skeleton.PeekNode(parentHandle);
 		glm::vec3 parentPos = parent.m_info.m_globalPosition;
 
 		MPoint start(parentPos[0], parentPos[1], parentPos[2]);
 		MPoint end(currPos[0], currPos[1], currPos[2]);
-		CylinderMesh cyl(start, end, rad);
+		CylinderMesh cyl(start, end, curr.m_info.m_thickness * radius);
 		cyl.appendToMesh(points, faceCounts, faceConns);
 	}
 	return true;

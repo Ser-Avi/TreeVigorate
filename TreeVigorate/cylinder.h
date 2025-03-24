@@ -14,7 +14,7 @@
 class CylinderMesh
 {
 public:
-    CylinderMesh(const MPoint& start, const MPoint& end, double r = 0.25);
+    CylinderMesh(const MPoint& start, const MPoint& end, double r);
     ~CylinderMesh();
 
     void getMesh(

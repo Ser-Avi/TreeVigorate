@@ -106,4 +106,6 @@ public:
 	static MObject radius;
 	// full path to tree data file
 	static MObject treeDataFile;
+	// used to make growth update
+	static MObject makeGrow;
 };
