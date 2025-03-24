@@ -104,7 +104,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		// Get vars
 		double fDTime = data.inputValue(deltaTime).asDouble();
 		int nGrows = data.inputValue(numGrows).asInt();
-		float rad = data.inputValue(radius).asDouble();
+		float r = data.inputValue(radius).asDouble();
 		MString treeInfo = data.inputValue(treeDataFile).asString();
 
 		/* Get time */
@@ -143,14 +143,12 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		ShootGrowthController m_shootGrowthParameters;
 		InitializeMVars(treeInfo.asChar(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
 
+		// Growing tree
 		MGlobal::displayInfo("Abt to Grow, stand back!!");
 		for (int i = 0; i < nGrows; ++i) {
 			int nodes = treeModel.RefShootSkeleton().RefSortedNodeList().size();
 			for (int j = 0; j < nodes; ++j) {
 				auto& snode = treeModel.RefShootSkeleton().RefNode(j);
-				//for (auto& bud : snode.m_data.m_buds) {
-				//	bud.m_vigorSink.AddVigor(1.0);
-				//}
 			}
 			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
 			MGlobal::displayInfo("Growth successful, iteration: ");
@@ -158,17 +156,18 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			
 			MGlobal::displayInfo("Shoot nodes: ");
 			MGlobal::displayInfo(MString(std::to_string(nodes).c_str()));
-			int rnodes = treeModel.RefRootSkeleton().RefSortedNodeList().size();
-
-			MGlobal::displayInfo("Root nodes: ");
-			MGlobal::displayInfo(MString(std::to_string(rnodes).c_str()));
+			
+			int flows = treeModel.RefShootSkeleton().RefSortedFlowList().size();
+			MGlobal::displayInfo("Flows nodes: ");
+			MGlobal::displayInfo(MString(std::to_string(flows).c_str()));
 		}
 
+		// Creating cylinders
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
 		if (shoots.RefSortedNodeList().size() != 0) {
 			int rootHandle = shoots.RefSortedNodeList()[0];
 			auto& rootNode = shoots.RefNode(rootHandle);
-			bool isAdd = addNodePositionPairs(rootNode, points, faceCounts, faceConns, shoots, rad);
+			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, r);
 		}
 
 		MFnMesh mesh;
@@ -184,7 +183,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 	return MS::kSuccess;
 }
 
-bool TreeNode::addNodePositionPairs(Node<InternodeGrowthData>& currentNode, MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double r) {
+bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double r) {
 	for (int i = 1; i < skeleton.RefSortedNodeList().size(); ++i)
 	{
 		int currHandle = skeleton.RefSortedNodeList()[i];
