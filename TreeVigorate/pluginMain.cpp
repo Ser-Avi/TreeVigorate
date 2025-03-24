@@ -55,11 +55,14 @@ global proc browseTreeSpeciesFile() {
     }
 }
 
-global proc createTreeNode() {
+global proc createTreeNode(string $file) {
 	createNode transform -n TSys1;
 	createNode mesh -n TShape1 -p TSys1;
 	sets -add initialShadingGroup TShape1;
 	createNode TreeNode -n TN1;
+    if($file != "") {
+        eval("setAttr -type \"string\" TN1.treeDataFile \"" + $file + "\"");
+    }
 	connectAttr TN1.outputMesh TShape1.inMesh;
 };
 
@@ -67,16 +70,15 @@ global proc generateTree() {
     //string $treeData = `textField -q -text treeDataField`;
     string $treeSpecies = `textField -q -text treeSpeciesField`;
 
-    //if ($treeData == "" || $treeSpecies == "") {
-    //    warning "Please select both a tree data JSON and a tree species file.";
-    //    return;
-    //}
-
     //print ("Generating tree with:\nTree Data: " + $treeData + "\nTree Species: " + $treeSpecies + "\n");
     print("Generating tree node");
-    createTreeNode;
+    createTreeNode($treeSpecies);
+
+    // Close the UI Window
+    if (`window -exists generateTreeWindow`) {
+        deleteUI generateTreeWindow;
+    }
     
-    // Replace the print statement with the actual tree generation logic
 }
 
 // Create the UI Window
@@ -92,17 +94,17 @@ global proc createTreeGeneratorWindow() {
     separator -style "none" -height 10;
 
     // Tree Data JSON Selection
-    text -label "Select Tree Data JSON:" -align "left";
-    separator -style "none" -height 5;
-    rowLayout -numberOfColumns 2 -columnWidth2 350 80;
-    textField -editable false -width 350 treeDataField;
-    button -label "Browse" -command("browseTreeDataFile");
-    setParent ..;
+    //text -label "Select Tree Data JSON:" -align "left";
+    //separator -style "none" -height 5;
+    //rowLayout -numberOfColumns 2 -columnWidth2 350 80;
+    //textField -editable false -width 350 treeDataField;
+    //button -label "Browse" -command("browseTreeDataFile");
+    //setParent ..;
 
     // Add some space
-    separator - style "none" - height 10;
-    separator - style "in" - height 5;
-    separator - style "none" - height 10;
+    //separator - style "none" - height 10;
+    //separator - style "in" - height 5;
+    //separator - style "none" - height 10;
 
     // Tree Species File Selection
     text - label "Select Tree Species File:" - align "left";
@@ -119,10 +121,6 @@ global proc createTreeGeneratorWindow() {
 
     // Generate Tree Button
     button - label "Generate Tree" - command("generateTree") - height 50;
-
-    // Add spacing at the bottom
-    separator - style "none" - height 10;
-
     showWindow generateTreeWindow;
 }
 )";
