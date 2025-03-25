@@ -261,7 +261,7 @@ void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::
 
 bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double radius) {
 #define FLOW true;
-#if FLOWs
+#if FLOW
 	for (int i = 0; i < skeleton.RefSortedFlowList().size(); ++i)
 	{
 		int currHandle = skeleton.RefSortedFlowList()[i];
