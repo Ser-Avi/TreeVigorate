@@ -19,6 +19,7 @@ MObject TreeNode::deltaTime;
 MObject TreeNode::numGrows;
 MObject TreeNode::radius;
 MObject TreeNode::treeDataFile;
+MObject TreeNode::makeGrow;
 
 void* TreeNode::creator()
 {
@@ -44,6 +45,9 @@ MStatus TreeNode::initialize()
 
 	TreeNode::treeDataFile = typedAttr.create("treeDataFile", "f", MFnData::kString, MObject::kNullObj, &returnStatus);
 	McheckErr(returnStatus, "Error creating treeDataFile attribute \n");
+
+	TreeNode::makeGrow = numAttr.create("makeGrow", "mg", MFnNumericData::kBoolean, false, &returnStatus);
+	McheckErr(returnStatus, "Error creating makeGrow attribute\n");
 
 	//TreeNode::time = unitAttr.create("time", "tm",
 	//	MFnUnitAttribute::kTime,
@@ -74,22 +78,16 @@ MStatus TreeNode::initialize()
 	McheckErr(returnStatus, "ERROR adding radius attribute\n");
 
 	returnStatus = addAttribute(TreeNode::treeDataFile);
-	McheckErr(returnStatus, "ERROR adding radius attribute\n");
+	McheckErr(returnStatus, "ERROR adding treeDataFile attribute\n");
+
+	returnStatus = addAttribute(TreeNode::makeGrow);
+	McheckErr(returnStatus, "ERROR adding makeGrow attribute\n");
 
 	//returnStatus = attributeAffects(TreeNode::time,
 	//	TreeNode::outputMesh);
 	//McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
-	returnStatus = attributeAffects(TreeNode::deltaTime,
-		TreeNode::outputMesh);
-	McheckErr(returnStatus, "ERROR in attributeAffects\n");
-	returnStatus = attributeAffects(TreeNode::numGrows,
-		TreeNode::outputMesh);
-	McheckErr(returnStatus, "ERROR in attributeAffects\n");
-	returnStatus = attributeAffects(TreeNode::radius,
-		TreeNode::outputMesh);
-	McheckErr(returnStatus, "ERROR in attributeAffects\n");
-	returnStatus = attributeAffects(TreeNode::treeDataFile,
+	returnStatus = attributeAffects(TreeNode::makeGrow,
 		TreeNode::outputMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
@@ -104,7 +102,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		// Get vars
 		double fDTime = data.inputValue(deltaTime).asDouble();
 		int nGrows = data.inputValue(numGrows).asInt();
-		float rad = data.inputValue(radius).asDouble();
+		float r = data.inputValue(radius).asDouble();
 		MString treeInfo = data.inputValue(treeDataFile).asString();
 
 		/* Get time */
@@ -143,14 +141,12 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		ShootGrowthController m_shootGrowthParameters;
 		InitializeMVars(treeInfo.asChar(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
 
+		// Growing tree
 		MGlobal::displayInfo("Abt to Grow, stand back!!");
 		for (int i = 0; i < nGrows; ++i) {
 			int nodes = treeModel.RefShootSkeleton().RefSortedNodeList().size();
 			for (int j = 0; j < nodes; ++j) {
 				auto& snode = treeModel.RefShootSkeleton().RefNode(j);
-				//for (auto& bud : snode.m_data.m_buds) {
-				//	bud.m_vigorSink.AddVigor(1.0);
-				//}
 			}
 			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
 			MGlobal::displayInfo("Growth successful, iteration: ");
@@ -158,17 +154,19 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			
 			MGlobal::displayInfo("Shoot nodes: ");
 			MGlobal::displayInfo(MString(std::to_string(nodes).c_str()));
-			int rnodes = treeModel.RefRootSkeleton().RefSortedNodeList().size();
-
-			MGlobal::displayInfo("Root nodes: ");
-			MGlobal::displayInfo(MString(std::to_string(rnodes).c_str()));
+			
+			int flows = treeModel.RefShootSkeleton().RefSortedFlowList().size();
+			MGlobal::displayInfo("Flows nodes: ");
+			MGlobal::displayInfo(MString(std::to_string(flows).c_str()));
 		}
 
+		MGlobal::displayInfo("Rad:");
+		MGlobal::displayInfo(std::to_string(r).c_str());
+
+		// Creating cylinders
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
 		if (shoots.RefSortedNodeList().size() != 0) {
-			int rootHandle = shoots.RefSortedNodeList()[0];
-			auto& rootNode = shoots.RefNode(rootHandle);
-			bool isAdd = addNodePositionPairs(rootNode, points, faceCounts, faceConns, shoots, rad);
+			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, r);
 		}
 
 		MFnMesh mesh;
@@ -184,21 +182,129 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 	return MS::kSuccess;
 }
 
-bool TreeNode::addNodePositionPairs(Node<InternodeGrowthData>& currentNode, MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double r) {
+/// <summary>
+/// Based on the cylinder class method
+/// </summary>
+void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
+	MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns) {
+	int startIndex = points.length();
+	int numSlices = 10;
+	float theta = 2 * M_PI / (float) numSlices;
+	glm::quat sRot = glm::rotation(glm::vec3(0, 1.f, 0), sDir);
+	glm::quat eRot = glm::rotation(glm::vec3(0, 1.f, 0), eDir);
+
+	bool needFaceReverse = (end.y - start.y) > 0;
+	
+	// starting circle points
+	for (int i = 0; i < numSlices; ++i) {
+		glm::vec3 p(cos(theta * i), 0, sin(theta * i));
+		p *= sRad;
+		p = sRot * p;
+		points.append(MPoint(p.x, p.y, p.z) + start);
+	}
+	// ending circle points
+	for (int i = 0; i < numSlices; ++i) {
+		glm::vec3 p(cos(theta * i), 0, sin(theta * i));
+		p *= eRad;
+		p = eRot * p;
+		points.append(MPoint(p.x, p.y, p.z) + end);
+	}
+	// endcaps
+	points.append(start);	// index: 2 * numslices + startIndex
+	points.append(end);		// index: above + 1
+	// setting endcap 1 indices
+	for (int i = 0; i < numSlices; ++i) {
+		faceCounts.append(3);
+		if (!needFaceReverse) {
+			faceConns.append(2 * numSlices + startIndex);  // Center
+			faceConns.append((i + 1) % numSlices + startIndex); 
+			faceConns.append(i + startIndex);              
+		}
+		else {
+			faceConns.append(2 * numSlices + startIndex);  // Center
+			faceConns.append(i + startIndex);              
+			faceConns.append((i + 1) % numSlices + startIndex); 
+		}
+	}
+	// endcap 2 indices
+	for (int i = 0; i < numSlices; ++i) {
+		faceCounts.append(3);
+		if (needFaceReverse) {
+			faceConns.append(2 * numSlices + 1 + startIndex);  // Center
+			faceConns.append(numSlices + (i + 1) % numSlices + startIndex);
+			faceConns.append(numSlices + i + startIndex);
+		}
+		else {
+			faceConns.append(2 * numSlices + 1 + startIndex);  // Center
+			faceConns.append(numSlices + i + startIndex);
+			faceConns.append(numSlices + (i + 1) % numSlices + startIndex);
+		}
+	}
+	// the middle indices
+	for (int i = 0; i < numSlices; ++i) {
+		faceCounts.append(4);
+		int next = (i + 1) % numSlices;
+		if (needFaceReverse) {
+			faceConns.append(i + startIndex);                   // Start circle, current
+			faceConns.append(numSlices + i + startIndex);       // End circle, current
+			faceConns.append(numSlices + next + startIndex);  // End circle, next
+			faceConns.append(next + startIndex);              // Start circle, next
+		}
+		else {
+			faceConns.append(i + startIndex);                   // Start circle, current
+			faceConns.append(next + startIndex);              // Start circle, next
+			faceConns.append(numSlices + next + startIndex);  // End circle, next
+			faceConns.append(numSlices + i + startIndex);       // End circle, current
+		}
+	}
+}
+
+bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double radius) {
+#define FLOW true;
+#if FLOW
+	for (int i = 0; i < skeleton.RefSortedFlowList().size(); ++i)
+	{
+		int currHandle = skeleton.RefSortedFlowList()[i];
+		auto& curr = skeleton.PeekFlow(currHandle);
+		glm::vec3 currPos = curr.m_info.m_globalStartPosition;
+		glm::vec3 parentPos = curr.m_info.m_globalEndPosition;
+		MPoint start(currPos[0], currPos[1], currPos[2]);
+		MPoint end(parentPos[0], parentPos[1], parentPos[2]);
+		glm::vec3 sDir;
+		if (curr.GetParentHandle() >= 0) {
+			sDir = currPos - skeleton.PeekFlow(curr.GetParentHandle()).m_info.m_globalStartPosition;
+		}
+		else {
+			sDir = glm::vec3(0, 1, 0);
+		}
+			glm::vec3 eDir = parentPos - currPos;
+		buildCylinderMesh(start, end, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, sDir, eDir,
+			points, faceCounts, faceConns);
+		//CylinderMesh cyl(start, end);
+		//cyl.appendToMesh(points, faceCounts, faceConns, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, curr.m_info.m_globalStartRotation, curr.m_info.m_globalEndRotation);
+
+#else
 	for (int i = 1; i < skeleton.RefSortedNodeList().size(); ++i)
 	{
 		int currHandle = skeleton.RefSortedNodeList()[i];
 		auto& curr = skeleton.PeekNode(currHandle);
 		glm::vec3 currPos = curr.m_info.m_globalPosition;
-		float rad = curr.m_info.m_thickness * r;
 		int parentHandle = curr.GetParentHandle();
 		auto& parent = skeleton.PeekNode(parentHandle);
 		glm::vec3 parentPos = parent.m_info.m_globalPosition;
-
 		MPoint start(parentPos[0], parentPos[1], parentPos[2]);
 		MPoint end(currPos[0], currPos[1], currPos[2]);
-		CylinderMesh cyl(start, end, rad);
-		cyl.appendToMesh(points, faceCounts, faceConns);
+		glm::vec3 sDir;
+		if (parent.GetParentHandle() >= 0) {
+			sDir = parentPos - skeleton.PeekNode(parent.GetParentHandle()).m_info.m_globalPosition;
+		}
+		else {
+			sDir = glm::vec3(0, 1, 0);
+		}
+		glm::vec3 eDir = currPos - parentPos;
+		buildCylinderMesh(start, end, parent.m_info.m_thickness * radius, curr.m_info.m_thickness * radius, sDir, eDir,
+			points, faceCounts, faceConns);
+#endif
 	}
 	return true;
 }
