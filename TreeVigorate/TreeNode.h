@@ -23,6 +23,7 @@
 #include <cylinder.h>
 
 #include "Rhizocode/TreeModel.hpp"
+#include <StrandManager.h>
 #include <maya/MGlobal.h>
 #include <list>
 #include <glm/gtc/random.hpp>

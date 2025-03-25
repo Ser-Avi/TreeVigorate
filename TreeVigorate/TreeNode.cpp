@@ -1,5 +1,4 @@
 #include "TreeNode.h"
-
 /*
 MEL Script to initialize this with:
 global proc createTreeNode() {
@@ -156,6 +155,9 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			MGlobal::displayInfo("Growth successful, iteration: ");
 			MGlobal::displayInfo(std::to_string(i).c_str());
 			
+			StrandManager strandManager;
+			strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 3);
+			treeModel.RefShootSkeleton().RefNode(0)
 			MGlobal::displayInfo("Shoot nodes: ");
 			MGlobal::displayInfo(MString(std::to_string(nodes).c_str()));
 			int rnodes = treeModel.RefRootSkeleton().RefSortedNodeList().size();
