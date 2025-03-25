@@ -56,35 +56,14 @@ void CylinderMesh::transform(MPointArray& points, MVectorArray& normals)
     }
 }
 
-void CylinderMesh::transformNew(MPointArray& cpoints, float sRad, float eRad, glm::quat sRot,
-    glm::quat eRot) {
-    for (int i = 0; i < gPoints.length(); ++i) {
-        if (gPoints[i].x == 0) {
-            glm::vec3 p(0, gPoints[i].y, gPoints[i].z);
-            p *= sRad;
-            p = sRot * p;
-            cpoints.append(MPoint(p.x, p.y, p.z) + mStart);
-        }
-        else {
-            glm::vec3 p(0, gPoints[i].y, gPoints[i].z);
-            p *= eRad;
-            p = eRot * p;
-            cpoints.append(MPoint(p.x, p.y, p.z) + mEnd);
-        }   
-    }
-}
-
 void CylinderMesh::appendToMesh(
     MPointArray& points, 
     MIntArray& faceCounts, 
-    MIntArray& faceConnects,
-    float sRad, float eRad, glm::quat sRot,
-    glm::quat eRot)
+    MIntArray& faceConnects)
 {
     MPointArray cpoints;
     MVectorArray cnormals; 
     transform(cpoints, cnormals);
-    //transformNew(cpoints, sRad, eRad, sRot, eRot);
 
     int startIndex = points.length(); // offset for indexes
     for (int i = 0; i < cpoints.length(); i++)

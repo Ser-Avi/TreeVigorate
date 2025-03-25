@@ -185,29 +185,28 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 /// <summary>
 /// Based on the cylinder class method
 /// </summary>
-void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::quat sRot, glm::quat eRot,
+void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
 	MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns) {
 	int startIndex = points.length();
 	int numSlices = 10;
 	float theta = 2 * M_PI / (float) numSlices;
-	glm::quat rot = glm::rotation(glm::vec3(0, 1.f, 0),
-		glm::normalize(glm::vec3(end.x - start.x, end.y - start.y, end.z - start.z)));
-	//glm::quat alignAxes = glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::angleAxis(glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::quat sRot = glm::rotation(glm::vec3(0, 1.f, 0), sDir);
+	glm::quat eRot = glm::rotation(glm::vec3(0, 1.f, 0), eDir);
 
-	bool needFaceReverse = (end.y - start.y) < 0;
+	bool needFaceReverse = (end.y - start.y) > 0;
 	
 	// starting circle points
 	for (int i = 0; i < numSlices; ++i) {
 		glm::vec3 p(cos(theta * i), 0, sin(theta * i));
 		p *= sRad;
-		p = rot * p;
+		p = sRot * p;
 		points.append(MPoint(p.x, p.y, p.z) + start);
 	}
 	// ending circle points
 	for (int i = 0; i < numSlices; ++i) {
 		glm::vec3 p(cos(theta * i), 0, sin(theta * i));
 		p *= eRad;
-		p = rot * p;
+		p = eRot * p;
 		points.append(MPoint(p.x, p.y, p.z) + end);
 	}
 	// endcaps
@@ -262,16 +261,24 @@ void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::
 
 bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double radius) {
 #define FLOW true;
-#if FLOW
+#if FLOWs
 	for (int i = 0; i < skeleton.RefSortedFlowList().size(); ++i)
 	{
 		int currHandle = skeleton.RefSortedFlowList()[i];
 		auto& curr = skeleton.PeekFlow(currHandle);
 		glm::vec3 currPos = curr.m_info.m_globalStartPosition;
 		glm::vec3 parentPos = curr.m_info.m_globalEndPosition;
-		MPoint start(parentPos[0], parentPos[1], parentPos[2]);
-		MPoint end(currPos[0], currPos[1], currPos[2]);
-		buildCylinderMesh(start, end, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, curr.m_info.m_globalStartRotation, curr.m_info.m_globalEndRotation,
+		MPoint start(currPos[0], currPos[1], currPos[2]);
+		MPoint end(parentPos[0], parentPos[1], parentPos[2]);
+		glm::vec3 sDir;
+		if (curr.GetParentHandle() >= 0) {
+			sDir = currPos - skeleton.PeekFlow(curr.GetParentHandle()).m_info.m_globalStartPosition;
+		}
+		else {
+			sDir = glm::vec3(0, 1, 0);
+		}
+			glm::vec3 eDir = parentPos - currPos;
+		buildCylinderMesh(start, end, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, sDir, eDir,
 			points, faceCounts, faceConns);
 		//CylinderMesh cyl(start, end);
 		//cyl.appendToMesh(points, faceCounts, faceConns, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, curr.m_info.m_globalStartRotation, curr.m_info.m_globalEndRotation);
@@ -285,16 +292,19 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 		int parentHandle = curr.GetParentHandle();
 		auto& parent = skeleton.PeekNode(parentHandle);
 		glm::vec3 parentPos = parent.m_info.m_globalPosition;
-		radius *= curr.m_info.m_thickness;
 		MPoint start(parentPos[0], parentPos[1], parentPos[2]);
 		MPoint end(currPos[0], currPos[1], currPos[2]);
-		buildCylinderMesh(start, end, curr.m_info.m_thickness, parent.m_info.m_thickness,
+		glm::vec3 sDir;
+		if (parent.GetParentHandle() >= 0) {
+			sDir = parentPos - skeleton.PeekNode(parent.GetParentHandle()).m_info.m_globalPosition;
+		}
+		else {
+			sDir = glm::vec3(0, 1, 0);
+		}
+		glm::vec3 eDir = currPos - parentPos;
+		buildCylinderMesh(start, end, parent.m_info.m_thickness * radius, curr.m_info.m_thickness * radius, sDir, eDir,
 			points, faceCounts, faceConns);
 #endif
-
-		
-		/*CylinderMesh cyl(start, end);
-		cyl.appendToMesh(points, faceCounts, faceConns);*/
 	}
 	return true;
 }

@@ -27,13 +27,10 @@ public:
     void appendToMesh(
         MPointArray& points, 
         MIntArray& faceCounts, 
-        MIntArray& faceConnects,
-        float sRad, float eRad, glm::quat sRot,
-        glm::quat eRot);
+        MIntArray& faceConnects);
 
 protected:
     void transform(MPointArray& points, MVectorArray& normals);
-    void transformNew(MPointArray& cpoints, float sRad, float eRad, glm::quat sRot, glm::quat eRot);
     MPoint mStart;
     MPoint mEnd;
     double r;
