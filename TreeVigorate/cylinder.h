@@ -8,13 +8,15 @@
 #include <maya/MVectorArray.h>
 #include <maya/MIntArray.h>
 #include <maya/MDoubleArray.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #define M_PI       3.14159265358979323846   // pi
 
 class CylinderMesh
 {
 public:
-    CylinderMesh(const MPoint& start, const MPoint& end, double r);
+    CylinderMesh(const MPoint& start, const MPoint& end, double r = 0.25);
     ~CylinderMesh();
 
     void getMesh(
@@ -25,10 +27,13 @@ public:
     void appendToMesh(
         MPointArray& points, 
         MIntArray& faceCounts, 
-        MIntArray& faceConnects);
+        MIntArray& faceConnects,
+        float sRad, float eRad, glm::quat sRot,
+        glm::quat eRot);
 
 protected:
     void transform(MPointArray& points, MVectorArray& normals);
+    void transformNew(MPointArray& cpoints, float sRad, float eRad, glm::quat sRot, glm::quat eRot);
     MPoint mStart;
     MPoint mEnd;
     double r;

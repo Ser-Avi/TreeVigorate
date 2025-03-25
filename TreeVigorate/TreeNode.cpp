@@ -166,8 +166,6 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		// Creating cylinders
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
 		if (shoots.RefSortedNodeList().size() != 0) {
-			int rootHandle = shoots.RefSortedNodeList()[0];
-			auto& rootNode = shoots.RefNode(rootHandle);
 			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, r);
 		}
 
@@ -184,7 +182,101 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 	return MS::kSuccess;
 }
 
+/// <summary>
+/// Based on the cylinder class method
+/// </summary>
+void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::quat sRot, glm::quat eRot,
+	MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns) {
+	int startIndex = points.length();
+	int numSlices = 10;
+	float theta = 2 * M_PI / (float) numSlices;
+	glm::quat rot = glm::rotation(glm::vec3(0, 1.f, 0),
+		glm::normalize(glm::vec3(end.x - start.x, end.y - start.y, end.z - start.z)));
+	//glm::quat alignAxes = glm::angleAxis(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::angleAxis(glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	bool needFaceReverse = (end.y - start.y) < 0;
+	
+	// starting circle points
+	for (int i = 0; i < numSlices; ++i) {
+		glm::vec3 p(cos(theta * i), 0, sin(theta * i));
+		p *= sRad;
+		p = rot * p;
+		points.append(MPoint(p.x, p.y, p.z) + start);
+	}
+	// ending circle points
+	for (int i = 0; i < numSlices; ++i) {
+		glm::vec3 p(cos(theta * i), 0, sin(theta * i));
+		p *= eRad;
+		p = rot * p;
+		points.append(MPoint(p.x, p.y, p.z) + end);
+	}
+	// endcaps
+	points.append(start);	// index: 2 * numslices + startIndex
+	points.append(end);		// index: above + 1
+	// setting endcap 1 indices
+	for (int i = 0; i < numSlices; ++i) {
+		faceCounts.append(3);
+		if (!needFaceReverse) {
+			faceConns.append(2 * numSlices + startIndex);  // Center
+			faceConns.append((i + 1) % numSlices + startIndex); 
+			faceConns.append(i + startIndex);              
+		}
+		else {
+			faceConns.append(2 * numSlices + startIndex);  // Center
+			faceConns.append(i + startIndex);              
+			faceConns.append((i + 1) % numSlices + startIndex); 
+		}
+	}
+	// endcap 2 indices
+	for (int i = 0; i < numSlices; ++i) {
+		faceCounts.append(3);
+		if (needFaceReverse) {
+			faceConns.append(2 * numSlices + 1 + startIndex);  // Center
+			faceConns.append(numSlices + (i + 1) % numSlices + startIndex);
+			faceConns.append(numSlices + i + startIndex);
+		}
+		else {
+			faceConns.append(2 * numSlices + 1 + startIndex);  // Center
+			faceConns.append(numSlices + i + startIndex);
+			faceConns.append(numSlices + (i + 1) % numSlices + startIndex);
+		}
+	}
+	// the middle indices
+	for (int i = 0; i < numSlices; ++i) {
+		faceCounts.append(4);
+		int next = (i + 1) % numSlices;
+		if (needFaceReverse) {
+			faceConns.append(i + startIndex);                   // Start circle, current
+			faceConns.append(numSlices + i + startIndex);       // End circle, current
+			faceConns.append(numSlices + next + startIndex);  // End circle, next
+			faceConns.append(next + startIndex);              // Start circle, next
+		}
+		else {
+			faceConns.append(i + startIndex);                   // Start circle, current
+			faceConns.append(next + startIndex);              // Start circle, next
+			faceConns.append(numSlices + next + startIndex);  // End circle, next
+			faceConns.append(numSlices + i + startIndex);       // End circle, current
+		}
+	}
+}
+
 bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double radius) {
+#define FLOW true;
+#if FLOW
+	for (int i = 0; i < skeleton.RefSortedFlowList().size(); ++i)
+	{
+		int currHandle = skeleton.RefSortedFlowList()[i];
+		auto& curr = skeleton.PeekFlow(currHandle);
+		glm::vec3 currPos = curr.m_info.m_globalStartPosition;
+		glm::vec3 parentPos = curr.m_info.m_globalEndPosition;
+		MPoint start(parentPos[0], parentPos[1], parentPos[2]);
+		MPoint end(currPos[0], currPos[1], currPos[2]);
+		buildCylinderMesh(start, end, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, curr.m_info.m_globalStartRotation, curr.m_info.m_globalEndRotation,
+			points, faceCounts, faceConns);
+		//CylinderMesh cyl(start, end);
+		//cyl.appendToMesh(points, faceCounts, faceConns, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, curr.m_info.m_globalStartRotation, curr.m_info.m_globalEndRotation);
+
+#else
 	for (int i = 1; i < skeleton.RefSortedNodeList().size(); ++i)
 	{
 		int currHandle = skeleton.RefSortedNodeList()[i];
@@ -193,11 +285,16 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 		int parentHandle = curr.GetParentHandle();
 		auto& parent = skeleton.PeekNode(parentHandle);
 		glm::vec3 parentPos = parent.m_info.m_globalPosition;
-
+		radius *= curr.m_info.m_thickness;
 		MPoint start(parentPos[0], parentPos[1], parentPos[2]);
 		MPoint end(currPos[0], currPos[1], currPos[2]);
-		CylinderMesh cyl(start, end, curr.m_info.m_thickness * radius);
-		cyl.appendToMesh(points, faceCounts, faceConns);
+		buildCylinderMesh(start, end, curr.m_info.m_thickness, parent.m_info.m_thickness,
+			points, faceCounts, faceConns);
+#endif
+
+		
+		/*CylinderMesh cyl(start, end);
+		cyl.appendToMesh(points, faceCounts, faceConns);*/
 	}
 	return true;
 }
