@@ -3,6 +3,9 @@
 #include "TreeCommand.h"
 #include "TreeNode.h"
 
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+
 #include <maya/MPxCommand.h>
 #include <maya/MIOStream.h>
 #include <maya/MString.h>
@@ -17,6 +20,9 @@
 #include <maya/MVector.h>
 #include <maya/MFnDependencyNode.h>
 #include <maya/MStringArray.h>
+
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+typedef CGAL::Delaunay_triangulation_2<K> Delaunay;
 
 MStatus initializePlugin(MObject obj) {
 	const char* pluginVendor = "Avi and Eli :)";
@@ -33,14 +39,19 @@ MStatus initializePlugin(MObject obj) {
 		return status;
 	}
 
-	MGlobal::displayInfo("Plugin initialized successfully!");
-
     // Registering TreeCmd
     status = plugin.registerCommand("TreeCmd", TreeCmd::creator, TreeCmd::newSyntax);
 
     MGlobal::displayInfo("Registered Cmd");
 
 	TreeCmd::RegisterMELCommands();
+
+	// CGAL Test
+	std::vector<K::Point_2> points = { {0,0}, {1, 0}, {0,1}, {1,1} };
+	Delaunay dt(points.begin(), points.end());
+	MGlobal::displayInfo("CGAL Delaunay gud");
+
+	MGlobal::displayInfo("Plugin initialized successfully!");
 
 	return (MS::kSuccess);
 }
