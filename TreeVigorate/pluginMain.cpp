@@ -2,6 +2,7 @@
 #include <maya/MGlobal.h>
 #include "TreeCommand.h"
 #include "TreeNode.h"
+#include "MeshTestNode.h"
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
@@ -34,6 +35,14 @@ MStatus initializePlugin(MObject obj) {
 	// adding TreeNode
 	status = plugin.registerNode("TreeNode", TreeNode::id,
 		TreeNode::creator, TreeNode::initialize);
+	if (!status) {
+		status.perror("registerNode");
+		return status;
+	}
+
+	// registering MeshTestNode
+	status = plugin.registerNode("MeshTestNode", MeshTestNode::id,
+		MeshTestNode::creator, MeshTestNode::initialize);
 	if (!status) {
 		status.perror("registerNode");
 		return status;

@@ -24,6 +24,7 @@
 #include <CGAL/Alpha_shape_2.h>
 #include <vector>
 #include <glm/glm.hpp>
+#include <glm/gtc/random.hpp>
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef K::Point_2 CGAL_Point;
@@ -52,6 +53,19 @@ public:
 	MStatus compute(const MPlug& plug, MDataBlock& data) override;
 	static  void* creator();
 	static  MStatus initialize();
+
+	/// <summary>
+	/// Converts glm::vec2s to CGAL points
+	/// </summary>
+	/// <param name="pts"></param>
+	/// <returns></returns>
+	std::vector<CGAL_Point> convertToCGAL(std::vector<glm::vec2>& pts);
+	/// <summary>
+	/// Converts CGAL points to glm::vec2s
+	/// </summary>
+	/// <param name="pts"></param>
+	/// <returns></returns>
+	std::vector<glm::vec2> convertToGLM(std::vector<CGAL_Point>& pts);
 
 	static MObject	outputMesh;
 	static MTypeId	id;
