@@ -21,6 +21,8 @@
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Alpha_shape_face_base_2.h>
+#include <CGAL/Alpha_shape_vertex_base_2.h>
 #include <CGAL/Alpha_shape_2.h>
 #include <vector>
 #include <glm/glm.hpp>
@@ -28,10 +30,10 @@
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef K::Point_2 CGAL_Point;
-typedef CGAL::Delaunay_triangulation_2<K> Delaunay;
 typedef CGAL::Alpha_shape_vertex_base_2<K> Vb;
-typedef CGAL::Alpha_shape_face_base_2<K> Fb;
+typedef CGAL::Alpha_shape_face_base_2<K>   Fb;
 typedef CGAL::Triangulation_data_structure_2<Vb, Fb> Tds;
+typedef CGAL::Delaunay_triangulation_2<K, Tds> Delaunay;
 typedef CGAL::Alpha_shape_2<Delaunay> Alpha_shape;
 
 #define McheckErr(stat,msg)         \
@@ -74,4 +76,6 @@ public:
 	static MObject maxLen;
 	// number of points on the mesh plane
 	static MObject numPts;
+	// Alpha is smth for edge mesh detection
+	static MObject alpha;
 };

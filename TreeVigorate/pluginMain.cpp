@@ -22,9 +22,6 @@
 #include <maya/MFnDependencyNode.h>
 #include <maya/MStringArray.h>
 
-typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-typedef CGAL::Delaunay_triangulation_2<K> Delaunay;
-
 MStatus initializePlugin(MObject obj) {
 	const char* pluginVendor = "Avi and Eli :)";
 	const char* pluginVersion = "0.2";
@@ -54,11 +51,6 @@ MStatus initializePlugin(MObject obj) {
     MGlobal::displayInfo("Registered Cmd");
 
 	TreeCmd::RegisterMELCommands();
-
-	// CGAL Test
-	std::vector<K::Point_2> points = { {0,0}, {1, 0}, {0,1}, {1,1} };
-	Delaunay dt(points.begin(), points.end());
-	MGlobal::displayInfo("CGAL Delaunay gud");
 
 	MGlobal::displayInfo("Plugin initialized successfully!");
 

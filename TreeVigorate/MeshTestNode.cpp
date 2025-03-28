@@ -5,6 +5,7 @@ MTypeId MeshTestNode::id(0x80500);
 
 MObject MeshTestNode::maxLen;
 MObject MeshTestNode::numPts;
+MObject MeshTestNode::alpha;
 
 void* MeshTestNode::creator()
 {
@@ -25,6 +26,9 @@ MStatus MeshTestNode::initialize()
 	MeshTestNode::numPts = numAttr.create("numPts", "np", MFnNumericData::kInt, 5, &returnStatus);
 	McheckErr(returnStatus, "Error creating numPts attribute \n");
 
+	MeshTestNode::alpha = numAttr.create("alpha", "a", MFnNumericData::kDouble, 0.5, &returnStatus);
+	McheckErr(returnStatus, "Error creating alpha attribute \n");
+
 	MeshTestNode::outputMesh = typedAttr.create("outputMesh", "out",
 		MFnData::kMesh,
 		MObject::kNullObj,
@@ -41,7 +45,14 @@ MStatus MeshTestNode::initialize()
 	returnStatus = addAttribute(MeshTestNode::numPts);
 	McheckErr(returnStatus, "ERROR adding numpts attribute\n");
 
+	returnStatus = addAttribute(MeshTestNode::alpha);
+	McheckErr(returnStatus, "ERROR adding numpts attribute\n");
+
 	returnStatus = attributeAffects(MeshTestNode::numPts,
+		MeshTestNode::outputMesh);
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
+
+	returnStatus = attributeAffects(MeshTestNode::alpha,
 		MeshTestNode::outputMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
@@ -90,6 +101,7 @@ MStatus MeshTestNode::compute(const MPlug& plug, MDataBlock& data)
 		// Get vars
 		double mLen = data.inputValue(maxLen).asDouble();
 		int numPs = data.inputValue(numPts).asInt();
+		double alp = data.inputValue(alpha).asDouble();
 
 		/*MString tester = ("Angle Test: " + std::to_string(fAngle)).c_str();
 		MGlobal::displayInfo(tester);
@@ -115,7 +127,7 @@ MStatus MeshTestNode::compute(const MPlug& plug, MDataBlock& data)
 
 		std::vector<glm::vec2> pts;
 
-		float theta = 3.1415926535 * 2.f / (float)numPs;
+		//float theta = 3.1415926535 * 2.f / (float)numPs;
 		float rad = 5;
 		for (int i = 0; i < numPs; ++i) {
 			//float angle = theta * i;
@@ -135,12 +147,17 @@ MStatus MeshTestNode::compute(const MPlug& plug, MDataBlock& data)
 			if (CGAL::sqrt(seg.squared_length()) <= mLen) {
 				edges.emplace_back(seg.source(), seg.target());
 			}
+			else {
+				MGlobal::displayInfo("Edge Cut");
+			}
 		}
 
 		// getting bounding edges
 		Alpha_shape alphaShape(dt);
-		double alpha = 0.5; // Adjust for concavity (smaller = more concave)
-		alphaShape.set_alpha(alpha);
+		//double alpha = 0.5; // Adjust for concavity (smaller = more concave)
+		//alphaShape.set_alpha(alp);
+		alphaShape.set_alpha(*alphaShape.find_optimal_alpha(1));
+		MGlobal::displayInfo("Alpha shape generated");
 
 		// clearing vectors that we'll reuse here
 		cgalPts.clear();
@@ -152,6 +169,7 @@ MStatus MeshTestNode::compute(const MPlug& plug, MDataBlock& data)
 			++edge) {
 			if (alphaShape.classify(*edge) == Alpha_shape::REGULAR) {
 				//boundaryEdges.push_back(*edge);
+				MGlobal::displayInfo("in if");
 				
 				// getting the point information
 				// Get the face containing the edge
@@ -164,7 +182,12 @@ MStatus MeshTestNode::compute(const MPlug& plug, MDataBlock& data)
 				//edgeVertices.emplace_back(p1, p2);
 				cgalPts.push_back(p1);
 			}
+			else {
+				MGlobal::displayInfo("failed");
+			}
 		}
+
+		MGlobal::displayInfo("Mesh generated");
 
 		pts = convertToGLM(cgalPts);
 
