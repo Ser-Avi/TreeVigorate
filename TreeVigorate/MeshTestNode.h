@@ -21,6 +21,7 @@
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Triangulation_vertex_base_with_info_2.h>
 #include <CGAL/Alpha_shape_face_base_2.h>
 #include <CGAL/Alpha_shape_vertex_base_2.h>
 #include <CGAL/Alpha_shape_2.h>
@@ -30,17 +31,41 @@
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
 typedef K::Point_2 CGAL_Point;
-typedef CGAL::Alpha_shape_vertex_base_2<K> Vb;
-typedef CGAL::Alpha_shape_face_base_2<K>   Fb;
+//typedef CGAL::Alpha_shape_vertex_base_2<K> Vb;
+//typedef CGAL::Alpha_shape_face_base_2<K>   Fb;
+//typedef CGAL::Triangulation_vertex_base_2 <size_t, K> Vb;
+typedef CGAL::Triangulation_vertex_base_with_info_2<size_t, K> Vb;
+typedef CGAL::Triangulation_face_base_2<K> Fb;
 typedef CGAL::Triangulation_data_structure_2<Vb, Fb> Tds;
 typedef CGAL::Delaunay_triangulation_2<K, Tds> Delaunay;
-typedef CGAL::Alpha_shape_2<Delaunay> Alpha_shape;
+//typedef CGAL::Alpha_shape_2<Delaunay> Alpha_shape;
 
 #define McheckErr(stat,msg)         \
     if ( MS::kSuccess != stat ) {   \
         cerr << msg;                \
         return MS::kFailure;        \
     }
+
+// Edge struct to store vertex indices
+struct Edge {
+	size_t v1, v2;
+
+	// constructor
+	Edge(size_t a, size_t b) : v1(std::min(a, b)), v2(std::max(a, b)) {}
+	// equality testing
+	bool operator==(const Edge& other) const {
+		return v1 == other.v1 && v2 == other.v2;
+	}
+};
+
+// Hash function for Edges
+namespace std {
+	template<> struct hash<Edge> {
+		size_t operator()(const Edge& e) const {
+			return hash<size_t>()(e.v1) ^ (hash<size_t>()(e.v2) << 1);
+		}
+	};
+}
 
 class MeshTestNode : public MPxNode {
 public:
@@ -55,6 +80,14 @@ public:
 	MStatus compute(const MPlug& plug, MDataBlock& data) override;
 	static  void* creator();
 	static  MStatus initialize();
+
+	/// <summary>
+	/// Constructs boundary points in CCW rotation for meshes from input points
+	/// </summary>
+	/// <param name="points"> the input points for the mesh</param>
+	/// <param name="maxEdge"> max edge length</param>
+	/// <returns> returns a vector of </returns>
+	std::vector<std::vector<glm::vec2>> getBoundaryPts(std::vector<glm::vec2> points, float maxEdge);
 
 	/// <summary>
 	/// Converts glm::vec2s to CGAL points
