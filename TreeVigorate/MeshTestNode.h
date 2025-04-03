@@ -19,26 +19,9 @@
 #include <maya/MIOStream.h>
 #include <maya/MGlobal.h>
 
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Delaunay_triangulation_2.h>
-#include <CGAL/Triangulation_vertex_base_with_info_2.h>
-#include <CGAL/Alpha_shape_face_base_2.h>
-#include <CGAL/Alpha_shape_vertex_base_2.h>
-#include <CGAL/Alpha_shape_2.h>
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
-
-typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-typedef K::Point_2 CGAL_Point;
-//typedef CGAL::Alpha_shape_vertex_base_2<K> Vb;
-//typedef CGAL::Alpha_shape_face_base_2<K>   Fb;
-//typedef CGAL::Triangulation_vertex_base_2 <size_t, K> Vb;
-typedef CGAL::Triangulation_vertex_base_with_info_2<size_t, K> Vb;
-typedef CGAL::Triangulation_face_base_2<K> Fb;
-typedef CGAL::Triangulation_data_structure_2<Vb, Fb> Tds;
-typedef CGAL::Delaunay_triangulation_2<K, Tds> Delaunay;
-//typedef CGAL::Alpha_shape_2<Delaunay> Alpha_shape;
 
 #define McheckErr(stat,msg)         \
     if ( MS::kSuccess != stat ) {   \
@@ -88,19 +71,6 @@ public:
 	/// <param name="maxEdge"> max edge length</param>
 	/// <returns> returns a vector of </returns>
 	std::vector<std::vector<glm::vec2>> getBoundaryPts(std::vector<glm::vec2> points, float maxEdge);
-
-	/// <summary>
-	/// Converts glm::vec2s to CGAL points
-	/// </summary>
-	/// <param name="pts"></param>
-	/// <returns></returns>
-	std::vector<CGAL_Point> convertToCGAL(std::vector<glm::vec2>& pts);
-	/// <summary>
-	/// Converts CGAL points to glm::vec2s
-	/// </summary>
-	/// <param name="pts"></param>
-	/// <returns></returns>
-	std::vector<glm::vec2> convertToGLM(std::vector<CGAL_Point>& pts);
 
 	static MObject	outputMesh;
 	static MTypeId	id;

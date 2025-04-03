@@ -4,9 +4,6 @@
 #include "TreeNode.h"
 #include "MeshTestNode.h"
 
-#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Delaunay_triangulation_2.h>
-
 #include <maya/MPxCommand.h>
 #include <maya/MIOStream.h>
 #include <maya/MString.h>
