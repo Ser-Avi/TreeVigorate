@@ -96,6 +96,4 @@ public:
 	static MObject maxLen;
 	// number of points on the mesh plane
 	static MObject numPts;
-	// Alpha is smth for edge mesh detection
-	static MObject alpha;
 };

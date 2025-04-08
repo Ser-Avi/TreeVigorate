@@ -7,7 +7,6 @@ MTypeId MeshTestNode::id(0x80500);
 
 MObject MeshTestNode::maxLen;
 MObject MeshTestNode::numPts;
-MObject MeshTestNode::alpha;
 
 void* MeshTestNode::creator()
 {
@@ -28,9 +27,6 @@ MStatus MeshTestNode::initialize()
 	MeshTestNode::numPts = numAttr.create("numPts", "np", MFnNumericData::kInt, 5, &returnStatus);
 	McheckErr(returnStatus, "Error creating numPts attribute \n");
 
-	MeshTestNode::alpha = numAttr.create("alpha", "a", MFnNumericData::kDouble, 0.5, &returnStatus);
-	McheckErr(returnStatus, "Error creating alpha attribute \n");
-
 	MeshTestNode::outputMesh = typedAttr.create("outputMesh", "out",
 		MFnData::kMesh,
 		MObject::kNullObj,
@@ -47,14 +43,7 @@ MStatus MeshTestNode::initialize()
 	returnStatus = addAttribute(MeshTestNode::numPts);
 	McheckErr(returnStatus, "ERROR adding numpts attribute\n");
 
-	returnStatus = addAttribute(MeshTestNode::alpha);
-	McheckErr(returnStatus, "ERROR adding numpts attribute\n");
-
 	returnStatus = attributeAffects(MeshTestNode::numPts,
-		MeshTestNode::outputMesh);
-	McheckErr(returnStatus, "ERROR in attributeAffects\n");
-
-	returnStatus = attributeAffects(MeshTestNode::alpha,
 		MeshTestNode::outputMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
@@ -98,7 +87,6 @@ MStatus MeshTestNode::compute(const MPlug& plug, MDataBlock& data)
 		// Get vars
 		double mLen = data.inputValue(maxLen).asDouble();
 		int numPs = data.inputValue(numPts).asInt();
-		double alp = data.inputValue(alpha).asDouble();
 
 		/*MString tester = ("Angle Test: " + std::to_string(fAngle)).c_str();
 		MGlobal::displayInfo(tester);
