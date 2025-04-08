@@ -32,27 +32,6 @@
         return MS::kFailure;        \
     }
 
-// Edge struct to store vertex indices
-struct Edge {
-	size_t v1, v2;
-
-	// constructor
-	Edge(size_t a, size_t b) : v1(std::min(a, b)), v2(std::max(a, b)) {}
-	// equality testing
-	bool operator==(const Edge& other) const {
-		return v1 == other.v1 && v2 == other.v2;
-	}
-};
-
-// Hash function for Edges
-namespace std {
-	template<> struct hash<Edge> {
-		size_t operator()(const Edge& e) const {
-			return hash<size_t>()(e.v1) ^ (hash<size_t>()(e.v2) << 1);
-		}
-	};
-}
-
 class MeshTestNode : public MPxNode {
 public:
 	MeshTestNode() {};
