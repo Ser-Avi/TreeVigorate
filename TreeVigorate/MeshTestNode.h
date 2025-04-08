@@ -20,6 +20,9 @@
 #include <maya/MGlobal.h>
 
 #include <vector>
+#include <map>
+#include <stack>
+#include <unordered_set>
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
 
@@ -69,8 +72,8 @@ public:
 	/// </summary>
 	/// <param name="points"> the input points for the mesh</param>
 	/// <param name="maxEdge"> max edge length</param>
-	/// <returns> returns a vector of </returns>
-	std::vector<std::vector<glm::vec2>> getBoundaryPts(std::vector<glm::vec2> points, float maxEdge);
+	/// <returns> returns a vector of points and the corresponding indices for triangles </returns>
+	std::vector<std::vector<double>> getBoundaryPts(std::vector<glm::vec2> points, float maxEdge);
 
 	static MObject	outputMesh;
 	static MTypeId	id;

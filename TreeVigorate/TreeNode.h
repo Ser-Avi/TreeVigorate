@@ -29,6 +29,8 @@
 #include <string>
 #include <fstream>
 
+#define mPrint(msg) MGlobal::displayInfo(msg)
+
 using namespace EcoSysLab;
 
 #define McheckErr(stat,msg)         \
