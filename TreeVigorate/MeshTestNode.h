@@ -68,12 +68,26 @@ public:
 	static  MStatus initialize();
 
 	/// <summary>
-	/// Constructs boundary points in CCW rotation for meshes from input points
+	/// Constructs a triangulation of points on a 
+	/// plane, with edges < maxEdge removed.
 	/// </summary>
-	/// <param name="points"> the input points for the mesh</param>
+	/// <param name="points"> the input points for the plane mesh</param>
 	/// <param name="maxEdge"> max edge length</param>
-	/// <returns> returns a vector of points and the corresponding indices for triangles </returns>
-	std::vector<std::vector<double>> getBoundaryPts(std::vector<glm::vec2> points, float maxEdge);
+	/// <returns> returns a vector indices for the triangles </returns>
+	std::vector<int> getPlaneTriangleIdx(std::vector<glm::vec2> points, float maxEdge);
+
+	/// <summary>
+	/// Adds the triangles to Maya, with pts as vectors,
+	/// and tris as the indices of the triangles referring to the
+	/// vectors in pts.
+	/// </summary>
+	/// <param name="tris"> the triangle indices</param>
+	/// <param name="pts"> the vector pts</param>
+	/// <param name="points"> Maya point array</param>
+	/// <param name="faceCounts"> Maya face count int array</param>
+	/// <param name="faceConns"> Maya face connections int array</param>
+	void createTris(std::vector<int>& tris, std::vector<glm::vec2>& pts,
+		MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns);
 
 	static MObject	outputMesh;
 	static MTypeId	id;
