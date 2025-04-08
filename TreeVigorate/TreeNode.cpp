@@ -36,23 +36,22 @@ MStatus TreeNode::initialize()
 
 	TreeNode::deltaTime = numAttr.create("deltaTime", "dt", MFnNumericData::kDouble, 0.1, &returnStatus);
 	McheckErr(returnStatus, "Error creating TreeNode deltaTime attribute \n");
+	numAttr.setNiceNameOverride("Growth rate");
 
 	TreeNode::numGrows = numAttr.create("numGrows", "ng", MFnNumericData::kInt, 0, &returnStatus);
 	McheckErr(returnStatus, "Error creating TreeNode numGrows attribute \n");
+	numAttr.setNiceNameOverride("Growth amount");
 
 	TreeNode::radius = numAttr.create("radius", "r", MFnNumericData::kDouble, 1.0, &returnStatus);
 	McheckErr(returnStatus, "Error creatin radius attribute \n");
+	numAttr.setNiceNameOverride("Radius multiplier");
 
 	TreeNode::treeDataFile = typedAttr.create("treeDataFile", "f", MFnData::kString, MObject::kNullObj, &returnStatus);
 	McheckErr(returnStatus, "Error creating treeDataFile attribute \n");
+	typedAttr.setHidden(true);
 
 	TreeNode::makeGrow = numAttr.create("makeGrow", "mg", MFnNumericData::kBoolean, false, &returnStatus);
 	McheckErr(returnStatus, "Error creating makeGrow attribute\n");
-
-	//TreeNode::time = unitAttr.create("time", "tm",
-	//	MFnUnitAttribute::kTime,
-	//	0.0, &returnStatus);
-	//McheckErr(returnStatus, "ERROR creating TreeNode time attribute\n");
 
 
 	TreeNode::outputMesh = typedAttr.create("outputMesh", "out",
@@ -61,9 +60,7 @@ MStatus TreeNode::initialize()
 		&returnStatus);
 	McheckErr(returnStatus, "ERROR creating TreeNode output attribute\n");
 	/*typedAttr.setStorable(false);*/
-
-	//returnStatus = addAttribute(TreeNode::time);
-	//McheckErr(returnStatus, "ERROR adding time attribute\n");
+	typedAttr.setHidden(true);
 
 	returnStatus = addAttribute(TreeNode::outputMesh);
 	McheckErr(returnStatus, "ERROR adding outputMesh attribute\n");
@@ -82,10 +79,6 @@ MStatus TreeNode::initialize()
 
 	returnStatus = addAttribute(TreeNode::makeGrow);
 	McheckErr(returnStatus, "ERROR adding makeGrow attribute\n");
-
-	//returnStatus = attributeAffects(TreeNode::time,
-	//	TreeNode::outputMesh);
-	//McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
 	returnStatus = attributeAffects(TreeNode::makeGrow,
 		TreeNode::outputMesh);
@@ -553,7 +546,7 @@ bool TreeNode::ReadTreeFile(const std::string& fileName, RootGrowthController& m
 		return false;
 	}
 	MGlobal::displayInfo("Reading Tree File");
-	// ROOT - elm
+	// ROOT
 	m_rootGrowthParameters.m_apicalAngle = [=](const Node<RootNodeGrowthData>& rootNode)
 		{
 			// This is from apicalAngleMeanVariance
