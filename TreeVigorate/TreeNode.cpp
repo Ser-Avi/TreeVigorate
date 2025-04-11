@@ -115,10 +115,12 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			MGlobal::displayInfo("Light Direction Changed");
 		}
 
+		// Initializing tree params
 		if (!treeParams.isInit) {
 			MString treeInfo = data.inputValue(treeDataFile).asString();
-
-			// Initializing tree params
+			if (treeInfo != "") {
+				treeParams.isInit = true;
+			}
 			InitializeMVars(treeInfo.asChar(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
 		}
 

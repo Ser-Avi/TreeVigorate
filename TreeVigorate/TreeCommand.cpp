@@ -1,4 +1,4 @@
-#include "TreeCommand.h"
+﻿#include "TreeCommand.h"
 
 
 #include <maya/MGlobal.h>
@@ -49,6 +49,14 @@ global proc createTreeNode(string $file) {
         eval("setAttr -type \"string\" TN1.treeDataFile \"" + $file + "\"");
     }
 	connectAttr TN1.outputMesh TShape1.inMesh;
+
+	// creating Sun Direction locator
+	// deleting old one if it exists
+    if (`objExists "sunLoc"`) delete "sunLoc";
+    // create new locator
+    spaceLocator -name "sunLoc";
+    setAttr sunLoc.translate 0 1 0; // Default to Up
+    connectAttr sunLoc.translate TN1.sunDir;
 };
 
 global proc generateTree() {
