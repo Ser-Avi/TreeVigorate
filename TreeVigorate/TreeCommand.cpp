@@ -24,6 +24,213 @@ MSyntax TreeCmd::newSyntax() {
 	return syntax;
 }
 
+void TreeCmd::RegisterMELCommands() {
+	const char* windowCommand = R"(
+global proc browseTreeDataFile() {
+    string $filePath[] = `fileDialog2 -fileMode 1 -caption "Select Tree Data JSON"`;
+    if (size($filePath) > 0) {
+        textField -e -text ($filePath[0]) treeDataField;
+    }
+}
+
+global proc browseTreeSpeciesFile() {
+    string $filePath[] = `fileDialog2 -fileMode 1 -caption "Select Tree Species File"`;
+    if (size($filePath) > 0) {
+        textField -e -text ($filePath[0]) treeSpeciesField;
+    }
+}
+
+global proc createTreeNode(string $file) {
+	createNode transform -n TSys1;
+	createNode mesh -n TShape1 -p TSys1;
+	sets -add initialShadingGroup TShape1;
+	createNode TreeNode -n TN1;
+    if($file != "") {
+        eval("setAttr -type \"string\" TN1.treeDataFile \"" + $file + "\"");
+    }
+	connectAttr TN1.outputMesh TShape1.inMesh;
+};
+
+global proc createTestMeshNode() {
+	createNode transform -n MSys;
+	createNode mesh -name MShape -p MSys;
+	sets -add initialShadingGroup MShape;
+	createNode MeshTestNode -n MN1;
+	connectAttr MN1.outputMesh MShape.inMesh;
+}
+
+global proc generateTree() {
+    //string $treeData = `textField -q -text treeDataField`;
+    string $treeSpecies = `textField -q -text treeSpeciesField`;
+
+    //print ("Generating tree with:\nTree Data: " + $treeData + "\nTree Species: " + $treeSpecies + "\n");
+    print("Generating tree node");
+    createTreeNode($treeSpecies);
+
+    // Close the UI Window
+    if (`window -exists generateTreeWindow`) {
+        deleteUI generateTreeWindow;
+    }
+    
+}
+
+// Create the UI Window
+global proc createTreeGeneratorWindow() {
+    if (`window -exists generateTreeWindow`) {
+        deleteUI generateTreeWindow;
+    }
+
+    window -title "Generate Tree" -widthHeight 450 200 generateTreeWindow;
+    columnLayout -adjustableColumn true;
+
+    // Add spacing at the top
+    separator -style "none" -height 10;
+
+    // Tree Data JSON Selection
+    //text -label "Select Tree Data JSON:" -align "left";
+    //separator -style "none" -height 5;
+    //rowLayout -numberOfColumns 2 -columnWidth2 350 80;
+    //textField -editable false -width 350 treeDataField;
+    //button -label "Browse" -command("browseTreeDataFile");
+    //setParent ..;
+
+    // Add some space
+    //separator - style "none" - height 10;
+    //separator - style "in" - height 5;
+    //separator - style "none" - height 10;
+
+    // Tree Species File Selection
+    text - label "Select Tree Species File:" - align "left";
+    separator - style "none" - height 5;
+    rowLayout - numberOfColumns 2 - columnWidth2 350 80;
+    textField - editable false - width 350 treeSpeciesField;
+    button - label "Browse" - command("browseTreeSpeciesFile");
+    setParent ..;
+
+    // Add some space before the button
+    separator - style "none" - height 15;
+    separator - style "in" - height 5;
+    separator - style "none" - height 15;
+
+    // Generate Tree Button
+    button - label "Generate Tree" - command("generateTree") - height 50;
+    showWindow generateTreeWindow;
+}
+)";
+
+	const char* iterationCmds = R"(
+		global proc createTreeGrowthUI() {
+			// Window name
+			string $windowName = "treeGrowthController";
+    
+			// Delete if window already exists
+			if (`window -exists $windowName`) {
+				deleteUI $windowName;
+			}
+    
+			// Create window
+			window -title "Tree Growth Controller" -widthHeight 400 150 $windowName;
+    
+			// Main layout
+			columnLayout -adjustableColumn true -columnAttach "both" 5;
+    
+			// Text label
+			text -label "Iterate Tree Growth" -align "center" -font "boldLabelFont";
+    
+			// Divider
+			separator -height 20;
+    
+			// Slider for number of growth iterations
+			rowLayout -numberOfColumns 3 -columnWidth3 100 200 50;
+				text -label "Iterations:";
+				intSlider -minValue 1 -maxValue 100 -value 10 -step 1 
+						 -dragCommand "updateIterationField" 
+						 -changeCommand "updateIterationField"
+						 "iterationSlider";
+				intField -value 10 -minValue 1 -maxValue 100 -step 1
+						-changeCommand "updateIterationSlider"
+						"iterationField";
+			setParent..;
+    
+			// Button to start growth animation
+			button -label "Animate Growth" 
+				   -command "executeTreeGrowth"
+				   -height 40
+				   -backgroundColor 0.2 0.6 0.2;
+    
+			// Help text
+			text -label "Select your TreeNode first" -font "smallPlainLabelFont";
+    
+			// Show the window
+			showWindow $windowName;
+		}
+
+		// Update field when slider changes
+		global proc updateIterationField() {
+			int $val = `intSlider -q -value iterationSlider`;
+			intField -e -value $val iterationField;
+		}
+
+		// Update slider when field changes
+		global proc updateIterationSlider() {
+			int $val = `intField -q -value iterationField`;
+			intSlider -e -value $val iterationSlider;
+		}
+
+		// Execute the growth animation
+		global proc executeTreeGrowth() {
+			// Finding tree node with hardcoded name
+			string $treeNode = "TN" + `match "[0-9]+$" "TSys1"`;
+			if (!`objExists $treeNode`) {
+				error "TreeNode not found";
+				return;
+			}
+    
+			// Get iteration value
+			int $iterations = `intSlider -q -value iterationSlider`;
+    
+			// Animate through each frame
+			for ($i = 1; $i <= $iterations; $i++) {
+				int $toggle = `getAttr ($treeNode + ".makeGrow")`;
+				$toggle = 1 - $toggle;
+				setAttr ($treeNode + ".makeGrow") $toggle;
+				refresh -force;
+			}
+			print ("Growth animation completed for " + $treeNode + "\n");
+		}
+	)";
+
+	const char* menuCommand = R"(
+if (`menu -exists treeVigorateMenu`) {
+    deleteUI treeVigorateMenu;
+}
+
+// Create the custom menu in the "Window" menu
+menu
+    -label "TreeVigorate"
+    -parent MayaWindow
+    treeVigorateMenu;
+
+// Add the "Open Grammar Settings" item to the custom menu
+menuItem
+    -label "Build Tree"
+    -command("createTreeGeneratorWindow")
+        systemItem;
+menuItem
+	-label "Iterate Growth"
+	-command("createTreeGrowthUI")
+		systemItem2;
+menuItem
+	-label "Create Test Mesh"
+	-command("createTestMeshNode")
+		systemItem3;
+)";
+
+	MGlobal::executeCommand(windowCommand);
+	MGlobal::executeCommand(menuCommand);
+	MGlobal::executeCommand(iterationCmds);
+}
+
 void SetSoilLayer(SoilLayer& sl) {
 
 	sl.m_mat = SoilPhysicalMaterial({ 1,

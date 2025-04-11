@@ -17,6 +17,7 @@ public:
     virtual ~TreeCmd();
     static void* creator() { return new TreeCmd(); }
     static MSyntax newSyntax();
+    static void RegisterMELCommands();
     MStatus doIt(const MArgList& args);
 
     SoilModel m_soilModel;

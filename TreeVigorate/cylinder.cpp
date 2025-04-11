@@ -63,7 +63,7 @@ void CylinderMesh::appendToMesh(
 {
     MPointArray cpoints;
     MVectorArray cnormals; 
-    transform(cpoints, cnormals);    
+    transform(cpoints, cnormals);
 
     int startIndex = points.length(); // offset for indexes
     for (int i = 0; i < cpoints.length(); i++)
@@ -105,12 +105,12 @@ void CylinderMesh::initCylinderMesh(double r)
 
     for (int i = 0; i < numslices; i++)
     {
-        gPoints.append(MPoint(0,r*cos(angle*i), r*sin(angle*i)));
-        gNormals.append(MVector(0,r*cos(angle*i), r*sin(angle*i)));
+        gPoints.append(MPoint(0, r*cos(angle*i),r*sin(angle*i)));
+        gNormals.append(MVector(0, r*cos(angle*i), r*sin(angle*i)));
     }
     for (int i = 0; i < numslices; i++)
     {
-        gPoints.append(MPoint(1,r*cos(angle*i), r*sin(angle*i)));
+        gPoints.append(MPoint(1, r*cos(angle*i), r*sin(angle*i)));
         gNormals.append(MVector(0,r*cos(angle*i), r*sin(angle*i)));
     }
     // endcap 1
@@ -118,7 +118,7 @@ void CylinderMesh::initCylinderMesh(double r)
     gNormals.append(MVector(-1,0,0));
 
     // endcap 2
-    gPoints.append(MPoint(1,0,0));
+    gPoints.append(MPoint(1, 0,0));
     gNormals.append(MVector(1,0,0));
 
     // Set indices for endcap 1

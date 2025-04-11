@@ -8,6 +8,8 @@
 #include <maya/MVectorArray.h>
 #include <maya/MIntArray.h>
 #include <maya/MDoubleArray.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #define M_PI       3.14159265358979323846   // pi
 
