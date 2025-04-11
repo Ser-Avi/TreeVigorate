@@ -20,6 +20,7 @@ MObject TreeNode::numGrows;
 MObject TreeNode::radius;
 MObject TreeNode::treeDataFile;
 MObject TreeNode::makeGrow;
+MObject TreeNode::sunDir;
 
 void* TreeNode::creator()
 {
@@ -53,6 +54,11 @@ MStatus TreeNode::initialize()
 	TreeNode::makeGrow = numAttr.create("makeGrow", "mg", MFnNumericData::kBoolean, false, &returnStatus);
 	McheckErr(returnStatus, "Error creating makeGrow attribute\n");
 
+	TreeNode::sunDir = numAttr.create("sunDir", "sd", MFnNumericData::k3Double, 0, &returnStatus);
+	numAttr.setNiceNameOverride("Light Direction");
+	numAttr.setDefault(0.0, 1.0, 0.0);
+	McheckErr(returnStatus, "Error creating sunDir attrib\n");
+
 
 	TreeNode::outputMesh = typedAttr.create("outputMesh", "out",
 		MFnData::kMesh,
@@ -84,6 +90,11 @@ MStatus TreeNode::initialize()
 		TreeNode::outputMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
+	returnStatus = addAttribute(TreeNode::sunDir);
+	/*returnStatus = attributeAffects(TreeNode::sunDir,
+		TreeNode::outputMesh);*/
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
+
 	return MS::kSuccess;
 }
 
@@ -96,7 +107,20 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		double fDTime = data.inputValue(deltaTime).asDouble();
 		int nGrows = data.inputValue(numGrows).asInt();
 		float r = data.inputValue(radius).asDouble();
-		MString treeInfo = data.inputValue(treeDataFile).asString();
+		double3& sunDirVal = data.inputValue(sunDir).asDouble3();
+		glm::vec3 sunVec = glm::normalize(glm::vec3(sunDirVal[0], sunDirVal[1], sunDirVal[2]));
+
+		if (sunVec != treeModel.lightDir) {
+			treeModel.lightDir = sunVec;
+			MGlobal::displayInfo("Light Direction Changed");
+		}
+
+		if (!treeParams.isInit) {
+			MString treeInfo = data.inputValue(treeDataFile).asString();
+
+			// Initializing tree params
+			InitializeMVars(treeInfo.asChar(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
+		}
 
 		/* Get time */
 		//MDataHandle timeData = data.inputValue(time, &returnStatus);
@@ -126,14 +150,6 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MIntArray faceCounts;
 		MIntArray faceConns;
 
-
-		// Initializing tree params
-		SoilModel m_soilModel;
-		ClimateModel m_climateModel;
-		RootGrowthController m_rootGrowthParameters;
-		ShootGrowthController m_shootGrowthParameters;
-		InitializeMVars(treeInfo.asChar(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
-
 		// Growing tree
 		MGlobal::displayInfo("Abt to Grow, stand back!!");
 		for (int i = 0; i < nGrows; ++i) {
@@ -141,7 +157,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			for (int j = 0; j < nodes; ++j) {
 				auto& snode = treeModel.RefShootSkeleton().RefNode(j);
 			}
-			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
+			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
 			MGlobal::displayInfo("Growth successful, iteration: ");
 			MGlobal::displayInfo(std::to_string(i).c_str());
 			
@@ -303,94 +319,6 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 }
 
 // PARSING FILES
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-
-
-// These params don't align 1 to 1 with actual params that we use,
-// so this is somehow the best method atm.
-struct SGParams {
-	int m_internodeGrowthRate;
-	int m_leafGrowthRate;
-	int m_fruitGrowthRate;
-	int m_lateralBudCount;
-	int m_fruitBudCount;
-	int m_leafBudCount;
-	float m_branchingAngleMeanVariance[2];
-	float m_rollAngleMeanVariance[2];
-	float m_apicalAngleMeanVariance[2];
-	float m_gravitropism;
-	float m_phototropism;
-	float m_internodeLength;
-	float m_endNodeThickness;
-	float m_thicknessAccumulationFactor;
-	float m_thicknessAccumulateAgeFactor;
-	float m_lateralBudFlushingProbabilityTemperatureRange[4];
-	float m_leafBudFlushingProbabilityTemperatureRange[4];
-	float m_fruitBudFlushingProbabilityTemperatureRange[4];
-	float m_apicalBudLightingFactor;
-	float m_lateralBudLightingFactor;
-	float m_leafBudLightingFactor;
-	float m_fruitBudLightingFactor;
-	float m_apicalControl;
-	float m_apicalControlAgeFactor;
-	float m_apicalDominance;
-	float m_apicalDominanceAgeFactor;
-	float m_apicalDominanceDistanceFactor;
-	float m_apicalBudExtinctionRate;
-	float m_lateralBudExtinctionRate;
-	float m_leafBudExtinctionRate;
-	float m_fruitBudExtinctionRate;
-	float m_leafVigorRequirement;
-	float m_fruitVigorRequirement;
-	float m_internodeVigorRequirement;
-	float m_vigorRequirementAggregateLoss;
-	float m_lowBranchPruning;
-	float m_saggingFactorThicknessReductionMax[3];
-	float m_maxLeafSize[3];
-	float m_leafPositionVariance;
-	float m_leafRandomRotation;
-	float m_leafChlorophyllLoss;
-	float m_leafChlorophyllSynthesisFactorTemperature;
-	float m_leafFallProbability;
-	float m_leafDistanceToBranchEndLimit;
-	float m_maxFruitSize[3];
-	float m_fruitPositionVariance;
-	float m_fruitRandomRotation;
-	float m_fruitFallProbability;
-};
-
-struct RGParams {
-	float m_branchingAngleMeanVariance[2];
-	float m_rollAngleMeanVariance[2];
-	float m_apicalAngleMeanVariance[2];
-	float m_rootNodeLength;
-	float m_rootNodeGrowthRate;
-	float m_endNodeThickness;
-	float m_thicknessAccumulationFactor;
-	float m_thicknessAccumulateAgeFactor;
-	float m_rootNodeVigorRequirement;
-	float m_vigorRequirementAggregateLoss;
-	float m_environmentalFriction;
-	float m_environmentalFrictionFactor;
-	float m_apicalControl;
-	float m_apicalControlAgeFactor;
-	float m_apicalDominance;
-	float m_apicalDominanceAgeFactor;
-	float m_apicalDominanceDistanceFactor;
-	float m_tropismSwitchingProbability;
-	float m_tropismSwitchingProbabilityDistanceFactor;
-	float m_tropismIntensity;
-	float m_branchingProbability;
-};
-
-struct PlantParameters {
-	SGParams sg;
-	RGParams rg;
-};
 
 void parseArray(std::istringstream& iss, float* array, size_t size) {
 	char separator;
@@ -778,6 +706,7 @@ void TreeNode::InitializeMVars(const std::string& treeFilePath, SoilModel& m_soi
 
 	// if we don't define a file path or couldn't read the file, we will initialize it as an elm
 	if (treeFilePath == "" || !ReadTreeFile(treeFilePath, m_rootGrowthParameters, m_shootGrowthParameters, m_climateModel)) {
+		MGlobal::displayInfo("default vals :(");
 		// ROOT - elm
 		m_rootGrowthParameters.m_apicalAngle = [=](const Node<RootNodeGrowthData>& rootNode)
 			{
@@ -959,12 +888,6 @@ void TreeNode::InitializeMVars(const std::string& treeFilePath, SoilModel& m_soi
 				return 0.0;
 			};
 	}
-
-	MGlobal::displayInfo("Apical Dom Dist Factor:");
-	MGlobal::displayInfo(std::to_string(m_shootGrowthParameters.m_apicalDominanceDistanceFactor).c_str());
-
-	MGlobal::displayInfo("End Node Thickness:");
-	MGlobal::displayInfo(std::to_string(m_shootGrowthParameters.m_endNodeThickness).c_str());
 
 	MGlobal::displayInfo("Tree Initialized");
 }

@@ -127,6 +127,9 @@ namespace EcoSysLab {
 		
 	public:
 
+		//Added by Avi
+		glm::vec3 lightDir = glm::vec3(0);
+
 		float m_age = 0;
 
 		void PruneInternode(NodeHandle internodeHandle);
