@@ -157,7 +157,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			
 			StrandManager strandManager;
 			strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 3);
-			treeModel.RefShootSkeleton().RefNode(0)
+			treeModel.RefShootSkeleton().RefNode(0);
 			MGlobal::displayInfo("Shoot nodes: ");
 			MGlobal::displayInfo(MString(std::to_string(nodes).c_str()));
 			int rnodes = treeModel.RefRootSkeleton().RefSortedNodeList().size();

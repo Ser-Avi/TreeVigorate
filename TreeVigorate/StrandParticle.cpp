@@ -11,3 +11,7 @@ StrandParticle::StrandParticle(Node<InternodeGrowthData>& node, glm::vec2 positi
 int StrandParticle::getIndex() const {
 	return index;
 }
+
+glm::vec2 StrandParticle::getLocalPosition() const {
+	return localPosition;
+}

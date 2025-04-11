@@ -17,7 +17,7 @@ class StrandManager {
 	/// <param name="skeleton"></param> graph
 	/// <param name="particleIndices"></param> corresponding indices to new particles
 	
-	void populateStrandsFromNode(Node<InternodeGrowthData>& sourceNode, ShootSkeleton& skeleton, std::vector<int> particleIndices);
+	void populateStrandsFromChildNode(Node<InternodeGrowthData>& childNode, Node<InternodeGrowthData>& receiverNode, ShootSkeleton& skeleton, std::vector<int> particleIndices);
 	/// <summary>
 	/// Given source node, populate through to root new particles with a shared index
 	/// </summary>
@@ -31,4 +31,7 @@ public:
 	/// </summary>
 	/// <param name="skeleton"></param>
 	void generateParticlesForTree(ShootSkeleton& skeleton, int n);
+
+
+	void resolvePbd(ShootSkeleton& skeleton);
 };

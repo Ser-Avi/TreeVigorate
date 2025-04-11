@@ -24,25 +24,32 @@ void StrandManager::populateStrandsFromNode(Node<InternodeGrowthData>& sourceNod
 
 	if (sourceNode.GetParentHandle() != -1) {
 		Node<InternodeGrowthData>& parentNode = skeleton.RefNode(sourceNode.GetParentHandle());
-		populateStrandsFromNode(parentNode, skeleton, generatedIndices);
+		populateStrandsFromChildNode(parentNode, sourceNode, skeleton, generatedIndices);
 	}
 }
 
-void StrandManager::populateStrandsFromNode(Node<InternodeGrowthData>& sourceNode, ShootSkeleton& skeleton, std::vector<int> particleIndices) {
-	float radius = sourceNode.m_info.m_thickness;
+void StrandManager::populateStrandsFromChildNode(Node<InternodeGrowthData>& childNode, Node<InternodeGrowthData>& receiverNode, ShootSkeleton& skeleton, std::vector<int> particleIndices) {
+	float radius = receiverNode.m_info.m_thickness;
 	
-	for (int i = 0; i < particleIndices.size(); ++i) {
-		//todo: this is not how we position the descendents here, need to offset according to calling node position
-		float rad = 2 * M_PI * (i / static_cast<float>(particleIndices.size()));
-		glm::vec2 localPosition(glm::cos(rad) * radius, glm::sin(rad) * radius);
+	glm::vec2 projectedVector = glm::vec2(childNode.m_info.m_globalPosition.x - receiverNode.m_info.m_globalPosition.x, childNode.m_info.m_globalPosition.z - receiverNode.m_info.m_globalPosition.z);
+	float offsetRadii = childNode.m_info.m_thickness + receiverNode.m_info.m_thickness;
+	glm::vec2 offsetVector = glm::normalize(projectedVector) * offsetRadii;
 
-		uPtr<StrandParticle> particle = mkU<StrandParticle>(particleIndices[i], sourceNode, localPosition);
-		nodeToParticlesMap[sourceNode.GetHandle()].push_back(std::move(particle));
+	std::vector<uPtr<StrandParticle>> childParticles = nodeToParticlesMap[childNode.GetHandle()];
+	std::vector<uPtr<StrandParticle>> receiverParticles = nodeToParticlesMap[childNode.GetHandle()];
+
+	for (auto& particle : childParticles) {
+		auto newParticleIterator = std::find(particleIndices.front(), particleIndices.back(), particle.get()->getIndex());
+		if (newParticleIterator != particleIndices.back()) {
+			glm::vec2 calculatedPosition = particle.get()->getLocalPosition() + offsetVector;
+			uPtr<StrandParticle> newParentParticle = mkU<StrandParticle>(particle.get()->getIndex(), receiverNode, calculatedPosition);
+			nodeToParticlesMap[receiverNode.GetHandle()].push_back(std::move(particle));
+		}
 	}
 
-	if (sourceNode.GetParentHandle() != -1) {
-		Node<InternodeGrowthData>& parentNode = skeleton.RefNode(sourceNode.GetParentHandle());
-		populateStrandsFromNode(parentNode, skeleton, particleIndices);
+	if (receiverNode.GetParentHandle() != -1) {
+		Node<InternodeGrowthData>& parentNode = skeleton.RefNode(receiverNode.GetParentHandle());
+		populateStrandsFromChildNode(receiverNode, parentNode, skeleton, particleIndices);
 	}
 }
 
@@ -54,5 +61,13 @@ void StrandManager::generateParticlesForTree(ShootSkeleton& skeleton, int n) {
 			this->populateStrandsFromNode(node, skeleton, n);
 		}
 	}
+}
+
+void StrandManager::resolvePbd(ShootSkeleton& skeleton) {
+	for (auto& pair : nodeToParticlesMap) {
+		
+	}
+
+
 }
 
