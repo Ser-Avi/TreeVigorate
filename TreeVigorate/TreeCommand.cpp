@@ -25,6 +25,91 @@ MSyntax TreeCmd::newSyntax() {
 }
 
 void TreeCmd::RegisterMELCommands() {
+	const char* treeUIcmd = R"(
+global proc createTreeUI() {
+	if (`window -exists treeUI`) {
+        deleteUI treeUI;
+    }
+    
+    window -title "Tree Controls" -widthHeight 350 200 treeUI;
+    
+    columnLayout -adjustableColumn true;
+    
+    // Float slider for more interactive control
+    floatSliderGrp -label "Growth Rate" 
+                  -field true 
+                  -minValue 1.0 
+                  -maxValue 100.0 
+                  -value 10.0 
+                  -step 0.5
+                  -dragCommand "updateRate" 
+                  -changeCommand "updateRate"
+				  -annotation "Controls how fast each growth is calculated"
+                  rateSlider;
+    
+    separator -height 10;
+
+	intSliderGrp -label "Growth Amount" 
+					  -field true 
+					  -minValue 0 
+					  -maxValue 1000 
+					  -value 20 
+					  -step 1
+					  -dragCommand "updateGrowth" 
+					  -changeCommand "updateGrowth"
+					  -annotation "Controls how much the tree grows with each calculation"
+					  growthSlider;
+    
+    separator -height 10;
+
+	floatSliderGrp -label "Radius Adjuster" 
+					  -field true 
+					  -minValue 0.2
+					  -maxValue 50.0 
+					  -value 1.0 
+					  -step 0.2
+					  -dragCommand "updateRad" 
+					  -changeCommand "updateRad"
+				      -annotation "Adjusts tree radius with this multiplier"
+					  radSlider;
+    
+    separator -height 10;
+
+	// Add a checkbox for the boolean parameter
+    //checkBox -label "Grow" 
+            // -value false
+            // -changeCommand "toggleGrow"
+		   //  -annotation "Toggle this to make the tree grow"
+          //   growCheck;
+	button	-label "Grow" 
+			-command "toggleGrow"
+			-backgroundColor 0.2 0.6 0.2;
+
+	showWindow treeUI;
+}
+
+global proc updateRate() {
+    float $value = `floatSliderGrp -query -value rateSlider`;
+	setAttr TN1.deltaTime ( 1 / $value);
+}
+
+global proc updateRad() {
+    float $value = `floatSliderGrp -query -value radSlider`;
+	setAttr TN1.radius $value;
+}
+
+global proc updateGrowth() {
+    float $value = `intSliderGrp -query -value growthSlider`;
+	setAttr TN1.numGrows $value;
+}
+
+global proc toggleGrow() {
+	int $toggle = `getAttr TN1.makeGrow`;
+	$toggle = 1 - $toggle;
+	setAttr TN1.makeGrow $toggle;
+}
+	)";
+	
 	const char* windowCommand = R"(
 global proc browseTreeDataFile() {
     string $filePath[] = `fileDialog2 -fileMode 1 -caption "Select Tree Data JSON"`;
@@ -64,6 +149,7 @@ global proc createTreeNode(string $file) {
 
 	// creating Sun Direction locator
 	createSunLoc($treeNode);
+	createTreeUI;
 };
 
 global proc generateTree() {
@@ -229,6 +315,7 @@ menuItem
 		systemItem2;
 )";
 
+	MGlobal::executeCommand(treeUIcmd);
 	MGlobal::executeCommand(windowCommand);
 	MGlobal::executeCommand(menuCommand);
 	MGlobal::executeCommand(iterationCmds);
