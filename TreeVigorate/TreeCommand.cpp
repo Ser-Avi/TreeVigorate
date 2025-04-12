@@ -40,23 +40,30 @@ global proc browseTreeSpeciesFile() {
     }
 }
 
+global proc createSunLoc(string $tree) {
+	// deleting old one if it exists
+    if (`objExists "sunLoc"`) delete "sunLoc";
+    // create new locator
+    spaceLocator -name "sunLoc";
+    setAttr sunLoc.translate 0 1 0; // Default to Up
+    connectAttr sunLoc.translate ($tree + ".sunDir");
+
+	// clamping sun location to always be positive on y-axis
+	transformLimits -ty 0 1000 -ety 1 0 "sunLoc";
+}
+
 global proc createTreeNode(string $file) {
 	createNode transform -n TSys1;
 	createNode mesh -n TShape1 -p TSys1;
 	sets -add initialShadingGroup TShape1;
-	createNode TreeNode -n TN1;
+	string $treeNode = `createNode TreeNode -n TN1`;
     if($file != "") {
         eval("setAttr -type \"string\" TN1.treeDataFile \"" + $file + "\"");
     }
 	connectAttr TN1.outputMesh TShape1.inMesh;
 
 	// creating Sun Direction locator
-	// deleting old one if it exists
-    if (`objExists "sunLoc"`) delete "sunLoc";
-    // create new locator
-    spaceLocator -name "sunLoc";
-    setAttr sunLoc.translate 0 1 0; // Default to Up
-    connectAttr sunLoc.translate TN1.sunDir;
+	createSunLoc($treeNode);
 };
 
 global proc generateTree() {
