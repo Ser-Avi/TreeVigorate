@@ -1,10 +1,10 @@
 #include "StrandParticle.h"
 
-StrandParticle::StrandParticle(int sharedIndex, Node<InternodeGrowthData>& node, glm::vec2 position) : index(sharedIndex), node(node), localPosition(position) 
+StrandParticle::StrandParticle(int sharedIndex, glm::vec2 position, NodeHandle nodeHandle) : index(sharedIndex), localPosition(position), nodeHandle(nodeHandle)
 {
 }
 
-StrandParticle::StrandParticle(Node<InternodeGrowthData>& node, glm::vec2 position) : node(node), localPosition(position), index(indexCount) {
+StrandParticle::StrandParticle(glm::vec2 position, NodeHandle nodeHandle) : localPosition(position), index(indexCount), nodeHandle(nodeHandle) {
 	indexCount++;
 }
 
@@ -14,4 +14,23 @@ int StrandParticle::getIndex() const {
 
 glm::vec2 StrandParticle::getLocalPosition() const {
 	return localPosition;
+}
+
+glm::vec2 StrandParticle::getVelocity() const
+{
+	return velocity;
+}
+
+const NodeHandle StrandParticle::getNodeHandle() const
+{
+	return nodeHandle;
+}
+
+void StrandParticle::setLocalPosition(glm::vec2 position) {
+	localPosition = position;
+}
+
+void StrandParticle::setVelocity(glm::vec2 vel)
+{
+	velocity = vel;
 }

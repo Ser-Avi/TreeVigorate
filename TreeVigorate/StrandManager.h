@@ -3,12 +3,14 @@
 #include <StrandParticle.h>
 #include <util.h>
 #include <memory>
+#include <unordered_map>
+#include <DelauneyData.h>
 
 using namespace EcoSysLab;
 
 
 class StrandManager {
-	std::unordered_map<NodeHandle, std::vector<uPtr<StrandParticle>>> nodeToParticlesMap;
+	std::unordered_map<NodeHandle, std::vector<StrandParticle>> nodeToParticlesMap;
 	/// <summary>
 	/// For descendent of a new node, generate corresponding strand particles.
 	/// Recursive.
@@ -25,13 +27,18 @@ class StrandManager {
 public:
 	//std::vector<StrandParticle&> getParticlesAtNode(const Node<InternodeGrowthData>& node) const;
 
-
+	inline static float boundaryAttractantCoefficient = 0.1f;
 	/// <summary>
 	/// For all nodes in skeleton where parent == null and there is no corresponding particles, generate n particles through to root
 	/// </summary>
 	/// <param name="skeleton"></param>
 	void generateParticlesForTree(ShootSkeleton& skeleton, int n);
 
+	void resolvePbd(ShootSkeleton& skeleton, NodeHandle handle, std::vector<int> triangleIndices);
 
-	void resolvePbd(ShootSkeleton& skeleton);
+	std::vector<glm::vec3> getGlobalNodeParticlePositions(NodeHandle handle, ShootSkeleton& skeleton);
+
+	DelauneyData getPlaneTriangleIdx(NodeHandle handle, float maxEdge, int indexOffset);
+
+	std::vector<int> getBridgeTriangleIdx(ShootSkeleton& skeleton, std::unordered_map<NodeHandle, DelauneyData> nodeToDelauneyData);
 };

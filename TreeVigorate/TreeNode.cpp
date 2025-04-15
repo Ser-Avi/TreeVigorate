@@ -150,10 +150,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
 			MGlobal::displayInfo("Growth successful, iteration: ");
 			MGlobal::displayInfo(std::to_string(i).c_str());
-			
-			StrandManager strandManager;
-			strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 3);
-			treeModel.RefShootSkeleton().RefNode(0);
+
 			MGlobal::displayInfo("Shoot nodes: ");
 			MGlobal::displayInfo(MString(std::to_string(nodes).c_str()));
 			
@@ -164,13 +161,39 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 
 		MGlobal::displayInfo("Rad:");
 		MGlobal::displayInfo(std::to_string(r).c_str());
+		
+		StrandManager strandManager;
+		strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 3);
+		//for now, draw each plane
+
+		for (auto& handle : treeModel.RefShootSkeleton().RefRawNodes()) {
+			std::vector<glm::vec3> positions = strandManager.getGlobalNodeParticlePositions(handle.GetHandle(), treeModel.RefShootSkeleton());
+			//todo :: what should max edge actually be?
+			if (positions.size() > 2) {
+				DelauneyData delauneyData = strandManager.getPlaneTriangleIdx(handle.GetHandle(), 999999, points.length());
+				strandManager.resolvePbd(treeModel.RefShootSkeleton(), handle.GetHandle(), delauneyData.idx);
+
+				for (auto& point : positions) {
+					MPoint p(point.x, point.y, point.z);
+					points.append(p);
+				}
+
+
+				for (int i = 0; i < delauneyData.idx.size(); i += 3) {
+					faceCounts.append(3);
+					faceConns.append(delauneyData.idx[i]);
+					faceConns.append(delauneyData.idx[i + 1]);
+					faceConns.append(delauneyData.idx[i + 2]);
+				}
+			}
+		}
 
 		// Creating cylinders
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
 		if (shoots.RefSortedNodeList().size() != 0) {
-			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, r);
+			//bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, r);
 		}
-
+		
 		MFnMesh mesh;
 		mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);
 		McheckErr(returnStatus, "ERROR creating new Mesh");
