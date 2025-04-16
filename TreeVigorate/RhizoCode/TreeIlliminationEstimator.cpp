@@ -11,7 +11,9 @@ float TreeIlluminationEstimator::IlluminationEstimation(const glm::vec3& positio
 	}
 	else
 	{
-		lightDirection = glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f) + glm::normalize(data.m_shadowDirection) * data.m_shadowIntensity);
+		// NOTE: Avi changed this to be normalize(lightDirection + glm::...
+		// from glm::normalize(glm::vec3(0, 1, 0) + glm::...
+		lightDirection = glm::normalize(lightDirection + glm::normalize(data.m_shadowDirection) * data.m_shadowIntensity);
 	}
 
 	return lightIntensity;

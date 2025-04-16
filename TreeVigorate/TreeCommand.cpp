@@ -1,4 +1,4 @@
-#include "TreeCommand.h"
+﻿#include "TreeCommand.h"
 
 
 #include <maya/MGlobal.h>
@@ -25,6 +25,146 @@ MSyntax TreeCmd::newSyntax() {
 }
 
 void TreeCmd::RegisterMELCommands() {
+	const char* treeUIcmd = R"(
+global proc createTreeUI() {
+	if (`window -exists treeUI`) {
+        deleteUI treeUI;
+    }
+    
+    window -title "Tree Controls" -widthHeight 250 220 treeUI;
+    
+    columnLayout -adjustableColumn true;
+    
+    // Float slider for more interactive control
+    floatSliderGrp -label "Growth Rate" 
+                  -field true 
+                  -minValue 1.0 
+                  -maxValue 100.0 
+                  -value 50.0 
+                  -step 0.5
+                  -dragCommand "updateRate" 
+                  -changeCommand "updateRate"
+				  -annotation "Controls how fast each growth is calculated"
+                  rateSlider;
+    
+    separator -height 10;
+
+	intSliderGrp -label "Growth Amount" 
+					  -field true 
+					  -minValue 0 
+					  -maxValue 1000 
+					  -value 0 
+					  -step 1
+					  -dragCommand "updateGrowth" 
+					  -changeCommand "updateGrowth"
+					  -annotation "Controls how much the tree grows with each calculation"
+					  growthSlider;
+    
+    separator -height 10;
+
+	floatSliderGrp -label "Radius Adjuster" 
+					  -field true 
+					  -minValue 0.2
+					  -maxValue 50.0 
+					  -value 1.0 
+					  -step 0.2
+					  -dragCommand "updateRad" 
+					  -changeCommand "updateRad"
+				      -annotation "Adjusts tree radius with this multiplier"
+					  radSlider;
+    
+    separator -height 10;
+
+	// button to initialize growth
+	button	-label "Grow Once" 
+			-command "toggleGrow"
+			-backgroundColor 0.2 0.6 0.2;
+	
+	separator -height 10;
+
+	button	-label "Play"
+			-command "playPause"
+			-backgroundColor 0.8 0.3 0.3
+			playButton;
+
+	separator -height 10;
+
+	// Display total growth time
+	text -label "Total Grow Time:";
+    textField -editable false -text (`getAttr TN1.growTime`) growTimeField;
+    
+    // Add cleanup when window closes
+    scriptJob -uiDeleted "treeUI" "onTreeUIClose";
+
+	showWindow treeUI;
+}
+
+global proc updateGrowTime() {
+	float $curr = `getAttr TN1.growTime`;
+    textField -edit -text $curr growTimeField;
+}
+
+global proc updateRate() {
+    float $value = `floatSliderGrp -query -value rateSlider`;
+	setAttr TN1.deltaTime ( 1 / $value);
+}
+
+global proc updateRad() {
+    float $value = `floatSliderGrp -query -value radSlider`;
+	setAttr TN1.radius $value;
+}
+
+global proc updateGrowth() {
+    float $value = `intSliderGrp -query -value growthSlider`;
+	setAttr TN1.numGrows $value;
+}
+
+global proc toggleGrow() {
+	int $toggle = `getAttr TN1.makeGrow`;
+	$toggle = 1 - $toggle;
+	setAttr TN1.makeGrow $toggle;
+
+	refresh -force;
+	updateGrowTime;
+}
+
+global proc playPause() {
+    // Check if we're currently playing
+    int $isPlaying = `optionVar -exists "growPlaying"` ? `optionVar -q "growPlaying"` : 0;
+    
+    if ($isPlaying) {
+        // Pause the playback
+        int $jobNum = `optionVar -q "treeJob"`;
+        scriptJob -kill $jobNum -force;
+        optionVar -remove "treeJob";
+        optionVar -iv "growPlaying" 0;
+        
+        // Update button label
+        button -edit -label "Play" -backgroundColor 0.8 0.3 0.3 playButton;
+        print "Playback paused\n";
+    } else {
+        // Start playing
+        int $jobNum = `scriptJob -event "idle" "toggleGrow"`;
+        optionVar -iv "treeJob" $jobNum;
+        optionVar -iv "growPlaying" 1;
+        
+        // Update button label
+        button -edit -label "Pause" -backgroundColor 0.3 0.4 0.6 playButton;
+        print "Playback started\n";
+    }
+}
+
+global proc onTreeUIClose() {
+    // Cleanup any running playback when window closes
+    if (`optionVar -exists "growPlaying"` && `optionVar -q "growPlaying"`) {
+        int $jobNum = `optionVar -q "treeJob"`;
+        scriptJob -kill $jobNum -force;
+        optionVar -remove "treeJob";
+        optionVar -remove "growPlaying";
+    }
+}
+	)";
+	
 	const char* windowCommand = R"(
 global proc browseTreeDataFile() {
     string $filePath[] = `fileDialog2 -fileMode 1 -caption "Select Tree Data JSON"`;
@@ -40,15 +180,39 @@ global proc browseTreeSpeciesFile() {
     }
 }
 
+global proc generateTreeFromPreset (string $tree) {
+	createTreeNode($tree);
+	// Close the UI Window
+    if (`window -exists generateTreeWindow`) {
+        deleteUI generateTreeWindow;
+    }
+}
+
+global proc createSunLoc(string $tree) {
+	// deleting old one if it exists
+    if (`objExists "sunLoc"`) delete "sunLoc";
+    // create new locator
+    spaceLocator -name "sunLoc";
+    setAttr sunLoc.translate 0 10 0; // Default to Up
+    connectAttr sunLoc.translate ($tree + ".sunDir");
+
+	// clamping sun location to always be positive on y-axis
+	transformLimits -ty 0 1000 -ety 1 0 "sunLoc";
+}
+
 global proc createTreeNode(string $file) {
 	createNode transform -n TSys1;
 	createNode mesh -n TShape1 -p TSys1;
 	sets -add initialShadingGroup TShape1;
-	createNode TreeNode -n TN1;
+	string $treeNode = `createNode TreeNode -n TN1`;
     if($file != "") {
         eval("setAttr -type \"string\" TN1.treeDataFile \"" + $file + "\"");
     }
 	connectAttr TN1.outputMesh TShape1.inMesh;
+
+	// creating Sun Direction locator
+	createSunLoc($treeNode);
+	createTreeUI;
 };
 
 global proc generateTree() {
@@ -72,40 +236,49 @@ global proc createTreeGeneratorWindow() {
         deleteUI generateTreeWindow;
     }
 
-    window -title "Generate Tree" -widthHeight 450 200 generateTreeWindow;
+    window -title "Generate Tree" -widthHeight 350 230 generateTreeWindow;
     columnLayout -adjustableColumn true;
 
     // Add spacing at the top
     separator -style "none" -height 10;
+	text - label "Tree Presets";
+    separator -style "none" -height 10;
 
-    // Tree Data JSON Selection
-    //text -label "Select Tree Data JSON:" -align "left";
-    //separator -style "none" -height 5;
-    //rowLayout -numberOfColumns 2 -columnWidth2 350 80;
-    //textField -editable false -width 350 treeDataField;
-    //button -label "Browse" -command("browseTreeDataFile");
-    //setParent ..;
+	// row for buttons
+	rowLayout	-numberOfColumns 2 
+				-columnWidth2 175 175 
+				-columnAttach2 "both" "both"
+				-columnOffset2 0 0;
+
+		button	- label "Birch Tree"
+				- height 50
+				- width 175
+				- command "generateTreeFromPreset \"Birch\"";
+
+		button	- label "Spruce Tree"
+				- height 50
+				- width 175
+				- command "generateTreeFromPreset \"Spruce\"";
+	setParent..;
+
 
     // Add some space
-    //separator - style "none" - height 10;
-    //separator - style "in" - height 5;
-    //separator - style "none" - height 10;
-
-    // Tree Species File Selection
-    text - label "Select Tree Species File:" - align "left";
-    separator - style "none" - height 5;
-    rowLayout - numberOfColumns 2 - columnWidth2 350 80;
-    textField - editable false - width 350 treeSpeciesField;
-    button - label "Browse" - command("browseTreeSpeciesFile");
-    setParent ..;
-
-    // Add some space before the button
     separator - style "none" - height 15;
     separator - style "in" - height 5;
     separator - style "none" - height 15;
 
+    // Tree Species File Selection
+	text - label "Select Custom Tree File";
+    separator - style "none" - height 5;
+    rowLayout - numberOfColumns 2 - columnWidth2 290 60;
+		textField - editable false - width 190 treeSpeciesField;
+		button - label "Browse" - command("browseTreeSpeciesFile");
+    setParent ..;
+
+    separator -style "none" -height 10;
+
     // Generate Tree Button
-    button - label "Generate Tree" - command("generateTree") - height 50;
+    button - label "Generate Tree From File" - command("generateTree") - height 50 -width 290;
     showWindow generateTreeWindow;
 }
 )";
@@ -209,11 +382,16 @@ menuItem
     -command("createTreeGeneratorWindow")
         systemItem;
 menuItem
+	-label "Tree Controls"
+	-command("createTreeUI")
+		systemItem1;
+menuItem
 	-label "Iterate Growth"
 	-command("createTreeGrowthUI")
 		systemItem2;
 )";
 
+	MGlobal::executeCommand(treeUIcmd);
 	MGlobal::executeCommand(windowCommand);
 	MGlobal::executeCommand(menuCommand);
 	MGlobal::executeCommand(iterationCmds);
