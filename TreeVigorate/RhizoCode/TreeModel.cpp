@@ -216,6 +216,10 @@ void TreeModel::CollectShootFlux(const glm::mat4& globalTransform, ClimateModel&
 		auto& internode = m_shootSkeleton.RefNode(internodeHandle);
 		auto& internodeData = internode.m_data;
 		auto& internodeInfo = internode.m_info;
+		// if this light dir hasn't been set yet, set it to our custom one
+		if (internodeData.m_lightDirection == glm::vec3(0.f)) {
+			internodeData.m_lightDirection = lightDir;
+		}
 		internodeData.m_lightIntensity =
 			m_shootSkeleton.m_data.m_treeIlluminationEstimator.IlluminationEstimation(internodeInfo.m_globalPosition, internodeData.m_lightDirection);
 		for (const auto& bud : internode.m_data.m_buds)
@@ -740,6 +744,10 @@ bool TreeModel::ElongateInternode(float extendLength, NodeHandle internodeHandle
 		auto desiredGlobalUp = desiredGlobalRotation * glm::vec3(0, 1, 0);
 		ApplyTropism(-m_currentGravityDirection, shootGrowthParameters.m_gravitropism(internode), desiredGlobalFront,
 			desiredGlobalUp);
+		// if this light dir hasn't been set yet, set it to our custom one
+		if (internodeData.m_lightDirection == glm::vec3(0.f)) {
+			internodeData.m_lightDirection = lightDir;
+		}
 		ApplyTropism(internodeData.m_lightDirection, shootGrowthParameters.m_phototropism(internode),
 			desiredGlobalFront, desiredGlobalUp);
 		//Allocate Lateral bud for current internode
@@ -957,6 +965,10 @@ bool TreeModel::GrowInternode(ClimateModel& climateModel, NodeHandle internodeHa
 				auto desiredGlobalUp = desiredGlobalRotation * glm::vec3(0, 1, 0);
 				ApplyTropism(-m_currentGravityDirection, shootGrowthParameters.m_gravitropism(internode), desiredGlobalFront,
 					desiredGlobalUp);
+				// if this light dir hasn't been set yet, set it to our custom one
+				if (internodeData.m_lightDirection == glm::vec3(0.f)) {
+					internodeData.m_lightDirection = lightDir;
+				}
 				ApplyTropism(internodeData.m_lightDirection, shootGrowthParameters.m_phototropism(internode),
 					desiredGlobalFront, desiredGlobalUp);
 				//Create new internode
@@ -1003,6 +1015,10 @@ bool TreeModel::GrowInternode(ClimateModel& climateModel, NodeHandle internodeHa
 				glm::quat rotation = internodeData.m_desiredLocalRotation * bud.m_localRotation;
 				auto up = rotation * glm::vec3(0, 1, 0);
 				auto front = rotation * glm::vec3(0, 0, -1);
+				// if this light dir hasn't been set yet, set it to our custom one
+				if (internodeData.m_lightDirection == glm::vec3(0.f)) {
+					internodeData.m_lightDirection = lightDir;
+				}
 				ApplyTropism(internodeData.m_lightDirection, 0.3f, up, front);
 				rotation = glm::quatLookAt(front, up);
 				auto fruitPosition = internodeInfo.m_globalPosition + front * (fruitSize.z * 1.5f);
@@ -1045,6 +1061,10 @@ bool TreeModel::GrowInternode(ClimateModel& climateModel, NodeHandle internodeHa
 				glm::quat rotation = internodeData.m_desiredLocalRotation * bud.m_localRotation;
 				auto up = rotation * glm::vec3(0, 1, 0);
 				auto front = rotation * glm::vec3(0, 0, -1);
+				// if this light dir hasn't been set yet, set it to our custom one
+				if (internodeData.m_lightDirection == glm::vec3(0.f)) {
+					internodeData.m_lightDirection = lightDir;
+				}
 				ApplyTropism(internodeData.m_lightDirection, 0.3f, up, front);
 				rotation = glm::quatLookAt(front, up);
 				auto foliagePosition = internodeInfo.m_globalPosition + front * (leafSize.z * 1.5f);

@@ -96,7 +96,7 @@ namespace EcoSysLab
 
 		float m_temperature = 0.0f;
 
-		glm::vec3 m_lightDirection = glm::vec3(0, 1, 0);
+		glm::vec3 m_lightDirection = glm::vec3(0);
 		float m_lightIntensity = 1.0f;
 
 		float m_lightEnergy = 0.0f;

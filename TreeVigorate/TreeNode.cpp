@@ -19,6 +19,8 @@ MObject TreeNode::numGrows;
 MObject TreeNode::radius;
 MObject TreeNode::treeDataFile;
 MObject TreeNode::makeGrow;
+MObject TreeNode::sunDir;
+MObject TreeNode::growTime;
 
 void* TreeNode::creator()
 {
@@ -35,24 +37,35 @@ MStatus TreeNode::initialize()
 
 	TreeNode::deltaTime = numAttr.create("deltaTime", "dt", MFnNumericData::kDouble, 0.1, &returnStatus);
 	McheckErr(returnStatus, "Error creating TreeNode deltaTime attribute \n");
+	numAttr.setNiceNameOverride("Growth rate");
 
 	TreeNode::numGrows = numAttr.create("numGrows", "ng", MFnNumericData::kInt, 0, &returnStatus);
 	McheckErr(returnStatus, "Error creating TreeNode numGrows attribute \n");
+	numAttr.setNiceNameOverride("Growth amount");
 
 	TreeNode::radius = numAttr.create("radius", "r", MFnNumericData::kDouble, 1.0, &returnStatus);
 	McheckErr(returnStatus, "Error creatin radius attribute \n");
+	numAttr.setNiceNameOverride("Radius multiplier");
 
 	TreeNode::treeDataFile = typedAttr.create("treeDataFile", "f", MFnData::kString, MObject::kNullObj, &returnStatus);
 	McheckErr(returnStatus, "Error creating treeDataFile attribute \n");
+	typedAttr.setHidden(true);
 
 	TreeNode::makeGrow = numAttr.create("makeGrow", "mg", MFnNumericData::kBoolean, false, &returnStatus);
 	McheckErr(returnStatus, "Error creating makeGrow attribute\n");
 
-	//TreeNode::time = unitAttr.create("time", "tm",
-	//	MFnUnitAttribute::kTime,
-	//	0.0, &returnStatus);
-	//McheckErr(returnStatus, "ERROR creating TreeNode time attribute\n");
+	TreeNode::sunDir = numAttr.create("sunDir", "sd", MFnNumericData::k3Double, 0, &returnStatus);
+	numAttr.setNiceNameOverride("Light Direction");
+	numAttr.setDefault(0.0, 1.0, 0.0);
+	McheckErr(returnStatus, "Error creating sunDir attrib\n");
 
+	TreeNode::growTime = numAttr.create("growTime", "gt", MFnNumericData::kDouble, 0, &returnStatus);
+	numAttr.setStorable(true);
+	numAttr.setWritable(true);
+	numAttr.setReadable(true);
+	numAttr.setHidden(true);
+	numAttr.setKeyable(false);
+	McheckErr(returnStatus, "Error creating growTime attrib\n");
 
 	TreeNode::outputMesh = typedAttr.create("outputMesh", "out",
 		MFnData::kMesh,
@@ -60,9 +73,7 @@ MStatus TreeNode::initialize()
 		&returnStatus);
 	McheckErr(returnStatus, "ERROR creating TreeNode output attribute\n");
 	/*typedAttr.setStorable(false);*/
-
-	//returnStatus = addAttribute(TreeNode::time);
-	//McheckErr(returnStatus, "ERROR adding time attribute\n");
+	typedAttr.setHidden(true);
 
 	returnStatus = addAttribute(TreeNode::outputMesh);
 	McheckErr(returnStatus, "ERROR adding outputMesh attribute\n");
@@ -82,13 +93,15 @@ MStatus TreeNode::initialize()
 	returnStatus = addAttribute(TreeNode::makeGrow);
 	McheckErr(returnStatus, "ERROR adding makeGrow attribute\n");
 
-	//returnStatus = attributeAffects(TreeNode::time,
-	//	TreeNode::outputMesh);
-	//McheckErr(returnStatus, "ERROR in attributeAffects\n");
-
 	returnStatus = attributeAffects(TreeNode::makeGrow,
 		TreeNode::outputMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
+
+	returnStatus = addAttribute(TreeNode::sunDir);
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
+
+	returnStatus = addAttribute(TreeNode::growTime);
+	McheckErr(returnStatus, "ERROR adding growTime attribute\n");
 
 	return MS::kSuccess;
 }
@@ -102,23 +115,24 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		double fDTime = data.inputValue(deltaTime).asDouble();
 		int nGrows = data.inputValue(numGrows).asInt();
 		float r = data.inputValue(radius).asDouble();
-		MString treeInfo = data.inputValue(treeDataFile).asString();
+		double3& sunDirVal = data.inputValue(sunDir).asDouble3();
+		glm::vec3 sunVec = glm::normalize(glm::vec3(sunDirVal[0], sunDirVal[1], sunDirVal[2]));
 
-		/* Get time */
-		//MDataHandle timeData = data.inputValue(time, &returnStatus);
-		//McheckErr(returnStatus, "Error getting time data handle\n");
-		//MTime time = timeData.asTime();
-		//const int iterNum = (int)time.as(MTime::kFilm);
+		// For keeping track of total grow time
+		MDataHandle growTimeHandle = data.outputValue(growTime);
+		double currGrowTime = growTimeHandle.asDouble();
 
-		/*MString tester = ("Angle Test: " + std::to_string(fAngle)).c_str();
-		MGlobal::displayInfo(tester);
-		tester = ("Step Test: " + std::to_string(fStep)).c_str();
-		MGlobal::displayInfo(tester);
-		tester = ("Grammar Test: " + g);
-		MGlobal::displayInfo(tester);
-		tester = ("Time Test: " + std::to_string(iterNum)).c_str();
-		MGlobal::displayInfo(tester);*/
+		if (sunVec != treeModel.lightDir) {
+			treeModel.lightDir = sunVec;
+			MGlobal::displayInfo("Light Direction Changed");
+		}
 
+		// Initializing tree params
+		if (!treeParams.isInit) {
+			MString treeInfo = data.inputValue(treeDataFile).asString();
+			treeParams.isInit = true;
+			InitializeMVars(treeInfo.asChar(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
+		}
 
 		// create output object
 		MDataHandle outputHandle = data.outputValue(outputMesh, &returnStatus);
@@ -132,33 +146,31 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MIntArray faceCounts;
 		MIntArray faceConns;
 
-
-		// Initializing tree params
-		SoilModel m_soilModel;
-		ClimateModel m_climateModel;
-		RootGrowthController m_rootGrowthParameters;
-		ShootGrowthController m_shootGrowthParameters;
-		InitializeMVars(treeInfo.asChar(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
-
 		// Growing tree
 		MGlobal::displayInfo("Abt to Grow, stand back!!");
 		for (int i = 0; i < nGrows; ++i) {
-			int nodes = treeModel.RefShootSkeleton().RefSortedNodeList().size();
-			for (int j = 0; j < nodes; ++j) {
+			/*for (int j = 0; j < nodes; ++j) {
 				auto& snode = treeModel.RefShootSkeleton().RefNode(j);
-			}
-			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), m_soilModel, m_climateModel, m_rootGrowthParameters, m_shootGrowthParameters);
-			MGlobal::displayInfo("Growth successful, iteration: ");
-			MGlobal::displayInfo(std::to_string(i).c_str());
-
+			}*/
+			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
+			/*MGlobal::displayInfo("Growth successful, iteration: ");
+			MGlobal::displayInfo(std::to_string(i + 1).c_str());
+			
 			MGlobal::displayInfo("Shoot nodes: ");
+			int nodes = treeModel.RefShootSkeleton().RefSortedNodeList().size();
 			MGlobal::displayInfo(MString(std::to_string(nodes).c_str()));
 			
 			int flows = treeModel.RefShootSkeleton().RefSortedFlowList().size();
-			MGlobal::displayInfo("Flows nodes: ");
-			MGlobal::displayInfo(MString(std::to_string(flows).c_str()));
-		}
+			MGlobal::displayInfo("Flows: ");
+			MGlobal::displayInfo(MString(std::to_string(flows).c_str()));*/
 
+			// incrementing grow time
+			currGrowTime += fDTime;
+
+			// loading bar in MEL
+			MString loadingBar = getLoadBar(i, nGrows);
+			MGlobal::displayInfo(loadingBar);
+		}
 		MGlobal::displayInfo("Rad:");
 		MGlobal::displayInfo(std::to_string(r).c_str());
 		
@@ -204,10 +216,16 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		if (shoots.RefSortedNodeList().size() != 0) {
 			//bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, r);
 		}
-		
+
+		// setting growTime to new val
+		growTimeHandle.set(currGrowTime);
+		growTimeHandle.setClean();
+
 		MFnMesh mesh;
 		mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);
 		McheckErr(returnStatus, "ERROR creating new Mesh");
+
+		MGlobal::displayInfo("[##########] 100%");
 
 		outputHandle.set(newOutputData);
 		data.setClean(plug);
@@ -345,95 +363,38 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 	return true;
 }
 
+
+MString TreeNode::getLoadBar(int curr, int tot) {
+	int pct = curr * 100 / tot;
+
+	switch (pct / 10)
+	{
+	case(0):
+		return "[----------] 0%";
+	case(1):
+		return "[#---------] 10%";
+	case(2):
+		return "[##--------] 20%";
+	case(3):
+		return "[###-------] 30%";
+	case(4):
+		return "[####------] 40%";
+	case(5):
+		return "[#####-----] 50%";
+	case(6):
+		return "[######----] 60%";
+	case(7):
+		return "[#######---] 70%";
+	case(8):
+		return "[########--] 80%";
+	case(9):
+		return "[#########-] 90%";
+	default:
+		break;
+	}
+}
+
 // PARSING FILES
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-
-
-// These params don't align 1 to 1 with actual params that we use,
-// so this is somehow the best method atm.
-struct SGParams {
-	int m_internodeGrowthRate;
-	int m_leafGrowthRate;
-	int m_fruitGrowthRate;
-	int m_lateralBudCount;
-	int m_fruitBudCount;
-	int m_leafBudCount;
-	float m_branchingAngleMeanVariance[2];
-	float m_rollAngleMeanVariance[2];
-	float m_apicalAngleMeanVariance[2];
-	float m_gravitropism;
-	float m_phototropism;
-	float m_internodeLength;
-	float m_endNodeThickness;
-	float m_thicknessAccumulationFactor;
-	float m_thicknessAccumulateAgeFactor;
-	float m_lateralBudFlushingProbabilityTemperatureRange[4];
-	float m_leafBudFlushingProbabilityTemperatureRange[4];
-	float m_fruitBudFlushingProbabilityTemperatureRange[4];
-	float m_apicalBudLightingFactor;
-	float m_lateralBudLightingFactor;
-	float m_leafBudLightingFactor;
-	float m_fruitBudLightingFactor;
-	float m_apicalControl;
-	float m_apicalControlAgeFactor;
-	float m_apicalDominance;
-	float m_apicalDominanceAgeFactor;
-	float m_apicalDominanceDistanceFactor;
-	float m_apicalBudExtinctionRate;
-	float m_lateralBudExtinctionRate;
-	float m_leafBudExtinctionRate;
-	float m_fruitBudExtinctionRate;
-	float m_leafVigorRequirement;
-	float m_fruitVigorRequirement;
-	float m_internodeVigorRequirement;
-	float m_vigorRequirementAggregateLoss;
-	float m_lowBranchPruning;
-	float m_saggingFactorThicknessReductionMax[3];
-	float m_maxLeafSize[3];
-	float m_leafPositionVariance;
-	float m_leafRandomRotation;
-	float m_leafChlorophyllLoss;
-	float m_leafChlorophyllSynthesisFactorTemperature;
-	float m_leafFallProbability;
-	float m_leafDistanceToBranchEndLimit;
-	float m_maxFruitSize[3];
-	float m_fruitPositionVariance;
-	float m_fruitRandomRotation;
-	float m_fruitFallProbability;
-};
-
-struct RGParams {
-	float m_branchingAngleMeanVariance[2];
-	float m_rollAngleMeanVariance[2];
-	float m_apicalAngleMeanVariance[2];
-	float m_rootNodeLength;
-	float m_rootNodeGrowthRate;
-	float m_endNodeThickness;
-	float m_thicknessAccumulationFactor;
-	float m_thicknessAccumulateAgeFactor;
-	float m_rootNodeVigorRequirement;
-	float m_vigorRequirementAggregateLoss;
-	float m_environmentalFriction;
-	float m_environmentalFrictionFactor;
-	float m_apicalControl;
-	float m_apicalControlAgeFactor;
-	float m_apicalDominance;
-	float m_apicalDominanceAgeFactor;
-	float m_apicalDominanceDistanceFactor;
-	float m_tropismSwitchingProbability;
-	float m_tropismSwitchingProbabilityDistanceFactor;
-	float m_tropismIntensity;
-	float m_branchingProbability;
-};
-
-struct PlantParameters {
-	SGParams sg;
-	RGParams rg;
-};
 
 void parseArray(std::istringstream& iss, float* array, size_t size) {
 	char separator;
@@ -499,8 +460,10 @@ void parseShootGrowthParameters(std::ifstream& file, SGParams& params) {
 		else if (key == "m_maxFruitSize:") parseArray(iss, params.m_maxFruitSize, 3);
 		else if (key == "m_fruitPositionVariance:") iss >> params.m_fruitPositionVariance;
 		else if (key == "m_fruitRandomRotation:") iss >> params.m_fruitRandomRotation;
-		else if (key == "m_fruitFallProbability:") iss >> params.m_fruitFallProbability;
-		else if (key == "}") break; // End of shoot growth parameters
+		else if (key == "m_fruitFallProbability:") {
+			iss >> params.m_fruitFallProbability;
+			//break;	// break on the last line
+		}
 	}
 }
 
@@ -560,6 +523,202 @@ bool parseConfigFile(const std::string& filename, PlantParameters& params) {
 	return true;
 }
 
+void initializeParams(const std::string& treeName, PlantParameters& params) {
+	if (treeName == "Birch") {
+		MGlobal::displayInfo("birch");
+		//SHOOT
+		params.sg.m_internodeGrowthRate = 10.f;
+		params.sg.m_leafGrowthRate = 18.f;
+		params.sg.m_fruitGrowthRate = 18.f;
+		params.sg.m_lateralBudCount = 2.f;
+		params.sg.m_fruitBudCount = 1.f;
+		params.sg.m_leafBudCount = 1.f;
+		params.sg.m_branchingAngleMeanVariance[0] = 25.f;
+		params.sg.m_branchingAngleMeanVariance[1] = 2.f;
+		params.sg.m_rollAngleMeanVariance[0] = 120.f;
+		params.sg.m_rollAngleMeanVariance[1] = 2.f;
+		params.sg.m_apicalAngleMeanVariance[0] = 0.f;
+		params.sg.m_apicalAngleMeanVariance[1] = 2;
+		params.sg.m_gravitropism = 0.00999999978;
+		params.sg.m_phototropism = 0.0399999991;
+		params.sg.m_internodeLength = 0.0299999993;
+		params.sg.m_endNodeThickness = 0.00200000009;
+		params.sg.m_thicknessAccumulationFactor = 0.5;
+		params.sg.m_thicknessAccumulateAgeFactor = 0.f;
+		params.sg.m_lateralBudFlushingProbabilityTemperatureRange[0] = 0.00249999994;
+		params.sg.m_lateralBudFlushingProbabilityTemperatureRange[1] = 0.00249999994;
+		params.sg.m_lateralBudFlushingProbabilityTemperatureRange[2] = 0.f;
+		params.sg.m_lateralBudFlushingProbabilityTemperatureRange[3] = 100.f;
+		params.sg.m_leafBudFlushingProbabilityTemperatureRange[0] = 1.f;
+		params.sg.m_leafBudFlushingProbabilityTemperatureRange[1] = 1.f;
+		params.sg.m_leafBudFlushingProbabilityTemperatureRange[2] = 45.f;
+		params.sg.m_leafBudFlushingProbabilityTemperatureRange[3] = 60.f;
+		params.sg.m_fruitBudFlushingProbabilityTemperatureRange[0] = 0.f;
+		params.sg.m_fruitBudFlushingProbabilityTemperatureRange[1] = 0.100000001;
+		params.sg.m_fruitBudFlushingProbabilityTemperatureRange[2] = 50.f;
+		params.sg.m_fruitBudFlushingProbabilityTemperatureRange[3] = 70.f;
+		params.sg.m_apicalBudLightingFactor = 0.f;
+		params.sg.m_lateralBudLightingFactor = 1.f;
+		params.sg.m_leafBudLightingFactor = 1.f;
+		params.sg.m_fruitBudLightingFactor = 1.f;
+		params.sg.m_apicalControl = 0.f;
+		params.sg.m_apicalControlAgeFactor = 0.f;
+		params.sg.m_apicalDominance = 3.f;
+		params.sg.m_apicalDominanceAgeFactor = 0.f;
+		params.sg.m_apicalDominanceDistanceFactor = 0.970000029;
+		params.sg.m_apicalBudExtinctionRate = 0.f;
+		params.sg.m_lateralBudExtinctionRate = 0.f;
+		params.sg.m_leafBudExtinctionRate = 0.f;
+		params.sg.m_fruitBudExtinctionRate = 0.f;
+		params.sg.m_leafVigorRequirement = 0.100000001;
+		params.sg.m_fruitVigorRequirement = 0.100000001;
+		params.sg.m_internodeVigorRequirement = 1.f;
+		params.sg.m_vigorRequirementAggregateLoss = 0.989999988;
+		params.sg.m_lowBranchPruning = 0.250000006;
+		params.sg.m_saggingFactorThicknessReductionMax[0] = 9.99999975e-06;
+		params.sg.m_saggingFactorThicknessReductionMax[1] = 2.f;
+		params.sg.m_saggingFactorThicknessReductionMax[2] = 0.5;
+		params.sg.m_maxLeafSize[0] = 0.0500000007;
+		params.sg.m_maxLeafSize[1] = 0.5;
+		params.sg.m_maxLeafSize[2] = 0.0500000007;
+		params.sg.m_leafPositionVariance = 0.5;
+		params.sg.m_leafRandomRotation = 10.f;
+		params.sg.m_leafChlorophyllLoss = 4.f;
+		params.sg.m_leafChlorophyllSynthesisFactorTemperature = 65.f;
+		params.sg.m_leafFallProbability = 30.f;
+		params.sg.m_leafDistanceToBranchEndLimit = 10.f;
+		params.sg.m_maxFruitSize[0] = 0.0350000001;
+		params.sg.m_maxFruitSize[1] = 0.0350000001;
+		params.sg.m_maxFruitSize[2] = 0.0350000001;
+		params.sg.m_fruitPositionVariance = 0.5;
+		params.sg.m_fruitRandomRotation = 10.f;
+		params.sg.m_fruitFallProbability = 3.f;
+		//ROOT
+		params.rg.m_branchingAngleMeanVariance[0] = 30.f;
+		params.rg.m_branchingAngleMeanVariance[1] = 2.f;
+		params.rg.m_rollAngleMeanVariance[0] = 120.f;
+		params.rg.m_rollAngleMeanVariance[1] = 2.f;
+		params.rg.m_apicalAngleMeanVariance[0] = 0.f;
+		params.rg.m_apicalAngleMeanVariance[1] = 2.f;
+		params.rg.m_rootNodeLength = 0.0299999993;
+		params.rg.m_rootNodeGrowthRate = 10.f;
+		params.rg.m_endNodeThickness = 0.00200000009;
+		params.rg.m_thicknessAccumulationFactor = 0.5;
+		params.rg.m_thicknessAccumulateAgeFactor = 0.f;
+		params.rg.m_rootNodeVigorRequirement = 1.f;
+		params.rg.m_vigorRequirementAggregateLoss = 1.f;
+		params.rg.m_environmentalFriction = 1.f;
+		params.rg.m_environmentalFrictionFactor = 0.25;
+		params.rg.m_apicalControl = 0.f;
+		params.rg.m_apicalControlAgeFactor = 0.f;
+		params.rg.m_apicalDominance = 3.f;
+		params.rg.m_apicalDominanceAgeFactor = 0.f;
+		params.rg.m_apicalDominanceDistanceFactor = 0.970000029;
+		params.rg.m_tropismSwitchingProbability = 1.f;
+		params.rg.m_tropismSwitchingProbabilityDistanceFactor = 0.f;
+		params.rg.m_tropismIntensity = 0.100000001;
+		params.rg.m_branchingProbability = 0.0299999993;
+	}
+	else if (treeName == "Spruce") {
+		MGlobal::displayInfo("Philly tree");
+		//SHOOT
+		params.sg.m_internodeGrowthRate = 8;
+		params.sg.m_leafGrowthRate = 18;
+		params.sg.m_fruitGrowthRate = 18;
+		params.sg.m_lateralBudCount = 2;
+		params.sg.m_fruitBudCount = 1;
+		params.sg.m_leafBudCount = 1;
+		params.sg.m_branchingAngleMeanVariance[0] = 60;
+		params.sg.m_branchingAngleMeanVariance[1] = 3;
+		params.sg.m_rollAngleMeanVariance[0] = 90;
+		params.sg.m_rollAngleMeanVariance[1] = 2;
+		params.sg.m_apicalAngleMeanVariance[0] = 0;
+		params.sg.m_apicalAngleMeanVariance[1] = 1;
+		params.sg.m_gravitropism = 0.0399999991;
+		params.sg.m_phototropism = 0;
+		params.sg.m_internodeLength = 0.0299999993;
+		params.sg.m_endNodeThickness = 0.00100000005;
+		params.sg.m_thicknessAccumulationFactor = 0.5;
+		params.sg.m_thicknessAccumulateAgeFactor = 0;
+		params.sg.m_lateralBudFlushingProbabilityTemperatureRange[0] = 0.0399999991;
+		params.sg.m_lateralBudFlushingProbabilityTemperatureRange[1] = 0.0399999991;
+		params.sg.m_lateralBudFlushingProbabilityTemperatureRange[2] = 0;
+		params.sg.m_lateralBudFlushingProbabilityTemperatureRange[3] = 100;
+		params.sg.m_leafBudFlushingProbabilityTemperatureRange[0] = 1;
+		params.sg.m_leafBudFlushingProbabilityTemperatureRange[1] = 1;
+		params.sg.m_leafBudFlushingProbabilityTemperatureRange[2] = 45;
+		params.sg.m_leafBudFlushingProbabilityTemperatureRange[3] = 60;
+		params.sg.m_fruitBudFlushingProbabilityTemperatureRange[0] = 0;
+		params.sg.m_fruitBudFlushingProbabilityTemperatureRange[1] = 1;
+		params.sg.m_fruitBudFlushingProbabilityTemperatureRange[2] = 50;
+		params.sg.m_fruitBudFlushingProbabilityTemperatureRange[3] = 70;
+		params.sg.m_apicalBudLightingFactor = 0;
+		params.sg.m_lateralBudLightingFactor = 1;
+		params.sg.m_leafBudLightingFactor = 1;
+		params.sg.m_fruitBudLightingFactor = 1;
+		params.sg.m_apicalControl = 0.5;
+		params.sg.m_apicalControlAgeFactor = 0.100000001;
+		params.sg.m_apicalDominance = 0;
+		params.sg.m_apicalDominanceAgeFactor = 0;
+		params.sg.m_apicalDominanceDistanceFactor = 0.899999976;
+		params.sg.m_apicalBudExtinctionRate = 0;
+		params.sg.m_lateralBudExtinctionRate = 0;
+		params.sg.m_leafBudExtinctionRate = 0;
+		params.sg.m_fruitBudExtinctionRate = 0;
+		params.sg.m_leafVigorRequirement = 0.100000001;
+		params.sg.m_fruitVigorRequirement = 0.100000001;
+		params.sg.m_internodeVigorRequirement = 1;
+		params.sg.m_vigorRequirementAggregateLoss = 0.949999988;
+		params.sg.m_lowBranchPruning = 0.100000001;
+		params.sg.m_saggingFactorThicknessReductionMax[0] = 0.00000999999978;
+		params.sg.m_saggingFactorThicknessReductionMax[1] = 2;
+		params.sg.m_saggingFactorThicknessReductionMax[2] = 0.200000003;
+		params.sg.m_maxLeafSize[0] = 0.0500000007;
+		params.sg.m_maxLeafSize[1] = 0.5;
+		params.sg.m_maxLeafSize[2] = 0.0500000007;
+		params.sg.m_leafPositionVariance = 0.5;
+		params.sg.m_leafRandomRotation = 10;
+		params.sg.m_leafChlorophyllLoss = 4;
+		params.sg.m_leafChlorophyllSynthesisFactorTemperature = 65;
+		params.sg.m_leafFallProbability = 3;
+		params.sg.m_leafDistanceToBranchEndLimit = 10;
+		params.sg.m_maxFruitSize[0] = 0.0350000001;
+		params.sg.m_maxFruitSize[1] = 0.0350000001;
+		params.sg.m_maxFruitSize[2] = 0.0350000001;
+		params.sg.m_fruitPositionVariance = 0.5;
+		params.sg.m_fruitRandomRotation = 10;
+		params.sg.m_fruitFallProbability = 3;
+		//ROOT
+		params.rg.m_branchingAngleMeanVariance[0] = 30;
+		params.rg.m_branchingAngleMeanVariance[1] = 2;
+		params.rg.m_rollAngleMeanVariance[0] = 120;
+		params.rg.m_rollAngleMeanVariance[1] = 2;
+		params.rg.m_apicalAngleMeanVariance[0] = 0;
+		params.rg.m_apicalAngleMeanVariance[1] = 2;
+		params.rg.m_rootNodeLength = 0.0299999993;
+		params.rg.m_rootNodeGrowthRate = 10;
+		params.rg.m_endNodeThickness = 0.00200000009;
+		params.rg.m_thicknessAccumulationFactor = 0.5;
+		params.rg.m_thicknessAccumulateAgeFactor = 0;
+		params.rg.m_rootNodeVigorRequirement = 1;
+		params.rg.m_vigorRequirementAggregateLoss = 1;
+		params.rg.m_environmentalFriction = 1;
+		params.rg.m_environmentalFrictionFactor = 6;
+		params.rg.m_apicalControl = 0;
+		params.rg.m_apicalControlAgeFactor = 0;
+		params.rg.m_apicalDominance = 2;
+		params.rg.m_apicalDominanceAgeFactor = 0;
+		params.rg.m_apicalDominanceDistanceFactor = 0.970000029;
+		params.rg.m_tropismSwitchingProbability = 1;
+		params.rg.m_tropismSwitchingProbabilityDistanceFactor = 0;
+		params.rg.m_tropismIntensity = 0.150000006;
+		params.rg.m_branchingProbability = 0.0299999993;
+	}
+	else {
+		MGlobal::displayError("Preset tree name not recognized");
+	}
+}
+
 void TreeNode::SetSoilLayer(SoilLayer& sl) {
 
 	sl.m_mat = SoilPhysicalMaterial({ 1,
@@ -582,14 +741,24 @@ void TreeNode::SetSoilLayer(SoilLayer& sl) {
 	sl.m_thickness = [](const glm::vec2& position) {return 1000.f; };
 }
 
-bool TreeNode::ReadTreeFile(const std::string& fileName, RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters,
-	ClimateModel& cm) {
+bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters,
+	ClimateModel& cm, bool fromFile) {
 	PlantParameters params;
-	if (!parseConfigFile(fileName, params)) {
-		return false;
+	if (fromFile) {
+		if (!parseConfigFile(treeName, params)) {
+			return false;
+		}
 	}
+	else if (!fromFile) {
+		initializeParams(treeName, params);
+	}
+
+	size_t f = sizeof(params);
+
+	std::cout << f << std::endl;
+
 	MGlobal::displayInfo("Reading Tree File");
-	// ROOT - elm
+	// ROOT
 	m_rootGrowthParameters.m_apicalAngle = [=](const Node<RootNodeGrowthData>& rootNode)
 		{
 			// This is from apicalAngleMeanVariance
@@ -797,7 +966,7 @@ bool TreeNode::ReadTreeFile(const std::string& fileName, RootGrowthController& m
 	return true;
 }
 
-void TreeNode::InitializeMVars(const std::string& treeFilePath, SoilModel& m_soilModel, ClimateModel& m_climateModel,
+void TreeNode::InitializeMVars(const std::string& treeName, SoilModel& m_soilModel, ClimateModel& m_climateModel,
 	RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters) {
 	// SOIL
 	SoilParameters sp = SoilParameters();
@@ -819,195 +988,13 @@ void TreeNode::InitializeMVars(const std::string& treeFilePath, SoilModel& m_soi
 	ClimateParameters climateParametrs;
 	m_climateModel.Initialize(climateParametrs);
 
-	// if we don't define a file path or couldn't read the file, we will initialize it as an elm
-	if (treeFilePath == "" || !ReadTreeFile(treeFilePath, m_rootGrowthParameters, m_shootGrowthParameters, m_climateModel)) {
-		// ROOT - elm
-		m_rootGrowthParameters.m_apicalAngle = [=](const Node<RootNodeGrowthData>& rootNode)
-			{
-				// This is from apicalAngleMeanVariance
-				return glm::gaussRand(0, 3);
-			};
-		// 1 + apicalControl * glm::exp(-apicalControlAgeFactor * m_age)
-		m_rootGrowthParameters.m_apicalControl = 1 + 0;
-		m_rootGrowthParameters.m_apicalDominance = [=](const Node<RootNodeGrowthData>& rootNode)
-			{
-				// apicalDominance * glm::exp(-apicalDominanceAgeFactor, m_age)
-				return 0;	//apical dominance age factor is 0 for elm -> whole thing is 0
-			};
-		m_rootGrowthParameters.m_apicalDominanceDistanceFactor = 0.970000029;
-		m_rootGrowthParameters.m_branchingAngle = [=](const Node<RootNodeGrowthData>& rootNode)
-			{
-				// breanchingAngleMeanVariance
-				return glm::gaussRand(30, 2);
-			};
-		m_rootGrowthParameters.m_branchingProbability = [=](const Node<RootNodeGrowthData>& rootNode)
-			{
-				return  0.0700000003;
-			};
-		m_rootGrowthParameters.m_endNodeThickness = 0.00200000009;
-		m_rootGrowthParameters.m_environmentalFriction = [=](const Node<RootNodeGrowthData>& rootNode)
-			{
-				const auto& rootNodeData = rootNode.m_data;
-				// glm::pow(1.0 / glm::max(rootNodeData.m_soilDensity * m_environmentalFritcion, 1.0), m_environmentalFrictionFactor)
-				return 1.0f - glm::pow(1.0f / glm::max(rootNodeData.m_soilDensity * 0.5, 1.0), 1.0);
-			};
-		m_rootGrowthParameters.m_fineRootApicalAngleVariance = 0.3;
-		m_rootGrowthParameters.m_fineRootBranchingAngle = 30;
-		m_rootGrowthParameters.m_fineRootMinNodeThickness = 0.1;
-		m_rootGrowthParameters.m_fineRootNodeCount = 5;
-		m_rootGrowthParameters.m_fineRootSegmentLength = 1.2;
-		m_rootGrowthParameters.m_fineRootThickness = 0.5;
-		m_rootGrowthParameters.m_rollAngle = [=](const Node<RootNodeGrowthData>& rootNode)
-			{
-				//m_rollAngleMeanVariance
-				return glm::gaussRand(120, 2);
-			};
-		m_rootGrowthParameters.m_rootNodeGrowthRate = 10;
-		m_rootGrowthParameters.m_rootNodeLength = 0.0299999993;
-		m_rootGrowthParameters.m_rootNodeVigorRequirement = 1;
-		m_rootGrowthParameters.m_thicknessAccumulateAgeFactor = 0;
-		m_rootGrowthParameters.m_thicknessAccumulationFactor = 0.5;
-		m_rootGrowthParameters.m_tropismIntensity = 0.0500000007;
-		m_rootGrowthParameters.m_tropismSwitchingProbability = 1;
-		m_rootGrowthParameters.m_tropismSwitchingProbabilityDistanceFactor = 0;
-		m_rootGrowthParameters.m_vigorRequirementAggregateLoss = 1;
+	bool fromFile = treeName != "Birch" && treeName != "Spruce";
 
-		// SHOOT - Elm
-		m_shootGrowthParameters.m_internodeGrowthRate = 10;
-		m_shootGrowthParameters.m_leafGrowthRate = 18;
-		m_shootGrowthParameters.m_fruitGrowthRate = 18;
-		m_shootGrowthParameters.m_lateralBudCount = 2;
-		m_shootGrowthParameters.m_fruitBudCount = 0;
-		m_shootGrowthParameters.m_leafBudCount = 1;
-		m_shootGrowthParameters.m_branchingAngle = [=](const Node<InternodeGrowthData>& internode)
-			{
-				return glm::gaussRand(60, 3);
-			};
-		m_shootGrowthParameters.m_rollAngle = [=](const Node<InternodeGrowthData>& internode)
-			{
-				return glm::gaussRand(90, 2);
-			};
-		m_shootGrowthParameters.m_apicalAngle = [=](const Node<InternodeGrowthData>& internode)
-			{
-				return glm::gaussRand(0, 2);
-			};
-		m_shootGrowthParameters.m_gravitropism = [=](const Node<InternodeGrowthData>& internode)
-			{
-				return 0.0299999993;
-			};
-		m_shootGrowthParameters.m_phototropism = [=](const Node<InternodeGrowthData>& internode)
-			{
-				return 0.0500000007;
-			};
-		m_shootGrowthParameters.m_internodeLength = 0.0299999993;
-		m_shootGrowthParameters.m_endNodeThickness = 0.00200000009;
-		m_shootGrowthParameters.m_thicknessAccumulationFactor = 0.5;
-		m_shootGrowthParameters.m_thicknessAccumulateAgeFactor = 0;
-
-		m_shootGrowthParameters.m_lateralBudFlushingProbability = [=](const Node<InternodeGrowthData>& internode)
-			{
-				glm::vec4 probabilityRange = glm::vec4(0.00499999989, 0.00499999989, 0, 100);
-				const auto& internodeData = internode.m_data;
-				float flushProbability = glm::mix(probabilityRange.x, probabilityRange.y,
-					glm::clamp((internodeData.m_temperature - probabilityRange.z) / (probabilityRange.w - probabilityRange.z), 0.0f, 1.0f));
-				if (internodeData.m_inhibitor > 0.0f) flushProbability *= glm::exp(-internodeData.m_inhibitor);
-				//1 is shootGrowthParameters.m_lateralBudLightingFactor:
-				flushProbability *= glm::pow(internodeData.m_lightIntensity, 1);
-				return flushProbability;
-			};
-		m_shootGrowthParameters.m_leafBudFlushingProbability = [=](const Node<InternodeGrowthData>& internode)
-			{
-				const auto& internodeData = internode.m_data;
-				const auto& probabilityRange = glm::vec4(1, 1, 45, 60);
-				float flushProbability = glm::mix(probabilityRange.x, probabilityRange.y,
-					glm::clamp((internodeData.m_temperature - probabilityRange.z) / (probabilityRange.w - probabilityRange.z), 0.0f, 1.0f));
-				//1 is shootGrowthParameters.m_leafBudLightingFactor:
-				flushProbability *= glm::pow(internodeData.m_lightIntensity, 1);
-				return flushProbability;
-			};
-		m_shootGrowthParameters.m_fruitBudFlushingProbability = [=](const Node<InternodeGrowthData>& internode)
-			{
-				const auto& internodeData = internode.m_data;
-				const auto& probabilityRange = glm::vec4(0, 1, 50, 70);
-				float flushProbability = glm::mix(probabilityRange.x, probabilityRange.y,
-					glm::clamp((internodeData.m_temperature - probabilityRange.z) / (probabilityRange.w - probabilityRange.z), 0.0f, 1.0f));
-				//1 is shootGrowthParameters.m_fruitBudLightingFactor:
-				flushProbability *= glm::pow(internodeData.m_lightIntensity, 1);
-				return flushProbability;
-			};
-
-		//m_shootGrowthParameters.m_apicalBudLightingFactor = 0															;
-		//m_shootGrowthParameters.m_lateralBudLightingFactor = 1															;
-		//m_shootGrowthParameters.m_leafBudLightingFactor = 1																;
-		//m_shootGrowthParameters.m_fruitBudLightingFactor = 1															;
-		// m_shootGrowthParameters.m_apicalControl = 0.75;
-
-		m_shootGrowthParameters.m_apicalControl =
-			1.0f + 0.75 * glm::exp(-0.159999996 * treeModel.m_age);
-
-		m_shootGrowthParameters.m_apicalDominance = [=](const Node<InternodeGrowthData>& internode)
-			{
-				return 0.349999994 * glm::exp(0 * treeModel.m_age);
-			};
-		m_shootGrowthParameters.m_apicalDominanceDistanceFactor = 0.999000013;
-		m_shootGrowthParameters.m_leafVigorRequirement = 0.100000001;
-		m_shootGrowthParameters.m_fruitVigorRequirement = 0.100000001;
-		m_shootGrowthParameters.m_internodeVigorRequirement = 1;
-		m_shootGrowthParameters.m_vigorRequirementAggregateLoss = 0.949999988;
-		m_shootGrowthParameters.m_lowBranchPruning = 0.0500000007;
-
-		m_shootGrowthParameters.m_sagging = [=](const Node<InternodeGrowthData>& internode)
-			{
-				const auto& m_saggingFactorThicknessReductionMax = glm::vec3(0.00499999989, 3, 0.300000012);
-				const float newSagging = glm::min(
-					0.300000012,
-					m_saggingFactorThicknessReductionMax.x *
-					(internode.m_data.m_descendentTotalBiomass + internode.m_data.m_extraMass) /
-					glm::pow(
-						internode.m_info.m_thickness /
-						//endnodethickness:
-						0.00200000009,
-						m_saggingFactorThicknessReductionMax.y));
-				return glm::max(internode.m_data.m_sagging, newSagging);
-			};
-
-		m_shootGrowthParameters.m_maxLeafSize = { 0.0500000007, 0.5, 0.0500000007 };
-		m_shootGrowthParameters.m_leafPositionVariance = 0.5;
-		//m_shootGrowthParameters.m_leafRandomRotation = 10																;
-		m_shootGrowthParameters.m_leafDamage = [=](const Node<InternodeGrowthData>& internode)
-			{
-				const auto& internodeData = internode.m_data;
-				float leafDamage = 0.0f;
-				//shootGrowthParameters.m_leafChlorophyllSynthesisFactorTemperature is 65
-				if (m_climateModel.m_time - glm::floor(m_climateModel.m_time) > 0.5f && internodeData.m_temperature < 65)
-				{
-					//4 is m_leafChlorophyllLoss
-					leafDamage += 4;
-				}
-				return leafDamage;
-			};
-		m_shootGrowthParameters.m_leafFallProbability = [=](const Node<InternodeGrowthData>& internode)
-			{
-				return 3;
-			};
-		m_shootGrowthParameters.m_maxFruitSize = { 0.0350000001, 0.0350000001, 0.0350000001 };
-		m_shootGrowthParameters.m_fruitPositionVariance = 0.5;
-		//m_shootGrowthParameters.m_fruitRandomRotation = 10																;
-		m_shootGrowthParameters.m_fruitFallProbability = [=](const Node<InternodeGrowthData>& internode)
-			{
-				return 3;
-			};
-		m_shootGrowthParameters.m_pruningFactor = [=](const Node<InternodeGrowthData>& internode)
-			{
-				return 0.0;
-			};
+	// if we don't define a file path or couldn't read the file, we will initialize it as a birch
+	if (treeName == "" || !ReadTreeParams(treeName, m_rootGrowthParameters, m_shootGrowthParameters, m_climateModel, fromFile)) {
+		MGlobal::displayInfo("default Birch vals");
+		ReadTreeParams("Birch", m_rootGrowthParameters, m_shootGrowthParameters, m_climateModel, false);
 	}
-
-	MGlobal::displayInfo("Apical Dom Dist Factor:");
-	MGlobal::displayInfo(std::to_string(m_shootGrowthParameters.m_apicalDominanceDistanceFactor).c_str());
-
-	MGlobal::displayInfo("End Node Thickness:");
-	MGlobal::displayInfo(std::to_string(m_shootGrowthParameters.m_endNodeThickness).c_str());
 
 	MGlobal::displayInfo("Tree Initialized");
 }
