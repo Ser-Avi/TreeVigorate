@@ -382,6 +382,10 @@ menuItem
     -command("createTreeGeneratorWindow")
         systemItem;
 menuItem
+	-label "Tree Controls"
+	-command("createTreeUI")
+		systemItem1;
+menuItem
 	-label "Iterate Growth"
 	-command("createTreeGrowthUI")
 		systemItem2;
