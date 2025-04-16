@@ -1,4 +1,4 @@
-#include "TreeNode.h"
+﻿#include "TreeNode.h"
 
 /*
 MEL Script to initialize this with:
@@ -154,7 +154,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 				auto& snode = treeModel.RefShootSkeleton().RefNode(j);
 			}*/
 			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
-			MGlobal::displayInfo("Growth successful, iteration: ");
+			/*MGlobal::displayInfo("Growth successful, iteration: ");
 			MGlobal::displayInfo(std::to_string(i + 1).c_str());
 			
 			MGlobal::displayInfo("Shoot nodes: ");
@@ -163,10 +163,14 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			
 			int flows = treeModel.RefShootSkeleton().RefSortedFlowList().size();
 			MGlobal::displayInfo("Flows: ");
-			MGlobal::displayInfo(MString(std::to_string(flows).c_str()));
+			MGlobal::displayInfo(MString(std::to_string(flows).c_str()));*/
 
 			// incrementing grow time
 			currGrowTime += fDTime;
+
+			// loading bar in MEL
+			MString loadingBar = getLoadBar(i, nGrows);
+			MGlobal::displayInfo(loadingBar);
 		}
 
 		// Creating cylinders
@@ -178,11 +182,12 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		// setting growTime to new val
 		growTimeHandle.set(currGrowTime);
 		growTimeHandle.setClean();
-		MGlobal::displayInfo(std::to_string(growTimeHandle.asDouble()).c_str());
 
 		MFnMesh mesh;
 		mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);
 		McheckErr(returnStatus, "ERROR creating new Mesh");
+
+		MGlobal::displayInfo("[##########] 100%");
 
 		outputHandle.set(newOutputData);
 		data.setClean(plug);
@@ -318,6 +323,37 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 #endif
 	}
 	return true;
+}
+
+
+MString TreeNode::getLoadBar(int curr, int tot) {
+	int pct = curr * 100 / tot;
+
+	switch (pct / 10)
+	{
+	case(0):
+		return "[----------] 0%";
+	case(1):
+		return "[#---------] 10%";
+	case(2):
+		return "[##--------] 20%";
+	case(3):
+		return "[###-------] 30%";
+	case(4):
+		return "[####------] 40%";
+	case(5):
+		return "[#####-----] 50%";
+	case(6):
+		return "[######----] 60%";
+	case(7):
+		return "[#######---] 70%";
+	case(8):
+		return "[########--] 80%";
+	case(9):
+		return "[#########-] 90%";
+	default:
+		break;
+	}
 }
 
 // PARSING FILES

@@ -171,6 +171,15 @@ private:
 	/// <param name="rad"> radius multiplier of cylinders</param>
 	/// <returns>true</returns>
 	bool appendNodeCylindersToMesh( MPointArray& vertices, MIntArray& tris, MIntArray& edges, ShootSkeleton& skeleton, double rad);
+
+	/// <summary>
+	/// Outputs an MString loading bar to be displayed in the console.
+	/// Based on current iteration out of total
+	/// </summary>
+	/// <param name="curr"></param>
+	/// <param name="tot"></param>
+	/// <returns></returns>
+	MString getLoadBar(int curr, int tot);
 public:
 	TreeNode() {};
 	~TreeNode() override {};
