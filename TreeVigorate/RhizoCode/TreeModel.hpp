@@ -16,7 +16,7 @@ namespace EcoSysLab {
 		bool m_enableShoot = true;
 
 		bool m_autoBalance = true;
-		bool m_collectLight = false;
+		bool m_collectLight = true;
 		bool m_collectWater = false;
 		bool m_collectNitrite = false;
 

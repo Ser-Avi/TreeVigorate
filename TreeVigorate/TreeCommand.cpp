@@ -31,7 +31,7 @@ global proc createTreeUI() {
         deleteUI treeUI;
     }
     
-    window -title "Tree Controls" -widthHeight 350 200 treeUI;
+    window -title "Tree Controls" -widthHeight 250 220 treeUI;
     
     columnLayout -adjustableColumn true;
     
@@ -40,7 +40,7 @@ global proc createTreeUI() {
                   -field true 
                   -minValue 1.0 
                   -maxValue 100.0 
-                  -value 10.0 
+                  -value 50.0 
                   -step 0.5
                   -dragCommand "updateRate" 
                   -changeCommand "updateRate"
@@ -53,7 +53,7 @@ global proc createTreeUI() {
 					  -field true 
 					  -minValue 0 
 					  -maxValue 1000 
-					  -value 20 
+					  -value 0 
 					  -step 1
 					  -dragCommand "updateGrowth" 
 					  -changeCommand "updateGrowth"
@@ -75,17 +75,33 @@ global proc createTreeUI() {
     
     separator -height 10;
 
-	// Add a checkbox for the boolean parameter
-    //checkBox -label "Grow" 
-            // -value false
-            // -changeCommand "toggleGrow"
-		   //  -annotation "Toggle this to make the tree grow"
-          //   growCheck;
-	button	-label "Grow" 
+	// button to initialize growth
+	button	-label "Grow Once" 
 			-command "toggleGrow"
 			-backgroundColor 0.2 0.6 0.2;
+	
+	separator -height 10;
+
+	button	-label "Play"
+			-command "playPause"
+			-backgroundColor 0.8 0.3 0.3
+			playButton;
+
+	separator -height 10;
+
+	// Display total growth time
+	text -label "Total Grow Time:";
+    textField -editable false -text (`getAttr TN1.growTime`) growTimeField;
+    
+    // Add cleanup when window closes
+    scriptJob -uiDeleted "treeUI" "onTreeUIClose";
 
 	showWindow treeUI;
+}
+
+global proc updateGrowTime() {
+	float $curr = `getAttr TN1.growTime`;
+    textField -edit -text $curr growTimeField;
 }
 
 global proc updateRate() {
@@ -107,6 +123,45 @@ global proc toggleGrow() {
 	int $toggle = `getAttr TN1.makeGrow`;
 	$toggle = 1 - $toggle;
 	setAttr TN1.makeGrow $toggle;
+
+	refresh -force;
+	updateGrowTime;
+}
+
+global proc playPause() {
+    // Check if we're currently playing
+    int $isPlaying = `optionVar -exists "growPlaying"` ? `optionVar -q "growPlaying"` : 0;
+    
+    if ($isPlaying) {
+        // Pause the playback
+        int $jobNum = `optionVar -q "treeJob"`;
+        scriptJob -kill $jobNum -force;
+        optionVar -remove "treeJob";
+        optionVar -iv "growPlaying" 0;
+        
+        // Update button label
+        button -edit -label "Play" -backgroundColor 0.8 0.3 0.3 playButton;
+        print "Playback paused\n";
+    } else {
+        // Start playing
+        int $jobNum = `scriptJob -event "idle" "toggleGrow"`;
+        optionVar -iv "treeJob" $jobNum;
+        optionVar -iv "growPlaying" 1;
+        
+        // Update button label
+        button -edit -label "Pause" -backgroundColor 0.3 0.4 0.6 playButton;
+        print "Playback started\n";
+    }
+}
+
+global proc onTreeUIClose() {
+    // Cleanup any running playback when window closes
+    if (`optionVar -exists "growPlaying"` && `optionVar -q "growPlaying"`) {
+        int $jobNum = `optionVar -q "treeJob"`;
+        scriptJob -kill $jobNum -force;
+        optionVar -remove "treeJob";
+        optionVar -remove "growPlaying";
+    }
 }
 	)";
 	
@@ -125,12 +180,20 @@ global proc browseTreeSpeciesFile() {
     }
 }
 
+global proc generateTreeFromPreset (string $tree) {
+	createTreeNode($tree);
+	// Close the UI Window
+    if (`window -exists generateTreeWindow`) {
+        deleteUI generateTreeWindow;
+    }
+}
+
 global proc createSunLoc(string $tree) {
 	// deleting old one if it exists
     if (`objExists "sunLoc"`) delete "sunLoc";
     // create new locator
     spaceLocator -name "sunLoc";
-    setAttr sunLoc.translate 0 1 0; // Default to Up
+    setAttr sunLoc.translate 0 10 0; // Default to Up
     connectAttr sunLoc.translate ($tree + ".sunDir");
 
 	// clamping sun location to always be positive on y-axis
@@ -173,40 +236,49 @@ global proc createTreeGeneratorWindow() {
         deleteUI generateTreeWindow;
     }
 
-    window -title "Generate Tree" -widthHeight 450 200 generateTreeWindow;
+    window -title "Generate Tree" -widthHeight 350 230 generateTreeWindow;
     columnLayout -adjustableColumn true;
 
     // Add spacing at the top
     separator -style "none" -height 10;
+	text - label "Tree Presets";
+    separator -style "none" -height 10;
 
-    // Tree Data JSON Selection
-    //text -label "Select Tree Data JSON:" -align "left";
-    //separator -style "none" -height 5;
-    //rowLayout -numberOfColumns 2 -columnWidth2 350 80;
-    //textField -editable false -width 350 treeDataField;
-    //button -label "Browse" -command("browseTreeDataFile");
-    //setParent ..;
+	// row for buttons
+	rowLayout	-numberOfColumns 2 
+				-columnWidth2 175 175 
+				-columnAttach2 "both" "both"
+				-columnOffset2 0 0;
+
+		button	- label "Birch Tree"
+				- height 50
+				- width 175
+				- command "generateTreeFromPreset \"Birch\"";
+
+		button	- label "Spruce Tree"
+				- height 50
+				- width 175
+				- command "generateTreeFromPreset \"Spruce\"";
+	setParent..;
+
 
     // Add some space
-    //separator - style "none" - height 10;
-    //separator - style "in" - height 5;
-    //separator - style "none" - height 10;
-
-    // Tree Species File Selection
-    text - label "Select Tree Species File:" - align "left";
-    separator - style "none" - height 5;
-    rowLayout - numberOfColumns 2 - columnWidth2 350 80;
-    textField - editable false - width 350 treeSpeciesField;
-    button - label "Browse" - command("browseTreeSpeciesFile");
-    setParent ..;
-
-    // Add some space before the button
     separator - style "none" - height 15;
     separator - style "in" - height 5;
     separator - style "none" - height 15;
 
+    // Tree Species File Selection
+	text - label "Select Custom Tree File";
+    separator - style "none" - height 5;
+    rowLayout - numberOfColumns 2 - columnWidth2 290 60;
+		textField - editable false - width 190 treeSpeciesField;
+		button - label "Browse" - command("browseTreeSpeciesFile");
+    setParent ..;
+
+    separator -style "none" -height 10;
+
     // Generate Tree Button
-    button - label "Generate Tree" - command("generateTree") - height 50;
+    button - label "Generate Tree From File" - command("generateTree") - height 50 -width 290;
     showWindow generateTreeWindow;
 }
 )";

@@ -142,12 +142,12 @@ private:
 	/// <summary>
 	/// Function to initialize tree model with the set parameters
 	/// </summary>
-	/// <param name="treeFilePath"> full directory path to a .td tree species file to read in</param>
+	/// <param name="tree"> full directory path to a .td tree species file to read in, or the string of a preset tree</param>
 	/// <param name="m_soilModel"></param>
 	/// <param name="m_climateModel"></param>
 	/// <param name="m_rootGrowthParameters"></param>
 	/// <param name="m_shootGrowthParameters"></param>
-	void InitializeMVars(const std::string& treeFilePath, SoilModel &m_soilModel, ClimateModel& m_climateModel,
+	void InitializeMVars(const std::string& tree, SoilModel &m_soilModel, ClimateModel& m_climateModel,
 		RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters);
 	
 	/// <summary>
@@ -192,7 +192,7 @@ public:
 	/// <param name="m_shootGrowthParameters"></param>
 	/// <param name="cm"></param>
 	/// <returns>true if reading was successful</returns>
-	bool ReadTreeFile(const std::string& fileName, RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters, ClimateModel& cm);
+	bool ReadTreeParams(const std::string& fileName, RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters, ClimateModel& cm, bool fromFile);
 
 	static MObject	outputMesh;
 	static MTypeId	id;
@@ -209,4 +209,6 @@ public:
 	static MObject makeGrow;
 	// used to set the sun direction
 	static MObject sunDir;
+	// used to keep track of how much the tree has grown
+	static MObject growTime;
 };
