@@ -7,4 +7,5 @@ public:
 	std::vector<int> hullIdx;
 
 	DelauneyData(std::vector<int> idx, std::vector<int> hullIdx);
+	DelauneyData();
 };

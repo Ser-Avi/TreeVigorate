@@ -164,6 +164,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		
 		StrandManager strandManager;
 		strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 3);
+		std::unordered_map<NodeHandle, DelauneyData> nodeToDelauneyData;
 		//for now, draw each plane
 
 		for (auto& handle : treeModel.RefShootSkeleton().RefRawNodes()) {
@@ -171,21 +172,31 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			//todo :: what should max edge actually be?
 			if (positions.size() > 2) {
 				DelauneyData delauneyData = strandManager.getPlaneTriangleIdx(handle.GetHandle(), 999999, points.length());
-				strandManager.resolvePbd(treeModel.RefShootSkeleton(), handle.GetHandle(), delauneyData.idx);
+				nodeToDelauneyData[handle.GetHandle()] = delauneyData;
+				//strandManager.resolvePbd(treeModel.RefShootSkeleton(), handle.GetHandle(), delauneyData.idx);
 
 				for (auto& point : positions) {
 					MPoint p(point.x, point.y, point.z);
 					points.append(p);
 				}
 
-
-				for (int i = 0; i < delauneyData.idx.size(); i += 3) {
-					faceCounts.append(3);
-					faceConns.append(delauneyData.idx[i]);
-					faceConns.append(delauneyData.idx[i + 1]);
-					faceConns.append(delauneyData.idx[i + 2]);
+				if (handle.RefChildHandles().size() != 1) {
+					for (int i = 0; i < delauneyData.idx.size(); i += 3) {
+						faceCounts.append(3);
+						faceConns.append(delauneyData.idx[i]);
+						faceConns.append(delauneyData.idx[i + 1]);
+						faceConns.append(delauneyData.idx[i + 2]);
+					}
 				}
 			}
+		}
+
+		std::vector<int> bridgeIndices = strandManager.getBridgeTriangleIdx(treeModel.RefShootSkeleton(), nodeToDelauneyData);
+		for (int i = 0; i < bridgeIndices.size(); i += 3) {
+			faceCounts.append(3);
+			faceConns.append(bridgeIndices[i]);
+			faceConns.append(bridgeIndices[i + 1]);
+			faceConns.append(bridgeIndices[i + 2]);
 		}
 
 		// Creating cylinders

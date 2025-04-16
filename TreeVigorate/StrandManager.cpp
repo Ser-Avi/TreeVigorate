@@ -316,9 +316,9 @@ std::vector<int> StrandManager::getBridgeTriangleIdx(ShootSkeleton& skeleton, st
 
 				if (!freezeChild) {
 					int nextChild = (childCurr + 1) % childLoop.size();
-					bridgeTriangleIndices.push_back(childLoop[childCurr]);
 					bridgeTriangleIndices.push_back(parentLoop[parentCurr]);
-					bridgeTriangleIndices.push_back(parentLoop[nextChild]);
+					bridgeTriangleIndices.push_back(childLoop[nextChild]);
+					bridgeTriangleIndices.push_back(childLoop[childCurr]);
 
 					childCurr = nextChild;
 					if (childCurr == firstChild) freezeChild = true;
