@@ -1,6 +1,6 @@
 #include "MeshTestNode.h"
 
-#include "delaunator.hpp"
+//#include "delaunator.hpp"
 
 MObject MeshTestNode::outputMesh;
 MTypeId MeshTestNode::id(0x80500);
@@ -184,7 +184,8 @@ void MeshTestNode::createTris(std::vector<int>& tris, std::vector<glm::vec2>& pt
 
 std::vector<int> MeshTestNode::getPlaneTriangleIdx(std::vector<glm::vec2> points, float maxEdge) {
 	std::vector<int> IDXs;
-
+	return IDXs;
+	/*
 	// I. first we convert our vec2s to points that our delaunay algo reads
 	std::vector<double> dPts;
 	for (int i = 0; i < points.size(); ++i) {
