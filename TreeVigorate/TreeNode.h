@@ -220,4 +220,13 @@ public:
 	static MObject sunDir;
 	// used to keep track of how much the tree has grown
 	static MObject growTime;
+
+	// number of flow nodes
+	static MObject numNodes;
+	// selected node
+	static MObject selectedNode;
+	// selected node Vigor
+	static MObject selectedVigor;
+	// the mesh for the node
+	static MObject outputNodeMesh;
 };

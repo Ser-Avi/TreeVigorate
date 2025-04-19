@@ -23,6 +23,12 @@ MObject TreeNode::makeGrow;
 MObject TreeNode::sunDir;
 MObject TreeNode::growTime;
 
+
+MObject TreeNode::numNodes;
+MObject TreeNode::selectedNode;
+MObject TreeNode::selectedVigor;
+MObject TreeNode::outputNodeMesh;
+
 void* TreeNode::creator()
 {
 	return new TreeNode;
@@ -55,6 +61,20 @@ MStatus TreeNode::initialize()
 	TreeNode::makeGrow = numAttr.create("makeGrow", "mg", MFnNumericData::kBoolean, false, &returnStatus);
 	McheckErr(returnStatus, "Error creating makeGrow attribute\n");
 
+	TreeNode::numNodes = numAttr.create("numNodes", "nn", MFnNumericData::kInt, 1, &returnStatus);
+	numAttr.setStorable(true);
+	numAttr.setWritable(true);
+	numAttr.setReadable(true);
+	numAttr.setKeyable(false);
+
+	TreeNode::selectedNode = numAttr.create("selectedNode", "sn", MFnNumericData::kInt, 0, &returnStatus);
+	TreeNode::selectedVigor = numAttr.create("selectedVigor", "sv", MFnNumericData::kDouble, 1.0, &returnStatus);
+	TreeNode::outputNodeMesh = typedAttr.create("outputNodeMesh", "outNode",
+		MFnData::kMesh,
+		MObject::kNullObj,
+		&returnStatus);
+	typedAttr.setHidden(true);
+
 	TreeNode::sunDir = numAttr.create("sunDir", "sd", MFnNumericData::k3Double, 0, &returnStatus);
 	numAttr.setNiceNameOverride("Light Direction");
 	numAttr.setDefault(0.0, 1.0, 0.0);
@@ -64,7 +84,7 @@ MStatus TreeNode::initialize()
 	numAttr.setStorable(true);
 	numAttr.setWritable(true);
 	numAttr.setReadable(true);
-	numAttr.setHidden(true);
+	numAttr.setHidden(false);
 	numAttr.setKeyable(false);
 	McheckErr(returnStatus, "Error creating growTime attrib\n");
 
@@ -103,6 +123,18 @@ MStatus TreeNode::initialize()
 
 	returnStatus = addAttribute(TreeNode::growTime);
 	McheckErr(returnStatus, "ERROR adding growTime attribute\n");
+
+	returnStatus = addAttribute(TreeNode::numNodes);
+	returnStatus = addAttribute(TreeNode::selectedNode);
+	returnStatus = addAttribute(TreeNode::selectedVigor);
+	returnStatus = addAttribute(TreeNode::outputNodeMesh);
+
+
+	returnStatus = attributeAffects(TreeNode::selectedNode,
+		TreeNode::outputNodeMesh);
+	returnStatus = attributeAffects(TreeNode::selectedVigor,
+		TreeNode::outputNodeMesh);
+
 
 	return MS::kSuccess;
 }
@@ -182,6 +214,14 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		// setting growTime to new val
 		growTimeHandle.set(currGrowTime);
 		growTimeHandle.setClean();
+
+		// setting number of nodes
+		MDataHandle nodeNumHandle = data.outputValue(numNodes);
+		int flows = shoots.RefSortedFlowList().size();
+		nodeNumHandle.set(flows);
+		nodeNumHandle.setClean();
+		MGlobal::displayInfo("Flows: ");
+		MGlobal::displayInfo(MString(std::to_string(flows).c_str()));
 
 		MFnMesh mesh;
 		mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);

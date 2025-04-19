@@ -92,6 +92,18 @@ global proc createTreeUI() {
 	// Display total growth time
 	text -label "Total Grow Time:";
     textField -editable false -text (`getAttr TN1.growTime`) growTimeField;
+
+	separator - style "none" - height 15;
+    separator - style "in" - height 5;
+    separator - style "none" - height 15;
+	text -label "Node Editing";
+	separator - style "in" -height 5;
+
+	// Display total flow node num
+	text -label "Number of Tree Nodes:";
+    textField -editable false -text (`getAttr TN1.numNodes`) nodeNumField;
+
+	// Edit this specific node
     
     // Add cleanup when window closes
     scriptJob -uiDeleted "treeUI" "onTreeUIClose";
@@ -102,6 +114,11 @@ global proc createTreeUI() {
 global proc updateGrowTime() {
 	float $curr = `getAttr TN1.growTime`;
     textField -edit -text $curr growTimeField;
+}
+
+global proc updateNodeNum() {
+	float $curr = `getAttr TN1.numNodes`;
+    textField -edit -text $curr nodeNumField;
 }
 
 global proc updateRate() {
@@ -126,6 +143,7 @@ global proc toggleGrow() {
 
 	refresh -force;
 	updateGrowTime;
+	updateNodeNum;
 }
 
 global proc playPause() {
