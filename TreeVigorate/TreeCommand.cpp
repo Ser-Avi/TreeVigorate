@@ -104,11 +104,43 @@ global proc createTreeUI() {
     textField -editable false -text (`getAttr TN1.numNodes`) nodeNumField;
 
 	// Edit this specific node
+	text -label "Selected Node";
+	intField -minValue 0 -maxValue 100 -value 0 -changeCommand "updateSelectedNode" nodeSelectField;
+	
+	floatSliderGrp -label "Edit Growth Potential" 
+					  -field true 
+					  -minValue 0.0
+					  -maxValue 50.0 
+					  -value 1.0 
+					  -step 0.2
+					  -dragCommand "updateVigor" 
+					  -changeCommand "updateVigor"
+				      -annotation "Adjusts the selected node's growth potential"
+					  vigorSlider;
     
     // Add cleanup when window closes
     scriptJob -uiDeleted "treeUI" "onTreeUIClose";
 
 	showWindow treeUI;
+}
+
+global proc updateVigor() {
+	float $value = `floatSliderGrp -query -value vigorSlider`;
+	print("New vigor: " + $value);
+}
+
+global proc updateSelectedNode() {
+	int $uiVal = `intField -query -value nodeSelectField`;
+	setAttr TN1.selectedNode $uiVal;
+	print("Selected node: " + $uiVal);
+	// display the selected node's vigor
+	refresh -force;
+	
+	int $test = `getAttr TN1.selectedNode`;
+	print("Test: " + $test);
+
+	float $vigor = `getAttr TN1.selectedVigor`;
+	floatSliderGrp -edit -value $vigor vigorSlider;
 }
 
 global proc updateGrowTime() {
@@ -117,8 +149,10 @@ global proc updateGrowTime() {
 }
 
 global proc updateNodeNum() {
-	float $curr = `getAttr TN1.numNodes`;
+	int $curr = `getAttr TN1.numNodes`;
     textField -edit -text $curr nodeNumField;
+	// setting the maximum value of node selection to this
+	intField -edit -maxValue $curr nodeSelectField;
 }
 
 global proc updateRate() {
@@ -220,13 +254,24 @@ global proc createSunLoc(string $tree) {
 
 global proc createTreeNode(string $file) {
 	createNode transform -n TSys1;
+	createNode transform -n TSys2;			// the 2s are for the highlighted node
 	createNode mesh -n TShape1 -p TSys1;
+	createNode mesh -n TShape2 -p TSys2;
 	sets -add initialShadingGroup TShape1;
+
+	// making second shape have a red shade for highlighting
+	shadingNode -asShader lambert -n "RedShader";
+	setAttr RedShader.color -type double3 1 0 0;
+	shadingNode -asUtility shadingEngine -n "RedShaderSG";
+	connectAttr -f "RedShader.outColor" "RedShaderSG.surfaceShader";
+	sets -e -forceElement "RedShaderSG" "TShape2";
+
 	string $treeNode = `createNode TreeNode -n TN1`;
     if($file != "") {
         eval("setAttr -type \"string\" TN1.treeDataFile \"" + $file + "\"");
     }
 	connectAttr TN1.outputMesh TShape1.inMesh;
+	connectAttr TN1.outputNodeMesh TShape2.inMesh;
 
 	// creating Sun Direction locator
 	createSunLoc($treeNode);

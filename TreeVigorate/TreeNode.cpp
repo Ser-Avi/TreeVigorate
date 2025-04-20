@@ -66,9 +66,13 @@ MStatus TreeNode::initialize()
 	numAttr.setWritable(true);
 	numAttr.setReadable(true);
 	numAttr.setKeyable(false);
-
 	TreeNode::selectedNode = numAttr.create("selectedNode", "sn", MFnNumericData::kInt, 0, &returnStatus);
 	TreeNode::selectedVigor = numAttr.create("selectedVigor", "sv", MFnNumericData::kDouble, 1.0, &returnStatus);
+	numAttr.setStorable(true);
+	numAttr.setWritable(true);
+	numAttr.setReadable(true);
+	numAttr.setHidden(false);
+	numAttr.setKeyable(false);
 	TreeNode::outputNodeMesh = typedAttr.create("outputNodeMesh", "outNode",
 		MFnData::kMesh,
 		MObject::kNullObj,
@@ -129,11 +133,12 @@ MStatus TreeNode::initialize()
 	returnStatus = addAttribute(TreeNode::selectedVigor);
 	returnStatus = addAttribute(TreeNode::outputNodeMesh);
 
-
 	returnStatus = attributeAffects(TreeNode::selectedNode,
 		TreeNode::outputNodeMesh);
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 	returnStatus = attributeAffects(TreeNode::selectedVigor,
 		TreeNode::outputNodeMesh);
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
 
 	return MS::kSuccess;
@@ -232,6 +237,70 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		outputHandle.set(newOutputData);
 		data.setClean(plug);
 	}
+	else if (plug == outputNodeMesh) {
+		int currNode = data.inputValue(selectedNode).asInt() - 1;
+		if (currNode < 0) {
+			MGlobal::displayError("ERROR: Node Index Invalid");
+
+			data.setClean(plug);
+			return MS::kSuccess;
+		}
+		MDataHandle vigHandle = data.outputValue(selectedVigor);
+		float currVig = vigHandle.asFloat();
+
+		Skeleton skeleton = treeModel.RefShootSkeleton();
+		NodeHandle currHandle = skeleton.RefSortedFlowList()[currNode];
+		Flow currFlow = skeleton.RefFlow(currHandle);
+		NodeHandle first = currFlow.RefNodeHandles()[0];
+		Node curr = skeleton.RefNode(first);
+		float vigor = curr.m_data.m_vigorFlow.m_subTreeAllocatedVigor;
+		/*float vigor = 0;
+		for (auto& bud : curr.m_data.m_buds) {
+			if (bud.m_status != BudStatus::Died) {
+				vigor += bud.m_vigorSink.GetVigor();
+			}
+		}*/
+		//float vigor = curr.m_data.m_buds[0].m_vigorSink.GetVigor();
+
+		MGlobal::displayInfo(std::to_string(vigor).c_str());
+
+		vigHandle.set(vigor);
+		vigHandle.setClean();
+
+		// highlighting selected flow
+		float r = data.inputValue(radius).asDouble() + 0.2;
+		glm::vec3 currPos = currFlow.m_info.m_globalStartPosition;
+		glm::vec3 parentPos = currFlow.m_info.m_globalEndPosition;
+		MPoint start(currPos[0], currPos[1], currPos[2]);
+		MPoint end(parentPos[0], parentPos[1], parentPos[2]);
+		glm::vec3 sDir;
+		if (currFlow.GetParentHandle() >= 0) {
+			sDir = currPos - skeleton.PeekFlow(currFlow.GetParentHandle()).m_info.m_globalStartPosition;
+		}
+		else {
+			sDir = glm::vec3(0, 1, 0);
+		}
+		glm::vec3 eDir = parentPos - currPos;
+		MPointArray points;
+		MIntArray faceCounts;
+		MIntArray faceConns;
+		buildCylinderMesh(start, end, currFlow.m_info.m_startThickness * r, currFlow.m_info.m_endThickness * r, sDir, eDir,
+			points, faceCounts, faceConns);
+
+		// create output object
+		MDataHandle outputHandle = data.outputValue(outputNodeMesh, &returnStatus);
+		McheckErr(returnStatus, "ERROR getting polygon data handle\n");
+		MFnMeshData dataCreator;
+		MObject newOutputData = dataCreator.create(&returnStatus);
+		McheckErr(returnStatus, "ERROR creating outputData");
+
+		MFnMesh mesh;
+		mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);
+		McheckErr(returnStatus, "ERROR creating new Mesh");
+
+		outputHandle.set(newOutputData);
+		data.setClean(plug);
+	}
 	else
 		return MS::kUnknownParameter;
 
@@ -241,7 +310,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 /// <summary>
 /// Based on the cylinder class method
 /// </summary>
-void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
+void TreeNode::buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
 	MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns) {
 	int startIndex = points.length();
 	int numSlices = 10;

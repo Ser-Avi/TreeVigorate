@@ -159,6 +159,21 @@ private:
 	/// Stores the initialized tree params
 	/// </summary>
 	Controllers treeParams;
+
+	/// <summary>
+	/// Builds a cylinder mesh into the input arrays
+	/// </summary>
+	/// <param name="start">start loc</param>
+	/// <param name="end">end loc</param>
+	/// <param name="sRad">start rad</param>
+	/// <param name="eRad">end rad</param>
+	/// <param name="sDir">start normal</param>
+	/// <param name="eDir">end normal</param>
+	/// <param name="points"></param>
+	/// <param name="faceCounts"></param>
+	/// <param name="faceConns"></param>
+	void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
+		MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns);
 	
 	/// <summary>
 	/// Creates a cylinder between each node in the input skeleton and appends them to the mesh
