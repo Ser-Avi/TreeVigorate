@@ -185,7 +185,7 @@ private:
 	/// <param name="skeleton"> skeleton storing the nodes</param>
 	/// <param name="rad"> radius multiplier of cylinders</param>
 	/// <returns>true</returns>
-	bool appendNodeCylindersToMesh( MPointArray& vertices, MIntArray& tris, MIntArray& edges, ShootSkeleton& skeleton, double rad);
+	bool appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double radius);
 
 	/// <summary>
 	/// Outputs an MString loading bar to be displayed in the console.
@@ -241,7 +241,7 @@ public:
 	// selected node
 	static MObject selectedNode;
 	// selected node Vigor
-	static MObject selectedVigor;
+	static MObject vigor;
 	// the mesh for the node
 	static MObject outputNodeMesh;
 };

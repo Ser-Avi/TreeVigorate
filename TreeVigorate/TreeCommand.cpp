@@ -110,11 +110,11 @@ global proc createTreeUI() {
 	floatSliderGrp -label "Edit Growth Potential" 
 					  -field true 
 					  -minValue 0.0
-					  -maxValue 50.0 
-					  -value 1.0 
-					  -step 0.2
-					  -dragCommand "updateVigor" 
-					  -changeCommand "updateVigor"
+					  -maxValue 1000.0 
+					  -value (`getAttr TN1.vigor`)
+					  -step 0.1
+					  -precision 2
+					  -changeCommand "setVigor"
 				      -annotation "Adjusts the selected node's growth potential"
 					  vigorSlider;
     
@@ -124,28 +124,31 @@ global proc createTreeUI() {
 	showWindow treeUI;
 }
 
-global proc updateVigor() {
+global proc setVigor() {
 	float $value = `floatSliderGrp -query -value vigorSlider`;
 	print("New vigor: " + $value);
+}
+
+global proc updateVigor() {
+	float $v = `getAttr TN1.vigor`;
+	$v = $v * 10.0;
+	print("fml: " + $v);
+	floatSliderGrp -edit -value $v vigorSlider;
 }
 
 global proc updateSelectedNode() {
 	int $uiVal = `intField -query -value nodeSelectField`;
 	setAttr TN1.selectedNode $uiVal;
 	print("Selected node: " + $uiVal);
-	// display the selected node's vigor
-	refresh -force;
-	
-	int $test = `getAttr TN1.selectedNode`;
-	print("Test: " + $test);
 
-	float $vigor = `getAttr TN1.selectedVigor`;
-	floatSliderGrp -edit -value $vigor vigorSlider;
+	refresh -force;
+
+	updateVigor;
 }
 
 global proc updateGrowTime() {
-	float $curr = `getAttr TN1.growTime`;
-    textField -edit -text $curr growTimeField;
+	float $currT = `getAttr TN1.growTime`;
+    textField -edit -text $currT growTimeField;
 }
 
 global proc updateNodeNum() {

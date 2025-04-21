@@ -26,7 +26,7 @@ MObject TreeNode::growTime;
 
 MObject TreeNode::numNodes;
 MObject TreeNode::selectedNode;
-MObject TreeNode::selectedVigor;
+MObject TreeNode::vigor;
 MObject TreeNode::outputNodeMesh;
 
 void* TreeNode::creator()
@@ -67,12 +67,12 @@ MStatus TreeNode::initialize()
 	numAttr.setReadable(true);
 	numAttr.setKeyable(false);
 	TreeNode::selectedNode = numAttr.create("selectedNode", "sn", MFnNumericData::kInt, 0, &returnStatus);
-	TreeNode::selectedVigor = numAttr.create("selectedVigor", "sv", MFnNumericData::kDouble, 1.0, &returnStatus);
+	TreeNode::vigor = numAttr.create("vigor", "v", MFnNumericData::kDouble, 3.0, &returnStatus);
 	numAttr.setStorable(true);
 	numAttr.setWritable(true);
 	numAttr.setReadable(true);
-	numAttr.setHidden(false);
 	numAttr.setKeyable(false);
+	McheckErr(returnStatus, "Error creating selectedVigor attrib\n");
 	TreeNode::outputNodeMesh = typedAttr.create("outputNodeMesh", "outNode",
 		MFnData::kMesh,
 		MObject::kNullObj,
@@ -130,16 +130,13 @@ MStatus TreeNode::initialize()
 
 	returnStatus = addAttribute(TreeNode::numNodes);
 	returnStatus = addAttribute(TreeNode::selectedNode);
-	returnStatus = addAttribute(TreeNode::selectedVigor);
+	returnStatus = addAttribute(TreeNode::vigor);
+	McheckErr(returnStatus, "ERROR adding vigor attribute\n");
 	returnStatus = addAttribute(TreeNode::outputNodeMesh);
 
 	returnStatus = attributeAffects(TreeNode::selectedNode,
 		TreeNode::outputNodeMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
-	returnStatus = attributeAffects(TreeNode::selectedVigor,
-		TreeNode::outputNodeMesh);
-	McheckErr(returnStatus, "ERROR in attributeAffects\n");
-
 
 	return MS::kSuccess;
 }
@@ -155,6 +152,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		float r = data.inputValue(radius).asDouble();
 		double3& sunDirVal = data.inputValue(sunDir).asDouble3();
 		glm::vec3 sunVec = glm::normalize(glm::vec3(sunDirVal[0], sunDirVal[1], sunDirVal[2]));
+		float currVig = data.inputValue(vigor).asDouble();
 
 		// For keeping track of total grow time
 		MDataHandle growTimeHandle = data.outputValue(growTime);
@@ -240,20 +238,20 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 	else if (plug == outputNodeMesh) {
 		int currNode = data.inputValue(selectedNode).asInt() - 1;
 		if (currNode < 0) {
-			MGlobal::displayError("ERROR: Node Index Invalid");
+			MGlobal::displayError("Node Index Invalid");
 
 			data.setClean(plug);
 			return MS::kSuccess;
 		}
-		MDataHandle vigHandle = data.outputValue(selectedVigor);
-		float currVig = vigHandle.asFloat();
+		MDataHandle vigHandle = data.outputValue(vigor);
+		float currVig = vigHandle.asDouble();
 
 		Skeleton skeleton = treeModel.RefShootSkeleton();
 		NodeHandle currHandle = skeleton.RefSortedFlowList()[currNode];
 		Flow currFlow = skeleton.RefFlow(currHandle);
 		NodeHandle first = currFlow.RefNodeHandles()[0];
 		Node curr = skeleton.RefNode(first);
-		float vigor = curr.m_data.m_vigorFlow.m_subTreeAllocatedVigor;
+		double treeVig = curr.m_data.m_vigorFlow.m_subTreeAllocatedVigor;
 		/*float vigor = 0;
 		for (auto& bud : curr.m_data.m_buds) {
 			if (bud.m_status != BudStatus::Died) {
@@ -262,9 +260,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		}*/
 		//float vigor = curr.m_data.m_buds[0].m_vigorSink.GetVigor();
 
-		MGlobal::displayInfo(std::to_string(vigor).c_str());
-
-		vigHandle.set(vigor);
+		vigHandle.set(treeVig);
 		vigHandle.setClean();
 
 		// highlighting selected flow
