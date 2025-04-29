@@ -126,7 +126,9 @@ global proc createTreeUI() {
 
 global proc setVigor() {
 	float $value = `floatSliderGrp -query -value vigorSlider`;
-	print("New vigor: " + $value);
+	$value = $value * 0.1;
+	setAttr TN1.vigor $value;
+	setAttr TN1.growNode true;
 }
 
 global proc updateVigor() {

@@ -32,6 +32,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <stack>
+#include <unordered_set>
 
 using namespace EcoSysLab;
 
@@ -161,6 +163,11 @@ private:
 	Controllers treeParams;
 
 	/// <summary>
+	/// Due to Maya being Maya, this is the best way of checking if Radius was changed...
+	/// </summary>
+	float prevRad;
+
+	/// <summary>
 	/// Builds a cylinder mesh into the input arrays
 	/// </summary>
 	/// <param name="start">start loc</param>
@@ -193,8 +200,41 @@ private:
 	/// </summary>
 	/// <param name="curr"></param>
 	/// <param name="tot"></param>
+	/// <param name="lightDir"></param>
 	/// <returns></returns>
 	MString getLoadBar(int curr, int tot);
+
+	void developSubtree(ShootSkeleton& skeleton, const NodeHandle& first, glm::vec3& lightDir);
+
+	/// <summary>
+	/// Performs growShoots on the subtree
+	/// </summary>
+	/// <param name="globalTransform"></param>
+	/// <param name="first"></param>
+	/// <param name="subNodes"></param>
+	/// <param name="climateModel"></param>
+	/// <param name="shootGrowthParameters"></param>
+	/// <param name="newShootGrowthRequirement"></param>
+	/// <returns></returns>
+	bool growSubShoots(const glm::mat4& globalTransform, const NodeHandle& first, std::unordered_set<NodeHandle> subNodes,
+		ClimateModel& climateModel, const ShootGrowthController& shootGrowthParameters, PlantGrowthRequirement& newShootGrowthRequirement);
+
+	/// <summary>
+	/// Allocates shoot vigor to the subtree
+	/// </summary>
+	/// <param name="first"></param>
+	/// <param name="subNodes"></param>
+	/// <param name="shootGrowthParameters"></param>
+	void SubTreeAllocateShootVigor(const NodeHandle& first, std::unordered_set<NodeHandle> subNodes, const ShootGrowthController& shootGrowthParameters);
+
+	/// <summary>
+	/// The post process part of growth.
+	/// Used when growing the subtree.
+	/// </summary>
+	/// <param name="treeStructureChanged"></param>
+	/// <param name="m_shootSkeleton"></param>
+	/// <param name="subNodes"></param>
+	void growPostProcess(bool treeStructureChanged, ShootSkeleton& m_shootSkeleton, std::unordered_set<NodeHandle> subNodes);
 public:
 	TreeNode() {};
 	~TreeNode() override {};
@@ -244,4 +284,6 @@ public:
 	static MObject vigor;
 	// the mesh for the node
 	static MObject outputNodeMesh;
+	// a bool to check if only node stuff should be updated
+	static MObject growNode;
 };
