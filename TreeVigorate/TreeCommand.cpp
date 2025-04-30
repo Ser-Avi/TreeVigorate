@@ -68,7 +68,6 @@ global proc createTreeUI() {
 					  -maxValue 50.0 
 					  -value 1.0 
 					  -step 0.2
-					  -dragCommand "updateRad" 
 					  -changeCommand "updateRad"
 				      -annotation "Adjusts tree radius with this multiplier"
 					  radSlider;

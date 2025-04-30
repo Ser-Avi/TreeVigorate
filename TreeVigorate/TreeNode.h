@@ -165,7 +165,7 @@ private:
 	/// <summary>
 	/// Due to Maya being Maya, this is the best way of checking if Radius was changed...
 	/// </summary>
-	float prevRad;
+	float prevRad = 1.0;
 
 	/// <summary>
 	/// Builds a cylinder mesh into the input arrays
