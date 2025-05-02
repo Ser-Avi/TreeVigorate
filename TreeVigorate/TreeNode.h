@@ -207,6 +207,13 @@ private:
 	void developSubtree(ShootSkeleton& skeleton, const NodeHandle& first, glm::vec3& lightDir);
 
 	/// <summary>
+	/// Prunes the entire subtree from the skeleton
+	/// </summary>
+	/// <param name="skeleton"></param>
+	/// <param name="first"></param>
+	void pruneSubtree(ShootSkeleton& skeleton, const NodeHandle& first);
+
+	/// <summary>
 	/// Performs growShoots on the subtree
 	/// </summary>
 	/// <param name="globalTransform"></param>
@@ -280,10 +287,12 @@ public:
 	static MObject numNodes;
 	// selected node
 	static MObject selectedNode;
-	// selected node Vigor
-	static MObject vigor;
+	// how many times we want to grow the subnode
+	static MObject numSubGrows;
 	// the mesh for the node
 	static MObject outputNodeMesh;
 	// a bool to check if only node stuff should be updated
 	static MObject growNode;
+	// a bool to check if we want to prune the subtree
+	static MObject pruneNode;
 };

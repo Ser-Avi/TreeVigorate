@@ -26,8 +26,9 @@ MObject TreeNode::growTime;
 
 MObject TreeNode::numNodes;
 MObject TreeNode::selectedNode;
-MObject TreeNode::vigor;
+MObject TreeNode::numSubGrows;
 MObject TreeNode::growNode;
+MObject TreeNode::pruneNode;
 MObject TreeNode::outputNodeMesh;
 
 void* TreeNode::creator()
@@ -90,11 +91,7 @@ MStatus TreeNode::initialize()
 	numAttr.setReadable(true);
 	numAttr.setKeyable(false);
 	TreeNode::selectedNode = numAttr.create("selectedNode", "sn", MFnNumericData::kInt, 0, &returnStatus);
-	TreeNode::vigor = numAttr.create("vigor", "v", MFnNumericData::kDouble, 3.0, &returnStatus);
-	numAttr.setStorable(true);
-	numAttr.setWritable(true);
-	numAttr.setReadable(true);
-	numAttr.setKeyable(false);
+	TreeNode::numSubGrows = numAttr.create("numSubGrows", "nsg", MFnNumericData::kInt, 0, &returnStatus);
 	McheckErr(returnStatus, "Error creating selectedVigor attrib\n");
 	TreeNode::outputNodeMesh = typedAttr.create("outputNodeMesh", "outNode",
 		MFnData::kMesh,
@@ -103,6 +100,8 @@ MStatus TreeNode::initialize()
 	typedAttr.setHidden(true);
 	TreeNode::growNode = numAttr.create("growNode", "gn", MFnNumericData::kBoolean, false, &returnStatus);
 	McheckErr(returnStatus, "Error creating growNode attribute\n");
+	TreeNode::pruneNode = numAttr.create("pruneNode", "pn", MFnNumericData::kBoolean, false, &returnStatus);
+	McheckErr(returnStatus, "Error creating pruneNode attribute\n");
 
 	returnStatus = addAttribute(TreeNode::outputMesh);
 	McheckErr(returnStatus, "ERROR adding outputMesh attribute\n");
@@ -140,15 +139,29 @@ MStatus TreeNode::initialize()
 	// NODE ATTRIBUTES
 	returnStatus = addAttribute(TreeNode::numNodes);
 	returnStatus = addAttribute(TreeNode::selectedNode);
-	returnStatus = addAttribute(TreeNode::vigor);
+	returnStatus = addAttribute(TreeNode::numSubGrows);
 	McheckErr(returnStatus, "ERROR adding vigor attribute\n");
 	returnStatus = addAttribute(TreeNode::growNode);
 	returnStatus = addAttribute(TreeNode::outputNodeMesh);
+	returnStatus = addAttribute(TreeNode::pruneNode);
 
 	returnStatus = attributeAffects(TreeNode::selectedNode,
 		TreeNode::outputNodeMesh);
 	returnStatus = attributeAffects(TreeNode::growNode,
 		TreeNode::outputMesh);
+	returnStatus = attributeAffects(TreeNode::pruneNode,
+		TreeNode::outputMesh);
+	// everything that affects the outputMesh, needs to also affect the outputnodeMesh, as any change in the above
+	// will affect the highlighted node. Could this just be making outputMesh affect outputnodeMesh?
+	// No, because Maya.
+	returnStatus = attributeAffects(TreeNode::growNode,
+		TreeNode::outputNodeMesh);
+	returnStatus = attributeAffects(TreeNode::radius,
+		TreeNode::outputNodeMesh);
+	returnStatus = attributeAffects(TreeNode::makeGrow,
+		TreeNode::outputNodeMesh);
+	returnStatus = attributeAffects(TreeNode::pruneNode,
+		TreeNode::outputNodeMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
 	return MS::kSuccess;
@@ -166,6 +179,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		double3& sunDirVal = data.inputValue(sunDir).asDouble3();
 		glm::vec3 sunVec = glm::normalize(glm::vec3(sunDirVal[0], sunDirVal[1], sunDirVal[2]));
 		bool isNodeChanged = data.inputValue(growNode).asBool();
+		bool isPruning = data.inputValue(pruneNode).asBool();
 
 		// For keeping track of total grow time
 		MDataHandle growTimeHandle = data.outputValue(growTime);
@@ -196,7 +210,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MIntArray faceConns;
 
 		// Growing tree
-		if (!isNodeChanged && abs(r - prevRad) <= 0.01) {
+		if (!isNodeChanged && abs(r - prevRad) <= 0.01 && !isPruning) {
 			MGlobal::displayInfo("Abt to Grow, stand back!!");
 			// if we aren't changing node vigor, we grow normally
 			for (int i = 0; i < nGrows; ++i) {
@@ -223,11 +237,9 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 				MGlobal::displayInfo(loadingBar);
 			}
 		}
-		else if (isNodeChanged) {
-			// else we only grow/prune from this node
-			float currVig = data.inputValue(vigor).asDouble();
-			MGlobal::displayInfo("Changing node vigor to: ");
-			MGlobal::displayInfo(std::to_string(currVig).c_str());
+		else if (isNodeChanged && !isPruning) {
+			// else we only grow from this node
+			int subGrowNum = data.inputValue(numSubGrows).asInt();
 
 			int currNode = data.inputValue(selectedNode).asInt() - 1;
 			if (currNode < 0) {
@@ -262,8 +274,12 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 				}
 			}*/
 
-			for (int i = 0; i < 100; ++i) {
+			for (int i = 0; i < subGrowNum; ++i) {
 				developSubtree(skeleton, first, sunVec);
+				
+				// loading bar in MEL
+				MString loadingBar = getLoadBar(i, subGrowNum);
+				MGlobal::displayInfo(loadingBar);
 			}
 
 			// reset bool to false
@@ -271,6 +287,27 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			boolHand.set(false);
 			boolHand.setClean();
 			MGlobal::displayInfo("finish nodegrow");
+		} else if (isPruning) {
+			int currNode = data.inputValue(selectedNode).asInt() - 1;
+			if (currNode < 0) {
+				MGlobal::displayError("Node Index Invalid");
+
+				data.setClean(plug);
+				return MS::kSuccess;
+			}
+
+			Skeleton skeleton = treeModel.RefShootSkeleton();
+			NodeHandle currHandle = skeleton.RefSortedFlowList()[currNode];
+			Flow currFlow = skeleton.RefFlow(currHandle);
+			const NodeHandle first = currFlow.RefNodeHandles()[0];
+
+			pruneSubtree(skeleton, first);
+
+			// reset bool to false
+			MDataHandle boolHand = data.outputValue(pruneNode);
+			boolHand.set(false);
+			boolHand.setClean();
+			MGlobal::displayInfo("finish pruning");
 		}
 
 		// Creating cylinders
@@ -314,29 +351,44 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			data.setClean(plug);
 			return MS::kSuccess;
 		}
-		MDataHandle vigHandle = data.outputValue(vigor);
-		float currVig = vigHandle.asDouble();
 
 		Skeleton skeleton = treeModel.RefShootSkeleton();
 		NodeHandle currHandle = skeleton.RefSortedFlowList()[currNode];
 		Flow currFlow = skeleton.RefFlow(currHandle);
+
+		// the flow could be empty if we just pruned, so we create an empty mesh and return it
+		if (currFlow.RefNodeHandles().size() == 0) {
+			MPointArray points;
+			MIntArray faceCounts;
+			MIntArray faceConns;
+			// create output object
+			MDataHandle outputHandle = data.outputValue(outputNodeMesh, &returnStatus);
+			McheckErr(returnStatus, "ERROR getting polygon data handle\n");
+			MFnMeshData dataCreator;
+			MObject newOutputData = dataCreator.create(&returnStatus);
+			McheckErr(returnStatus, "ERROR creating outputData");
+
+			MFnMesh mesh;
+			mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);
+			McheckErr(returnStatus, "ERROR creating new Mesh");
+
+			outputHandle.set(newOutputData);
+			data.setClean(plug);
+			return MStatus::kSuccess;
+		}
+
 		NodeHandle first = currFlow.RefNodeHandles()[0];
 		Node curr = skeleton.RefNode(first);
 		//double treeVig = curr.m_data.m_vigorFlow.m_subTreeAllocatedVigor;
 		// the vigor is stored in the buds
-		double treeVig = 0;
-		for (auto& bud : curr.m_data.m_buds) {
-			if (bud.m_status != BudStatus::Died) {
-				treeVig += bud.m_vigorSink.GetVigor();
-			}
-		}
+		//double treeVig = 0;
+		//for (auto& bud : curr.m_data.m_buds) {
+		//	if (bud.m_status != BudStatus::Died) {
+		//		treeVig += bud.m_vigorSink.GetVigor();
+		//	}
+		//}
 		
 		//float vigor = curr.m_data.m_buds[0].m_vigorSink.GetVigor();
-
-		treeVig = curr.m_data.m_vigorFlow.m_allocatedVigor;
-
-		vigHandle.set(treeVig);
-		vigHandle.setClean();
 
 		// highlighting selected flow
 		float r = data.inputValue(radius).asDouble() + 0.2;
@@ -659,6 +711,31 @@ void TreeNode::developSubtree(ShootSkeleton& m_shootSkeleton, const NodeHandle& 
 	treeModel.m_age += treeModel.m_currentDeltaTime;
 }
 
+void TreeNode::pruneSubtree(ShootSkeleton& skeleton, const NodeHandle& first) {
+
+	//std::stack<NodeHandle> nhstack;
+	//std::unordered_set<NodeHandle> subNodes;
+	//nhstack.push(first);
+	//while (!nhstack.empty()) {
+	//	const NodeHandle currNH = nhstack.top();
+	//	nhstack.pop();
+	//	if (!subNodes.count(currNH)) {
+	//		subNodes.insert(currNH);
+	//		std::vector<NodeHandle> children = skeleton.RefNode(currNH).RefChildHandles();
+	//		for (const auto& child : children) {
+	//			nhstack.push(child);
+	//		}
+	//	}
+	//}
+
+	//for (const auto& internodeHandle : subNodes) {
+	//	//if (skeleton.RefNode(internodeHandle).IsRecycled()) continue;
+	//	treeModel.PruneInternode(internodeHandle);
+	//}
+	treeModel.PruneInternode(first);
+	skeleton.SortLists();
+}
+
 bool TreeNode::growSubShoots(const glm::mat4& globalTransform, const NodeHandle& first, std::unordered_set<NodeHandle> subNodes,
 	ClimateModel& climateModel, const ShootGrowthController& shootGrowthParameters, PlantGrowthRequirement& newShootGrowthRequirement) {
 	ShootSkeleton& skeleton = treeModel.RefShootSkeleton();
@@ -840,7 +917,7 @@ void TreeNode::SubTreeAllocateShootVigor(const NodeHandle& first, std::unordered
 					currHand = m_shootSkeleton.PeekNode(currHand).GetParentHandle();
 					++distToFirst;
 				}
-				float num = 1.2;
+				float num = 1.0;
 				num -= (distToFirst * 0.1);
 				num = glm::clamp(num, 0.f, 1.5f);
 				float vigorRatio = glm::clamp((float)(subNodes.size() - distToFirst * 0.5) / (float)m_shootSkeleton.RefSortedNodeList().size(), 0.f, 10.f);// (float)numParents / (float)subNodes.size() * 2.f;

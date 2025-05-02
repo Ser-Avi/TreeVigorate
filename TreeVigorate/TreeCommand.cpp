@@ -42,7 +42,6 @@ global proc createTreeUI() {
                   -maxValue 100.0 
                   -value 50.0 
                   -step 0.5
-                  -dragCommand "updateRate" 
                   -changeCommand "updateRate"
 				  -annotation "Controls how fast each growth is calculated"
                   rateSlider;
@@ -52,10 +51,9 @@ global proc createTreeUI() {
 	intSliderGrp -label "Growth Amount" 
 					  -field true 
 					  -minValue 0 
-					  -maxValue 1000 
+					  -maxValue 500 
 					  -value 0 
 					  -step 1
-					  -dragCommand "updateGrowth" 
 					  -changeCommand "updateGrowth"
 					  -annotation "Controls how much the tree grows with each calculation"
 					  growthSlider;
@@ -106,16 +104,35 @@ global proc createTreeUI() {
 	text -label "Selected Node";
 	intField -minValue 0 -maxValue 100 -value 0 -changeCommand "updateSelectedNode" nodeSelectField;
 	
-	floatSliderGrp -label "Edit Growth Potential" 
+	intSliderGrp -label "Sub-tree Growth Amount" 
 					  -field true 
-					  -minValue 0.0
-					  -maxValue 1000.0 
-					  -value (`getAttr TN1.vigor`)
-					  -step 0.1
-					  -precision 2
-					  -changeCommand "setVigor"
-				      -annotation "Adjusts the selected node's growth potential"
-					  vigorSlider;
+					  -minValue 0
+					  -maxValue 500 
+					  -value 0
+					  -step 1
+					  -changeCommand "setSubGrowth"
+				      -annotation "Controls how much the sub-tree (with the selected node as its root) grows with each calculation"
+					  subGrowSlider;
+
+	separator -height 10;
+
+	// button to initialize growth
+	button	-label "Grow Subtree Once" 
+			-command "subGrow"
+			-backgroundColor 0.2 0.6 0.2;
+	
+	separator -height 10;
+
+	button	-label "Prune Subtree"
+			-command "prune"
+			-backgroundColor 0.8 0.7 0.2;
+
+	separator -height 10;
+	
+	button	-label "Play"
+			-command "subPlayPause"
+			-backgroundColor 0.8 0.3 0.3
+			subPlayButton;
     
     // Add cleanup when window closes
     scriptJob -uiDeleted "treeUI" "onTreeUIClose";
@@ -123,28 +140,55 @@ global proc createTreeUI() {
 	showWindow treeUI;
 }
 
-global proc setVigor() {
-	float $value = `floatSliderGrp -query -value vigorSlider`;
-	$value = $value * 0.1;
-	setAttr TN1.vigor $value;
-	setAttr TN1.growNode true;
+global proc subPlayPause() {
+    // Check if we're currently playing
+    int $isPlaying = `optionVar -exists "subGrowPlaying"` ? `optionVar -q "subGrowPlaying"` : 0;
+    
+    if ($isPlaying) {
+        // Pause the playback
+        int $jobNum = `optionVar -q "subJob"`;
+        scriptJob -kill $jobNum -force;
+        optionVar -remove "subJob";
+        optionVar -iv "subGrowPlaying" 0;
+        
+        // Update button label
+        button -edit -label "Play" -backgroundColor 0.8 0.3 0.3 subPlayButton;
+        print "Playback paused\n";
+    } else {
+        // Start playing
+        int $jobNum = `scriptJob -event "idle" "subGrow"`;
+        optionVar -iv "subJob" $jobNum;
+        optionVar -iv "subGrowPlaying" 1;
+        
+        // Update button label
+        button -edit -label "Pause" -backgroundColor 0.3 0.4 0.6 subPlayButton;
+        print "Playback started\n";
+    }
 }
 
-global proc updateVigor() {
-	float $v = `getAttr TN1.vigor`;
-	$v = $v * 10.0;
-	print("fml: " + $v);
-	floatSliderGrp -edit -value $v vigorSlider;
+global proc prune() {
+	print("Pruning");
+	setAttr TN1.pruneNode true;
+	
+	refresh -force;
+	updateNodeNum;
+}
+
+global proc setSubGrowth() {
+	int $value = `intSliderGrp -query -value subGrowSlider`;
+	setAttr TN1.numSubGrows $value;
+}
+
+global proc subGrow() {
+	setAttr TN1.growNode true;
+
+	refresh -force;
+	updateNodeNum;
 }
 
 global proc updateSelectedNode() {
 	int $uiVal = `intField -query -value nodeSelectField`;
 	setAttr TN1.selectedNode $uiVal;
-	print("Selected node: " + $uiVal);
-
-	refresh -force;
-
-	updateVigor;
 }
 
 global proc updateGrowTime() {
