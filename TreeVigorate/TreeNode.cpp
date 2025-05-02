@@ -85,7 +85,7 @@ MStatus TreeNode::initialize()
 	typedAttr.setHidden(true);
 
 	// NODE SPECIFIC ATTRIBUTES
-	TreeNode::numNodes = numAttr.create("numNodes", "nn", MFnNumericData::kInt, 1, &returnStatus);
+	TreeNode::numNodes = numAttr.create("numNodes", "nn", MFnNumericData::kInt, 0, &returnStatus);
 	numAttr.setStorable(true);
 	numAttr.setWritable(true);
 	numAttr.setReadable(true);

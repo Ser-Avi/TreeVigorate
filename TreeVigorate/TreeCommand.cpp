@@ -102,16 +102,25 @@ global proc createTreeUI() {
 
 	// Edit this specific node
 	text -label "Selected Node";
-	intField -minValue 0 -maxValue 100 -value 0 -changeCommand "updateSelectedNode" nodeSelectField;
+	intSliderGrp	-label "Select Node"
+					-field true
+					-minValue 0
+					-maxValue 0
+					-value 0
+					-step 1
+					-dragCommand "updateSelectedNode"
+					-changeCommand "updateSelectedNode"
+					-annotation "Select the node to edit"
+					nodeSelectSlider;
 	
-	intSliderGrp -label "Sub-tree Growth Amount" 
+	intSliderGrp -label "Subtree Growth Amount" 
 					  -field true 
 					  -minValue 0
-					  -maxValue 500 
+					  -maxValue 500
 					  -value 0
 					  -step 1
 					  -changeCommand "setSubGrowth"
-				      -annotation "Controls how much the sub-tree (with the selected node as its root) grows with each calculation"
+				      -annotation "Controls how much the subtree (with the selected node as its root) grows with each calculation"
 					  subGrowSlider;
 
 	separator -height 10;
@@ -187,7 +196,7 @@ global proc subGrow() {
 }
 
 global proc updateSelectedNode() {
-	int $uiVal = `intField -query -value nodeSelectField`;
+	int $uiVal = `intSliderGrp -query -value nodeSelectSlider`;
 	setAttr TN1.selectedNode $uiVal;
 }
 
@@ -200,7 +209,7 @@ global proc updateNodeNum() {
 	int $curr = `getAttr TN1.numNodes`;
     textField -edit -text $curr nodeNumField;
 	// setting the maximum value of node selection to this
-	intField -edit -maxValue $curr nodeSelectField;
+	intSliderGrp -edit -maxValue $curr nodeSelectSlider;
 }
 
 global proc updateRate() {
