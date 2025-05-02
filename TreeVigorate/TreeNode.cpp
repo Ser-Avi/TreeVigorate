@@ -333,6 +333,8 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		
 		//float vigor = curr.m_data.m_buds[0].m_vigorSink.GetVigor();
 
+		treeVig = curr.m_data.m_vigorFlow.m_allocatedVigor;
+
 		vigHandle.set(treeVig);
 		vigHandle.setClean();
 
@@ -554,7 +556,7 @@ void TreeNode::developSubtree(ShootSkeleton& m_shootSkeleton, const NodeHandle& 
 		if (internodeData.m_lightDirection == glm::vec3(0.f)) {
 			internodeData.m_lightDirection = lightDir;
 		}
-		internodeData.m_lightIntensity =
+   		internodeData.m_lightIntensity =
 			m_shootSkeleton.m_data.m_treeIlluminationEstimator.IlluminationEstimation(internodeInfo.m_globalPosition, internodeData.m_lightDirection);
 		for (const auto& bud : internode.m_data.m_buds)
 		{
@@ -750,25 +752,25 @@ void TreeNode::SubTreeAllocateShootVigor(const NodeHandle& first, std::unordered
 	float remainingVigor = m_shootSkeleton.m_data.m_vigor;
 
 	const float leafMaintenanceVigor = glm::min(remainingVigor, m_shootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor);
-	//remainingVigor -= leafMaintenanceVigor;
+	remainingVigor -= leafMaintenanceVigor;
 	float leafMaintenanceVigorFillingRate = 0.0f;
 	if (m_shootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor != 0.0f)
 		leafMaintenanceVigorFillingRate = leafMaintenanceVigor / m_shootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor;
 
 	const float leafDevelopmentVigor = glm::min(remainingVigor, m_shootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor);
-	//remainingVigor -= leafDevelopmentVigor;
+	remainingVigor -= leafDevelopmentVigor;
 	float leafDevelopmentVigorFillingRate = 0.0f;
 	if (m_shootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor != 0.0f)
 		leafDevelopmentVigorFillingRate = leafDevelopmentVigor / m_shootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor;
 
 	const float fruitMaintenanceVigor = glm::min(remainingVigor, m_shootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor);
-	//remainingVigor -= fruitMaintenanceVigor;
+	remainingVigor -= fruitMaintenanceVigor;
 	float fruitMaintenanceVigorFillingRate = 0.0f;
 	if (m_shootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor != 0.0f)
 		fruitMaintenanceVigorFillingRate = fruitMaintenanceVigor / m_shootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor;
 
 	const float fruitDevelopmentVigor = glm::min(remainingVigor, m_shootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor);
-	//remainingVigor -= fruitDevelopmentVigor;
+	remainingVigor -= fruitDevelopmentVigor;
 	float fruitDevelopmentVigorFillingRate = 0.0f;
 	if (m_shootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor != 0.0f)
 		fruitDevelopmentVigorFillingRate = fruitDevelopmentVigor / m_shootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor;
@@ -808,11 +810,19 @@ void TreeNode::SubTreeAllocateShootVigor(const NodeHandle& first, std::unordered
 			internodeVigorFlow.m_allocatedVigor = 0.0f;
 			internodeVigorFlow.m_subTreeAllocatedVigor = 0.0f;
 			if (m_shootSkeleton.m_data.m_vigorRequirement.m_nodeDevelopmentalVigor != 0.0f) {
+				/*for (const auto& bud : internodeData.m_buds) {
+					if (bud.m_type == BudType::Apical) {
+						internodeVigorFlow.m_vigorRequirementWeight += bud.m_vigorSink.GetDesiredDevelopmentalVigorRequirement();
+					}
+				}
+				NodeHandle root = m_shootSkeleton.RefSortedNodeList()[0];
+				const auto rootData = m_shootSkeleton.PeekNode(root).m_data;*/
 				const float totalRequirement = internodeVigorFlow.m_vigorRequirementWeight + internodeVigorFlow.m_subtreeVigorRequirementWeight;
 				if (totalRequirement != 0.0f) {
 					//The root internode firstly extract it's own resources needed for itself.
 					internodeVigorFlow.m_allocatedVigor = nodeDevelopmentVigor * internodeVigorFlow.m_vigorRequirementWeight / totalRequirement;
 				}
+				//internodeVigorFlow.m_allocatedVigor = nodeDevelopmentVigor * 0.5;
 				//The rest resource will be distributed to the descendants. 
 				internodeVigorFlow.m_subTreeAllocatedVigor = nodeDevelopmentVigor - internodeVigorFlow.m_allocatedVigor;
 			}
@@ -822,8 +832,21 @@ void TreeNode::SubTreeAllocateShootVigor(const NodeHandle& first, std::unordered
 		for (auto& bud : internodeData.m_buds) {
 			if (bud.m_type == BudType::Apical && internodeVigorFlow.m_vigorRequirementWeight != 0.0f) {
 				//The vigor gets allocated and stored eventually into the buds
-				const float budAllocatedVigor = internodeVigorFlow.m_allocatedVigor *
-					bud.m_vigorSink.GetMaxVigorRequirement() / internodeVigorFlow.m_vigorRequirementWeight;
+
+				// Added by Avi, because m_allocatedVigor keeps being 0
+				int distToFirst = 0;
+				auto currHand = internodeHandle;
+				while (currHand != first) {
+					currHand = m_shootSkeleton.PeekNode(currHand).GetParentHandle();
+					++distToFirst;
+				}
+				float num = 1.2;
+				num -= (distToFirst * 0.1);
+				num = glm::clamp(num, 0.f, 1.5f);
+				float vigorRatio = glm::clamp((float)(subNodes.size() - distToFirst * 0.5) / (float)m_shootSkeleton.RefSortedNodeList().size(), 0.f, 10.f);// (float)numParents / (float)subNodes.size() * 2.f;
+				const float budAllocatedVigor = num * bud.m_vigorSink.GetMaxVigorRequirement() / internodeVigorFlow.m_vigorRequirementWeight;
+				//const float budAllocatedVigor = internodeVigorFlow.m_allocatedVigor *
+				//	bud.m_vigorSink.GetMaxVigorRequirement() / internodeVigorFlow.m_vigorRequirementWeight;
 				bud.m_vigorSink.AddVigor(budAllocatedVigor);
 			}
 		}
