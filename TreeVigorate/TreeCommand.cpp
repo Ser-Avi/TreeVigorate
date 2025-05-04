@@ -215,6 +215,14 @@ global proc createTreeNode(string $file) {
 	createTreeUI;
 };
 
+global proc createTestMeshNode() {
+	createNode transform -n MSys;
+	createNode mesh -name MShape -p MSys;
+	sets -add initialShadingGroup MShape;
+	createNode MeshTestNode -n MN1;
+	connectAttr MN1.outputMesh MShape.inMesh;
+}
+
 global proc generateTree() {
     //string $treeData = `textField -q -text treeDataField`;
     string $treeSpecies = `textField -q -text treeSpeciesField`;
@@ -389,6 +397,10 @@ menuItem
 	-label "Iterate Growth"
 	-command("createTreeGrowthUI")
 		systemItem2;
+menuItem
+	-label "Create Test Mesh"
+	-command("createTestMeshNode")
+		systemItem3;
 )";
 
 	MGlobal::executeCommand(treeUIcmd);

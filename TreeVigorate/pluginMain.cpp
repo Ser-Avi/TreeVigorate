@@ -2,6 +2,7 @@
 #include <maya/MGlobal.h>
 #include "TreeCommand.h"
 #include "TreeNode.h"
+#include "MeshTestNode.h"
 
 #include <maya/MPxCommand.h>
 #include <maya/MIOStream.h>
@@ -33,7 +34,13 @@ MStatus initializePlugin(MObject obj) {
 		return status;
 	}
 
-	MGlobal::displayInfo("Plugin initialized successfully!");
+	// registering MeshTestNode
+	status = plugin.registerNode("MeshTestNode", MeshTestNode::id,
+		MeshTestNode::creator, MeshTestNode::initialize);
+	if (!status) {
+		status.perror("registerNode");
+		return status;
+	}
 
     // Registering TreeCmd
     status = plugin.registerCommand("TreeCmd", TreeCmd::creator, TreeCmd::newSyntax);
@@ -41,6 +48,8 @@ MStatus initializePlugin(MObject obj) {
     MGlobal::displayInfo("Registered Cmd");
 
 	TreeCmd::RegisterMELCommands();
+
+	MGlobal::displayInfo("Plugin initialized successfully!");
 
 	return (MS::kSuccess);
 }
