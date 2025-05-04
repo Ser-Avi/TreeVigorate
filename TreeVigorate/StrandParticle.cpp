@@ -8,17 +8,16 @@ StrandParticle::StrandParticle(glm::vec2 position, NodeHandle nodeHandle) : loca
 	indexCount++;
 }
 
+StrandParticle::StrandParticle()
+{
+}
+
 int StrandParticle::getIndex() const {
 	return index;
 }
 
 glm::vec2 StrandParticle::getLocalPosition() const {
 	return localPosition;
-}
-
-glm::vec2 StrandParticle::getVelocity() const
-{
-	return velocity;
 }
 
 const NodeHandle StrandParticle::getNodeHandle() const
@@ -28,9 +27,4 @@ const NodeHandle StrandParticle::getNodeHandle() const
 
 void StrandParticle::setLocalPosition(glm::vec2 position) {
 	localPosition = position;
-}
-
-void StrandParticle::setVelocity(glm::vec2 vel)
-{
-	velocity = vel;
 }

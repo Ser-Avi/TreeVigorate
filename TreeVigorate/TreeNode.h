@@ -173,7 +173,16 @@ private:
 	/// <param name="skeleton"> skeleton storing the nodes</param>
 	/// <param name="rad"> radius multiplier of cylinders</param>
 	/// <returns>true</returns>
-	bool appendNodeCylindersToMesh( MPointArray& vertices, MIntArray& tris, MIntArray& edges, ShootSkeleton& skeleton, double rad);
+	bool appendNodeCylindersToMesh( MPointArray& vertices, MIntArray& tris, MIntArray& edges, ShootSkeleton& skeleton, StrandManager strandManager, double rad);
+
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="skeleton"></param>
+	/// <param name="strandManager"></param>
+	/// <param name="rad"></param>
+	void appendLeavesToMesh(ShootSkeleton& skeleton, StrandManager strandManager, double rad);
 
 	/// <summary>
 	/// Outputs an MString loading bar to be displayed in the console.

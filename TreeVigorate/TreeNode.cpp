@@ -106,6 +106,15 @@ MStatus TreeNode::initialize()
 	return MS::kSuccess;
 }
 
+void TreeNode::appendLeavesToMesh(ShootSkeleton& skeleton, StrandManager strandManager, double rad)
+{
+	for (auto& node : skeleton.RefRawNodes()) {
+		for (auto& leaf : node.m_data.m_leaves) {
+
+		}
+	}
+}
+
 MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 {
 	MStatus returnStatus;
@@ -153,6 +162,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 				auto& snode = treeModel.RefShootSkeleton().RefNode(j);
 			}*/
 			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
+
 			/*MGlobal::displayInfo("Growth successful, iteration: ");
 			MGlobal::displayInfo(std::to_string(i + 1).c_str());
 			
@@ -175,29 +185,38 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MGlobal::displayInfo(std::to_string(r).c_str());
 		
 		StrandManager strandManager;
-		strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 3);
+		strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 6, r);
 		std::unordered_map<NodeHandle, DelauneyData> nodeToDelauneyData;
 		//for now, draw each plane
 
 		for (auto& handle : treeModel.RefShootSkeleton().RefRawNodes()) {
-			std::vector<glm::vec3> positions = strandManager.getGlobalNodeParticlePositions(handle.GetHandle(), treeModel.RefShootSkeleton());
+			std::unordered_map<NodeHandle, glm::vec3> positions = strandManager.getGlobalNodeParticlePositions(handle.GetHandle(), treeModel.RefShootSkeleton());
 			//todo :: what should max edge actually be?
 			if (positions.size() > 2) {
 				DelauneyData delauneyData = strandManager.getPlaneTriangleIdx(handle.GetHandle(), 999999, points.length());
-				nodeToDelauneyData[handle.GetHandle()] = delauneyData;
-				//strandManager.resolvePbd(treeModel.RefShootSkeleton(), handle.GetHandle(), delauneyData.idx);
+				//for (int i = 0; i < 5; ++i) {
+				//strandManager.resolvePbd(treeModel.RefShootSkeleton(), handle.GetHandle(), delauneyData, r);
+				//}
 
-				for (auto& point : positions) {
+				//reassign delauney after pbd shifting
+				delauneyData = strandManager.getPlaneTriangleIdx(handle.GetHandle(), 999999, points.length());
+				nodeToDelauneyData[handle.GetHandle()] = delauneyData;
+				
+
+				positions = strandManager.getGlobalNodeParticlePositions(handle.GetHandle(), treeModel.RefShootSkeleton());
+
+				for (auto& particle : strandManager.getNodeToParticlesMap()[handle.GetHandle()]) {
+					auto& point = positions[particle.getIndex()];
 					MPoint p(point.x, point.y, point.z);
-					points.append(p);
+				//	points.append(p);
 				}
 
-				if (handle.RefChildHandles().size() != 1) {
+				if (handle.RefChildHandles().size() != 1 || true) {
 					for (int i = 0; i < delauneyData.idx.size(); i += 3) {
-						faceCounts.append(3);
-						faceConns.append(delauneyData.idx[i]);
-						faceConns.append(delauneyData.idx[i + 1]);
-						faceConns.append(delauneyData.idx[i + 2]);
+					//	faceCounts.append(3);
+					//	faceConns.append(delauneyData.idx[i]);
+					//	faceConns.append(delauneyData.idx[i + 1]);
+					//	faceConns.append(delauneyData.idx[i + 2]);
 					}
 				}
 			}
@@ -205,16 +224,16 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 
 		std::vector<int> bridgeIndices = strandManager.getBridgeTriangleIdx(treeModel.RefShootSkeleton(), nodeToDelauneyData);
 		for (int i = 0; i < bridgeIndices.size(); i += 3) {
-			faceCounts.append(3);
-			faceConns.append(bridgeIndices[i]);
-			faceConns.append(bridgeIndices[i + 1]);
-			faceConns.append(bridgeIndices[i + 2]);
+		//	faceCounts.append(3);
+		//	faceConns.append(bridgeIndices[i]);
+		//	faceConns.append(bridgeIndices[i + 1]);
+		//	faceConns.append(bridgeIndices[i + 2]);
 		}
 
 		// Creating cylinders
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
 		if (shoots.RefSortedNodeList().size() != 0) {
-			//bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, r);
+			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, strandManager, r);
 		}
 
 		// setting growTime to new val
@@ -240,7 +259,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 /// Based on the cylinder class method
 /// </summary>
 void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
-	MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns) {
+	MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, bool drawTop, bool drawBot) {
 	int startIndex = points.length();
 	int numSlices = 10;
 	float theta = 2 * M_PI / (float) numSlices;
@@ -267,7 +286,7 @@ void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::
 	points.append(start);	// index: 2 * numslices + startIndex
 	points.append(end);		// index: above + 1
 	// setting endcap 1 indices
-	for (int i = 0; i < numSlices; ++i) {
+	for (int i = 0; i < numSlices && drawBot; ++i) {
 		faceCounts.append(3);
 		if (!needFaceReverse) {
 			faceConns.append(2 * numSlices + startIndex);  // Center
@@ -281,7 +300,7 @@ void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::
 		}
 	}
 	// endcap 2 indices
-	for (int i = 0; i < numSlices; ++i) {
+	for (int i = 0; i < numSlices && drawTop; ++i) {
 		faceCounts.append(3);
 		if (needFaceReverse) {
 			faceConns.append(2 * numSlices + 1 + startIndex);  // Center
@@ -313,8 +332,8 @@ void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::
 	}
 }
 
-bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, double radius) {
-#define FLOW true;
+bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, StrandManager strandManager, double radius) {
+#define FLOW false;
 #if FLOW
 	for (int i = 0; i < skeleton.RefSortedFlowList().size(); ++i)
 	{
@@ -338,6 +357,30 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 		//cyl.appendToMesh(points, faceCounts, faceConns, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, curr.m_info.m_globalStartRotation, curr.m_info.m_globalEndRotation);
 
 #else
+	for(auto &nodeHandle: skeleton.RefSortedNodeList()) {
+		auto& node = skeleton.RefNode(nodeHandle);
+		if (node.GetParentHandle() < 0) continue;
+
+		auto& parentNode = skeleton.RefNode(node.GetParentHandle());
+		std::unordered_map<NodeHandle, glm::vec3> parentGlobalPositions = strandManager.getGlobalNodeParticlePositions(parentNode.GetHandle(), skeleton);
+		std::unordered_map<NodeHandle, glm::vec3> childGlobalPositions = strandManager.getGlobalNodeParticlePositions(nodeHandle, skeleton);
+
+		for (auto& particle : childGlobalPositions) {
+			glm::vec3 endPosition = particle.second;
+			glm::vec3 startPosition = parentGlobalPositions[particle.first];
+
+			glm::vec3 sDir;
+			sDir = glm::vec3(0, 1, 0);
+
+			MPoint start(startPosition[0], startPosition[1], startPosition[2]);
+			MPoint end(endPosition[0], endPosition[1], endPosition[2]);
+
+		//	glm::vec3 eDir = parentPos - currPos;
+			buildCylinderMesh(start, end, parentNode.m_info.m_thickness * radius, node.m_info.m_thickness * radius, endPosition - startPosition, endPosition - startPosition, points, faceCounts, faceConns, node.RefChildHandles().size() == 0, false);
+		}	
+	}
+
+	/*
 	for (int i = 1; i < skeleton.RefSortedNodeList().size(); ++i)
 	{
 		int currHandle = skeleton.RefSortedNodeList()[i];
@@ -358,8 +401,8 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 		glm::vec3 eDir = currPos - parentPos;
 		buildCylinderMesh(start, end, parent.m_info.m_thickness * radius, curr.m_info.m_thickness * radius, sDir, eDir,
 			points, faceCounts, faceConns);
+			*/
 #endif
-	}
 	return true;
 }
 
