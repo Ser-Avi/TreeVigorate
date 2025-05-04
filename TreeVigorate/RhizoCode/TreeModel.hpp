@@ -55,19 +55,19 @@ namespace EcoSysLab {
 #pragma endregion
 #pragma region Tree Growth
 		inline void AggregateInternodeVigorRequirement(const ShootGrowthController& shootGrowthParameters);
-
+	public: // NOTE: Made this public so I can call it from TreeNode - Avi
 		inline void CalculateVigorRequirement(const ShootGrowthController& shootGrowthParameters, PlantGrowthRequirement& newTreeGrowthNutrientsRequirement);
 
 		inline void AllocateShootVigor(const ShootGrowthController& shootGrowthParameters);
-
+	
 		inline bool PruneInternodes(float maxDistance, NodeHandle internodeHandle,
 			const ShootGrowthController& shootGrowthParameters);
 
 		inline void CalculateThicknessAndSagging(NodeHandle internodeHandle,
 			const ShootGrowthController& shootGrowthParameters);
-
 		inline bool GrowInternode(ClimateModel& climateModel, NodeHandle internodeHandle, const ShootGrowthController& shootGrowthParameters);
-
+	private:
+		// NOTE: This is the method that actually creates and adds new nodes
 		bool ElongateInternode(float extendLength, NodeHandle internodeHandle,
 			const ShootGrowthController& shootGrowthParameters, float& collectedInhibitor);
 
@@ -109,23 +109,26 @@ namespace EcoSysLab {
 			const RootGrowthController& rootGrowthParameters, PlantGrowthRequirement& newRootGrowthRequirement);
 
 		inline void PlantVigorAllocation();
-
+	public:	// made this public to use in node growth - Avi
 		int m_leafCount = 0;
 		int m_fruitCount = 0;
+	private:
 		int m_fineRootCount = 0;
-
+	public:
 		int m_ageInYear = 0;
 		float m_internodeDevelopmentRate = 1.0f;
+	private:
 		float m_rootNodeDevelopmentRate = 1.0f;
+	public:
 		float m_currentDeltaTime = 1.0f;
-
+	private:
 		bool m_enableRoot = true;
 		bool m_enableShoot = true;
-
+	public:
 		void ResetReproductiveModule();
 
 		
-	public:
+
 
 		//Added by Avi
 		glm::vec3 lightDir = glm::vec3(0);

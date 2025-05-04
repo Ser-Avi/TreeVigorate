@@ -22,6 +22,14 @@ MObject TreeNode::makeGrow;
 MObject TreeNode::sunDir;
 MObject TreeNode::growTime;
 
+
+MObject TreeNode::numNodes;
+MObject TreeNode::selectedNode;
+MObject TreeNode::numSubGrows;
+MObject TreeNode::growNode;
+MObject TreeNode::pruneNode;
+MObject TreeNode::outputNodeMesh;
+
 void* TreeNode::creator()
 {
 	return new TreeNode;
@@ -63,7 +71,7 @@ MStatus TreeNode::initialize()
 	numAttr.setStorable(true);
 	numAttr.setWritable(true);
 	numAttr.setReadable(true);
-	numAttr.setHidden(true);
+	numAttr.setHidden(false);
 	numAttr.setKeyable(false);
 	McheckErr(returnStatus, "Error creating growTime attrib\n");
 
@@ -74,6 +82,25 @@ MStatus TreeNode::initialize()
 	McheckErr(returnStatus, "ERROR creating TreeNode output attribute\n");
 	/*typedAttr.setStorable(false);*/
 	typedAttr.setHidden(true);
+
+	// NODE SPECIFIC ATTRIBUTES
+	TreeNode::numNodes = numAttr.create("numNodes", "nn", MFnNumericData::kInt, 0, &returnStatus);
+	numAttr.setStorable(true);
+	numAttr.setWritable(true);
+	numAttr.setReadable(true);
+	numAttr.setKeyable(false);
+	TreeNode::selectedNode = numAttr.create("selectedNode", "sn", MFnNumericData::kInt, 0, &returnStatus);
+	TreeNode::numSubGrows = numAttr.create("numSubGrows", "nsg", MFnNumericData::kInt, 0, &returnStatus);
+	McheckErr(returnStatus, "Error creating selectedVigor attrib\n");
+	TreeNode::outputNodeMesh = typedAttr.create("outputNodeMesh", "outNode",
+		MFnData::kMesh,
+		MObject::kNullObj,
+		&returnStatus);
+	typedAttr.setHidden(true);
+	TreeNode::growNode = numAttr.create("growNode", "gn", MFnNumericData::kBoolean, false, &returnStatus);
+	McheckErr(returnStatus, "Error creating growNode attribute\n");
+	TreeNode::pruneNode = numAttr.create("pruneNode", "pn", MFnNumericData::kBoolean, false, &returnStatus);
+	McheckErr(returnStatus, "Error creating pruneNode attribute\n");
 
 	returnStatus = addAttribute(TreeNode::outputMesh);
 	McheckErr(returnStatus, "ERROR adding outputMesh attribute\n");
@@ -96,12 +123,45 @@ MStatus TreeNode::initialize()
 	returnStatus = attributeAffects(TreeNode::makeGrow,
 		TreeNode::outputMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
+	
+	returnStatus = attributeAffects(TreeNode::radius,
+		TreeNode::outputMesh);
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
+
 
 	returnStatus = addAttribute(TreeNode::sunDir);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
 	returnStatus = addAttribute(TreeNode::growTime);
 	McheckErr(returnStatus, "ERROR adding growTime attribute\n");
+
+	// NODE ATTRIBUTES
+	returnStatus = addAttribute(TreeNode::numNodes);
+	returnStatus = addAttribute(TreeNode::selectedNode);
+	returnStatus = addAttribute(TreeNode::numSubGrows);
+	McheckErr(returnStatus, "ERROR adding vigor attribute\n");
+	returnStatus = addAttribute(TreeNode::growNode);
+	returnStatus = addAttribute(TreeNode::outputNodeMesh);
+	returnStatus = addAttribute(TreeNode::pruneNode);
+
+	returnStatus = attributeAffects(TreeNode::selectedNode,
+		TreeNode::outputNodeMesh);
+	returnStatus = attributeAffects(TreeNode::growNode,
+		TreeNode::outputMesh);
+	returnStatus = attributeAffects(TreeNode::pruneNode,
+		TreeNode::outputMesh);
+	// everything that affects the outputMesh, needs to also affect the outputnodeMesh, as any change in the above
+	// will affect the highlighted node. Could this just be making outputMesh affect outputnodeMesh?
+	// No, because Maya.
+	returnStatus = attributeAffects(TreeNode::growNode,
+		TreeNode::outputNodeMesh);
+	returnStatus = attributeAffects(TreeNode::radius,
+		TreeNode::outputNodeMesh);
+	returnStatus = attributeAffects(TreeNode::makeGrow,
+		TreeNode::outputNodeMesh);
+	returnStatus = attributeAffects(TreeNode::pruneNode,
+		TreeNode::outputNodeMesh);
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
 	return MS::kSuccess;
 }
@@ -126,6 +186,8 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		float r = data.inputValue(radius).asDouble();
 		double3& sunDirVal = data.inputValue(sunDir).asDouble3();
 		glm::vec3 sunVec = glm::normalize(glm::vec3(sunDirVal[0], sunDirVal[1], sunDirVal[2]));
+		bool isNodeChanged = data.inputValue(growNode).asBool();
+		bool isPruning = data.inputValue(pruneNode).asBool();
 
 		// For keeping track of total grow time
 		MDataHandle growTimeHandle = data.outputValue(growTime);
@@ -156,30 +218,104 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MIntArray faceConns;
 
 		// Growing tree
-		MGlobal::displayInfo("Abt to Grow, stand back!!");
-		for (int i = 0; i < nGrows; ++i) {
-			/*for (int j = 0; j < nodes; ++j) {
-				auto& snode = treeModel.RefShootSkeleton().RefNode(j);
+		if (!isNodeChanged && abs(r - prevRad) <= 0.01 && !isPruning) {
+			MGlobal::displayInfo("Abt to Grow, stand back!!");
+			// if we aren't changing node vigor, we grow normally
+			for (int i = 0; i < nGrows; ++i) {
+				/*for (int j = 0; j < nodes; ++j) {
+					auto& snode = treeModel.RefShootSkeleton().RefNode(j);
+				}*/
+				bool didGrow = treeModel.Grow(fDTime, glm::mat4(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
+				/*MGlobal::displayInfo("Growth successful, iteration: ");
+				MGlobal::displayInfo(std::to_string(i + 1).c_str());
+
+				MGlobal::displayInfo("Shoot nodes: ");
+				int nodes = treeModel.RefShootSkeleton().RefSortedNodeList().size();
+				MGlobal::displayInfo(MString(std::to_string(nodes).c_str()));
+
+				int flows = treeModel.RefShootSkeleton().RefSortedFlowList().size();
+				MGlobal::displayInfo("Flows: ");
+				MGlobal::displayInfo(MString(std::to_string(flows).c_str()));*/
+
+				// incrementing grow time
+				currGrowTime += fDTime;
+
+				// loading bar in MEL
+				MString loadingBar = getLoadBar(i, nGrows);
+				MGlobal::displayInfo(loadingBar);
+			}
+		}
+		else if (isNodeChanged && !isPruning) {
+			// else we only grow from this node
+			int subGrowNum = data.inputValue(numSubGrows).asInt();
+
+			int currNode = data.inputValue(selectedNode).asInt() - 1;
+			if (currNode < 0) {
+				MGlobal::displayError("Node Index Invalid");
+
+				data.setClean(plug);
+				return MS::kSuccess;
+			}
+
+			Skeleton skeleton = treeModel.RefShootSkeleton();
+			NodeHandle currHandle = skeleton.RefSortedFlowList()[currNode];
+			Flow currFlow = skeleton.RefFlow(currHandle);
+			const NodeHandle first = currFlow.RefNodeHandles()[0];
+			Node curr = skeleton.RefNode(first);
+			//curr.m_data.m_vigorFlow.m_subTreeAllocatedVigor = currVig;
+
+			// lets add an even amount of vigor to the buds on the first node
+			/*int numBuds = curr.m_data.m_buds.size(); 
+			float initialVig = 0;
+			for (auto& bud : curr.m_data.m_buds) {
+				if (bud.m_status != BudStatus::Died) {
+					initialVig += bud.m_vigorSink.GetVigor();
+				}
+			}
+
+			float newVig = currVig - initialVig;
+			newVig /= (float)numBuds;
+
+			for (auto& bud : curr.m_data.m_buds) {
+				if (bud.m_status != BudStatus::Died) {
+					bud.m_vigorSink.AddVigor(newVig);
+				}
 			}*/
-			bool didGrow = treeModel.Grow(fDTime, glm::mat4(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
 
-			/*MGlobal::displayInfo("Growth successful, iteration: ");
-			MGlobal::displayInfo(std::to_string(i + 1).c_str());
-			
-			MGlobal::displayInfo("Shoot nodes: ");
-			int nodes = treeModel.RefShootSkeleton().RefSortedNodeList().size();
-			MGlobal::displayInfo(MString(std::to_string(nodes).c_str()));
-			
-			int flows = treeModel.RefShootSkeleton().RefSortedFlowList().size();
-			MGlobal::displayInfo("Flows: ");
-			MGlobal::displayInfo(MString(std::to_string(flows).c_str()));*/
+			for (int i = 0; i < subGrowNum; ++i) {
+				developSubtree(skeleton, first, sunVec);
+				
+				// loading bar in MEL
+				MString loadingBar = getLoadBar(i, subGrowNum);
+				MGlobal::displayInfo(loadingBar);
+			}
 
-			// incrementing grow time
-			currGrowTime += fDTime;
+			// reset bool to false
+			MDataHandle boolHand = data.outputValue(growNode);
+			boolHand.set(false);
+			boolHand.setClean();
+			MGlobal::displayInfo("finish nodegrow");
+		} else if (isPruning) {
+			int currNode = data.inputValue(selectedNode).asInt() - 1;
+			if (currNode < 0) {
+				MGlobal::displayError("Node Index Invalid");
 
-			// loading bar in MEL
-			MString loadingBar = getLoadBar(i, nGrows);
-			MGlobal::displayInfo(loadingBar);
+				data.setClean(plug);
+				return MS::kSuccess;
+			}
+
+			Skeleton skeleton = treeModel.RefShootSkeleton();
+			NodeHandle currHandle = skeleton.RefSortedFlowList()[currNode];
+			Flow currFlow = skeleton.RefFlow(currHandle);
+			const NodeHandle first = currFlow.RefNodeHandles()[0];
+
+			pruneSubtree(skeleton, first);
+
+			// reset bool to false
+			MDataHandle boolHand = data.outputValue(pruneNode);
+			boolHand.set(false);
+			boolHand.setClean();
+			MGlobal::displayInfo("finish pruning");
 		}
 		MGlobal::displayInfo("Rad:");
 		MGlobal::displayInfo(std::to_string(r).c_str());
@@ -240,11 +376,106 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		growTimeHandle.set(currGrowTime);
 		growTimeHandle.setClean();
 
+		// setting number of nodes
+		MDataHandle nodeNumHandle = data.outputValue(numNodes);
+		int flows = shoots.RefSortedFlowList().size();
+		nodeNumHandle.set(flows);
+		nodeNumHandle.setClean();
+		MGlobal::displayInfo("Flows: ");
+		MGlobal::displayInfo(MString(std::to_string(flows).c_str()));
+		int nodes = shoots.RefSortedNodeList().size();
+		MGlobal::displayInfo("Nodes: ");
+		MGlobal::displayInfo(std::to_string(nodes).c_str());
+
 		MFnMesh mesh;
 		mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);
 		McheckErr(returnStatus, "ERROR creating new Mesh");
 
+		// store rad...
+		prevRad = r;
+
 		MGlobal::displayInfo("[##########] 100%");
+
+		outputHandle.set(newOutputData);
+		data.setClean(plug);
+	}
+	else if (plug == outputNodeMesh) {
+		int currNode = data.inputValue(selectedNode).asInt() - 1;
+		if (currNode < 0) {
+			MGlobal::displayError("Node Index Invalid");
+
+			data.setClean(plug);
+			return MS::kSuccess;
+		}
+
+		Skeleton skeleton = treeModel.RefShootSkeleton();
+		NodeHandle currHandle = skeleton.RefSortedFlowList()[currNode];
+		Flow currFlow = skeleton.RefFlow(currHandle);
+
+		// the flow could be empty if we just pruned, so we create an empty mesh and return it
+		if (currFlow.RefNodeHandles().size() == 0) {
+			MPointArray points;
+			MIntArray faceCounts;
+			MIntArray faceConns;
+			// create output object
+			MDataHandle outputHandle = data.outputValue(outputNodeMesh, &returnStatus);
+			McheckErr(returnStatus, "ERROR getting polygon data handle\n");
+			MFnMeshData dataCreator;
+			MObject newOutputData = dataCreator.create(&returnStatus);
+			McheckErr(returnStatus, "ERROR creating outputData");
+
+			MFnMesh mesh;
+			mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);
+			McheckErr(returnStatus, "ERROR creating new Mesh");
+
+			outputHandle.set(newOutputData);
+			data.setClean(plug);
+			return MStatus::kSuccess;
+		}
+
+		NodeHandle first = currFlow.RefNodeHandles()[0];
+		Node curr = skeleton.RefNode(first);
+		//double treeVig = curr.m_data.m_vigorFlow.m_subTreeAllocatedVigor;
+		// the vigor is stored in the buds
+		//double treeVig = 0;
+		//for (auto& bud : curr.m_data.m_buds) {
+		//	if (bud.m_status != BudStatus::Died) {
+		//		treeVig += bud.m_vigorSink.GetVigor();
+		//	}
+		//}
+		
+		//float vigor = curr.m_data.m_buds[0].m_vigorSink.GetVigor();
+
+		// highlighting selected flow
+		float r = data.inputValue(radius).asDouble() * 6.2;
+		glm::vec3 currPos = currFlow.m_info.m_globalStartPosition;
+		glm::vec3 parentPos = currFlow.m_info.m_globalEndPosition;
+		MPoint start(currPos[0], currPos[1], currPos[2]);
+		MPoint end(parentPos[0], parentPos[1], parentPos[2]);
+		glm::vec3 sDir;
+		if (currFlow.GetParentHandle() >= 0) {
+			sDir = currPos - skeleton.PeekFlow(currFlow.GetParentHandle()).m_info.m_globalStartPosition;
+		}
+		else {
+			sDir = glm::vec3(0, 1, 0);
+		}
+		glm::vec3 eDir = parentPos - currPos;
+		MPointArray points;
+		MIntArray faceCounts;
+		MIntArray faceConns;
+		buildCylinderMesh(start, end, currFlow.m_info.m_startThickness * r, currFlow.m_info.m_endThickness * r, sDir, eDir,
+			points, faceCounts, faceConns, true, true);
+
+		// create output object
+		MDataHandle outputHandle = data.outputValue(outputNodeMesh, &returnStatus);
+		McheckErr(returnStatus, "ERROR getting polygon data handle\n");
+		MFnMeshData dataCreator;
+		MObject newOutputData = dataCreator.create(&returnStatus);
+		McheckErr(returnStatus, "ERROR creating outputData");
+
+		MFnMesh mesh;
+		mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);
+		McheckErr(returnStatus, "ERROR creating new Mesh");
 
 		outputHandle.set(newOutputData);
 		data.setClean(plug);
@@ -258,7 +489,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 /// <summary>
 /// Based on the cylinder class method
 /// </summary>
-void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
+void TreeNode::buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
 	MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, bool drawTop, bool drawBot) {
 	int startIndex = points.length();
 	int numSlices = 10;
@@ -352,7 +583,7 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 		}
 			glm::vec3 eDir = parentPos - currPos;
 		buildCylinderMesh(start, end, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, sDir, eDir,
-			points, faceCounts, faceConns);
+			points, faceCounts, faceConns, node.RefChildHandles().size() == 0, false);
 		//CylinderMesh cyl(start, end);
 		//cyl.appendToMesh(points, faceCounts, faceConns, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, curr.m_info.m_globalStartRotation, curr.m_info.m_globalEndRotation);
 
@@ -376,7 +607,8 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 			MPoint end(endPosition[0], endPosition[1], endPosition[2]);
 
 		//	glm::vec3 eDir = parentPos - currPos;
-			buildCylinderMesh(start, end, parentNode.m_info.m_thickness * radius, node.m_info.m_thickness * radius, endPosition - startPosition, endPosition - startPosition, points, faceCounts, faceConns, node.RefChildHandles().size() == 0, false);
+			buildCylinderMesh(start, end, parentNode.m_info.m_thickness * radius, node.m_info.m_thickness * radius, 
+				endPosition - startPosition, endPosition - startPosition, points, faceCounts, faceConns, (node.RefChildHandles().size() == 0), false);
 		}	
 	}
 
@@ -406,6 +638,548 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 	return true;
 }
 
+void TreeNode::developSubtree(ShootSkeleton& m_shootSkeleton, const NodeHandle& first, glm::vec3& lightDir) {
+	// To develop the subtree, we will call everything in the regular grow function, but only
+	// on this first node and its children
+
+	// STEP 1: Collecting Shoot Flux -> light energy on leafs
+	// first we need to get all the nodes of this subtree using DFS
+	std::stack<NodeHandle> nhstack;
+	std::unordered_set<NodeHandle> visited;
+	nhstack.push(first);
+	while (!nhstack.empty()) {
+		const NodeHandle currNH = nhstack.top();
+		nhstack.pop();
+		if (!visited.count(currNH)) {
+			visited.insert(currNH);
+			std::vector<NodeHandle> children = m_shootSkeleton.RefNode(currNH).RefChildHandles();
+			for (const auto& child : children) {
+				nhstack.push(child);
+			}
+		}
+	}
+	m_shootSkeleton.m_data.m_treeIlluminationEstimator.m_voxel.Initialize(m_shootSkeleton.m_data.m_treeIlluminationEstimator.m_settings.m_voxelSize, m_shootSkeleton.m_min, m_shootSkeleton.m_max);
+
+	const float maxLeafSize = glm::pow((treeParams.sgc.m_maxLeafSize.x + treeParams.sgc.m_maxLeafSize.z) / 2.0f, 2.0f);
+	const float maxFruitSize = glm::pow((treeParams.sgc.m_maxFruitSize.x + treeParams.sgc.m_maxFruitSize.y + treeParams.sgc.m_maxFruitSize.z) / 3.0f, 2.0f);
+	for (const auto& nodeHandle : visited) {
+		const auto& internode = m_shootSkeleton.RefNode(nodeHandle);
+		const auto& internodeData = internode.m_data;
+		const auto& internodeInfo = internode.m_info;
+		float shadowSize = internodeInfo.m_length * internodeInfo.m_thickness * 2.0f;
+		for (const auto& i : internodeData.m_buds)
+		{
+			if (i.m_type == BudType::Leaf && i.m_reproductiveModule.m_maturity > 0.0f)
+			{
+				shadowSize += maxLeafSize * glm::pow(i.m_reproductiveModule.m_maturity, 0.5f);
+			}
+			else if (i.m_type == BudType::Fruit && i.m_reproductiveModule.m_maturity > 0.0f)
+			{
+				shadowSize += maxFruitSize * glm::pow(i.m_reproductiveModule.m_maturity, 1.0f / 3.0f);
+			}
+		}
+		m_shootSkeleton.m_data.m_treeIlluminationEstimator.AddShadowVolume({ internodeInfo.m_globalPosition, shadowSize });
+	}
+
+	for (const auto& internodeHandle : visited) {
+		auto& internode = m_shootSkeleton.RefNode(internodeHandle);
+		auto& internodeData = internode.m_data;
+		auto& internodeInfo = internode.m_info;
+		// if this light dir hasn't been set yet, set it to our custom one
+		if (internodeData.m_lightDirection == glm::vec3(0.f)) {
+			internodeData.m_lightDirection = lightDir;
+		}
+   		internodeData.m_lightIntensity =
+			m_shootSkeleton.m_data.m_treeIlluminationEstimator.IlluminationEstimation(internodeInfo.m_globalPosition, internodeData.m_lightDirection);
+		for (const auto& bud : internode.m_data.m_buds)
+		{
+			if (bud.m_status == BudStatus::Flushed && bud.m_type == BudType::Leaf)
+			{
+				if (treeModel.m_treeGrowthSettings.m_collectLight) {
+					internodeData.m_lightEnergy = internodeData.m_lightIntensity * glm::pow(bud.m_reproductiveModule.m_maturity, 2.0f) * bud.m_reproductiveModule.m_health;
+					m_shootSkeleton.m_data.m_shootFlux.m_lightEnergy += internodeData.m_lightEnergy;
+				}
+			}
+		}
+	}
+
+	// STEP 2: Vigor Allocation - photosynthesis
+	RootSkeleton& m_rootSkeleton = treeModel.RefRootSkeleton();
+	float totalVigor = m_shootSkeleton.m_data.m_shootFlux.m_lightEnergy;
+
+	const float totalLeafMaintenanceVigorRequirement = m_shootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor + m_rootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor;
+	const float totalLeafDevelopmentVigorRequirement = m_shootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor + m_rootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor;
+	const float totalFruitMaintenanceVigorRequirement = m_shootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor + m_rootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor;
+	const float totalFruitDevelopmentVigorRequirement = m_shootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor + m_rootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor;
+	const float totalNodeDevelopmentalVigorRequirement = m_shootSkeleton.m_data.m_vigorRequirement.m_nodeDevelopmentalVigor + m_rootSkeleton.m_data.m_vigorRequirement.m_nodeDevelopmentalVigor;
+
+	const float leafMaintenanceVigor = glm::min(totalVigor, totalLeafMaintenanceVigorRequirement);
+	const float leafDevelopmentVigor = glm::min(totalVigor - totalLeafMaintenanceVigorRequirement, totalLeafDevelopmentVigorRequirement);
+	const float fruitMaintenanceVigor = glm::min(totalVigor - totalLeafMaintenanceVigorRequirement - leafDevelopmentVigor, totalFruitMaintenanceVigorRequirement);
+	const float fruitDevelopmentVigor = glm::min(totalVigor - totalLeafMaintenanceVigorRequirement - leafDevelopmentVigor - fruitMaintenanceVigor, totalFruitDevelopmentVigorRequirement);
+	const float nodeDevelopmentVigor = glm::min(totalVigor - totalLeafMaintenanceVigorRequirement - leafDevelopmentVigor - fruitMaintenanceVigor - fruitDevelopmentVigor, totalNodeDevelopmentalVigorRequirement);
+	m_rootSkeleton.m_data.m_vigor = m_shootSkeleton.m_data.m_vigor = 0.0f;
+	if (totalLeafMaintenanceVigorRequirement != 0.0f) {
+		m_rootSkeleton.m_data.m_vigor += leafMaintenanceVigor * m_rootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor
+			/ totalLeafMaintenanceVigorRequirement;
+		m_shootSkeleton.m_data.m_vigor += leafMaintenanceVigor * m_shootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor
+			/ totalLeafMaintenanceVigorRequirement;
+	}
+	if (totalLeafDevelopmentVigorRequirement != 0.0f) {
+		m_rootSkeleton.m_data.m_vigor += leafDevelopmentVigor * m_rootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor
+			/ totalLeafDevelopmentVigorRequirement;
+		m_shootSkeleton.m_data.m_vigor += leafDevelopmentVigor * m_shootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor
+			/ totalLeafDevelopmentVigorRequirement;
+	}
+	if (totalFruitMaintenanceVigorRequirement != 0.0f) {
+		m_rootSkeleton.m_data.m_vigor += fruitMaintenanceVigor * m_rootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor
+			/ totalFruitMaintenanceVigorRequirement;
+		m_shootSkeleton.m_data.m_vigor += fruitMaintenanceVigor * m_shootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor
+			/ totalFruitMaintenanceVigorRequirement;
+	}
+	if (totalFruitDevelopmentVigorRequirement != 0.0f) {
+		m_rootSkeleton.m_data.m_vigor += fruitDevelopmentVigor * m_rootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor
+			/ totalFruitDevelopmentVigorRequirement;
+		m_shootSkeleton.m_data.m_vigor += fruitDevelopmentVigor * m_shootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor
+			/ totalFruitDevelopmentVigorRequirement;
+	}
+
+	treeModel.m_vigorRatio.m_rootVigorWeight = m_rootSkeleton.m_data.m_vigorRequirement.m_nodeDevelopmentalVigor / totalNodeDevelopmentalVigorRequirement;
+	treeModel.m_vigorRatio.m_shootVigorWeight = m_shootSkeleton.m_data.m_vigorRequirement.m_nodeDevelopmentalVigor / totalNodeDevelopmentalVigorRequirement;
+
+	if (treeModel.m_vigorRatio.m_shootVigorWeight + treeModel.m_vigorRatio.m_rootVigorWeight != 0.0f) {
+		m_rootSkeleton.m_data.m_vigor += nodeDevelopmentVigor * treeModel.m_vigorRatio.m_rootVigorWeight / (treeModel.m_vigorRatio.m_shootVigorWeight + treeModel.m_vigorRatio.m_rootVigorWeight);
+		m_shootSkeleton.m_data.m_vigor += nodeDevelopmentVigor * treeModel.m_vigorRatio.m_shootVigorWeight / (treeModel.m_vigorRatio.m_shootVigorWeight + treeModel.m_vigorRatio.m_rootVigorWeight);
+	}
+
+	// STEP 3: Grow branches and set up nutrient requirements for next iteration.
+	bool treeStructureChanged = false;
+	PlantGrowthRequirement newShootGrowthRequirement;
+	glm::mat4 globalTransform = glm::mat4();
+	if (growSubShoots(globalTransform, first, visited, treeParams.cm, treeParams.sgc, newShootGrowthRequirement)) {
+		treeStructureChanged = true;
+	}
+
+	// STEP 4: Set tree age
+	const int year = treeParams.cm.m_time;
+	if (year != treeModel.m_ageInYear)
+	{
+		//const auto& sortedInternodeList = m_shootSkeleton.RefSortedNodeList();
+		//for (auto it = sortedInternodeList.rbegin(); it != sortedInternodeList.rend(); it++) {
+		for (auto nh : visited){
+			auto& internode = m_shootSkeleton.RefNode(nh);
+			auto& internodeData = internode.m_data;
+			auto& buds = internodeData.m_buds;
+			for (auto& bud : buds)
+			{
+				if (bud.m_status == BudStatus::Removed) continue;
+				if (bud.m_type == BudType::Fruit || bud.m_type == BudType::Leaf)
+				{
+					bud.m_status = BudStatus::Dormant;
+					bud.m_reproductiveModule.Reset();
+				}
+			}
+		}
+		treeModel.m_fruitCount = treeModel.m_leafCount = 0;
+
+
+		treeModel.ResetReproductiveModule();
+		treeModel.m_ageInYear = year;
+	}
+	//Set new growth nutrients requirement for next iteration.
+	m_shootSkeleton.m_data.m_vigorRequirement = newShootGrowthRequirement;
+	treeModel.m_iteration++;
+	treeModel.m_age += treeModel.m_currentDeltaTime;
+}
+
+void TreeNode::pruneSubtree(ShootSkeleton& skeleton, const NodeHandle& first) {
+
+	//std::stack<NodeHandle> nhstack;
+	//std::unordered_set<NodeHandle> subNodes;
+	//nhstack.push(first);
+	//while (!nhstack.empty()) {
+	//	const NodeHandle currNH = nhstack.top();
+	//	nhstack.pop();
+	//	if (!subNodes.count(currNH)) {
+	//		subNodes.insert(currNH);
+	//		std::vector<NodeHandle> children = skeleton.RefNode(currNH).RefChildHandles();
+	//		for (const auto& child : children) {
+	//			nhstack.push(child);
+	//		}
+	//	}
+	//}
+
+	//for (const auto& internodeHandle : subNodes) {
+	//	//if (skeleton.RefNode(internodeHandle).IsRecycled()) continue;
+	//	treeModel.PruneInternode(internodeHandle);
+	//}
+	treeModel.PruneInternode(first);
+	skeleton.SortLists();
+}
+
+bool TreeNode::growSubShoots(const glm::mat4& globalTransform, const NodeHandle& first, std::unordered_set<NodeHandle> subNodes,
+	ClimateModel& climateModel, const ShootGrowthController& shootGrowthParameters, PlantGrowthRequirement& newShootGrowthRequirement) {
+	ShootSkeleton& skeleton = treeModel.RefShootSkeleton();
+
+	// Update the tree from this node down.
+	// First, we need to PRUNE in case the vigor was decreased
+	const auto maxDistance = skeleton.RefNode(0).m_data.m_maxDistanceToAnyBranchEnd;
+	bool anyBranchPruned = false;
+	for (const auto& internodeHandle : subNodes) {
+		if (skeleton.RefNode(internodeHandle).IsRecycled()) continue;
+		if (treeModel.PruneInternodes(maxDistance, internodeHandle, treeParams.sgc)) {
+			anyBranchPruned = true;
+			MGlobal::displayInfo("pruned");
+		}
+	}
+	// if we pruned something, we have to resort flow and node handles, and thus
+	// we need to recalculate the subtree nodes
+	if (anyBranchPruned) {
+		skeleton.SortLists();
+		subNodes.clear();
+		std::stack<NodeHandle> nhstack;
+		nhstack.push(first);
+		while (!nhstack.empty()) {
+			const NodeHandle currNH = nhstack.top();
+			nhstack.pop();
+			if (!subNodes.count(currNH)) {
+				subNodes.insert(currNH);
+				std::vector<NodeHandle> children = skeleton.RefNode(currNH).RefChildHandles();
+				for (const auto& child : children) {
+					nhstack.push(child);
+				}
+			}
+		}
+	}
+
+	// Now we GROW
+	bool anyBranchGrown = false;
+	// AggregateInternodeVigorRequirement
+	for (auto nh : subNodes) {
+		auto& internode = skeleton.RefNode(nh);
+		auto& internodeData = internode.m_data;
+		if (!internode.IsEndNode()) {
+			//If current node is not end node
+			for (const auto& i : internode.RefChildHandles()) {
+				auto& childInternode = skeleton.RefNode(i);
+				internodeData.m_vigorFlow.m_subtreeVigorRequirementWeight +=
+					shootGrowthParameters.m_vigorRequirementAggregateLoss *
+					(childInternode.m_data.m_vigorFlow.m_vigorRequirementWeight
+						+ childInternode.m_data.m_vigorFlow.m_subtreeVigorRequirementWeight);
+			}
+		}
+	}
+	
+	SubTreeAllocateShootVigor(first, subNodes, treeParams.sgc);
+
+	// grow node
+	for (const auto& internodeHandle : subNodes) {
+		const bool graphChanged = treeModel.GrowInternode(treeParams.cm, internodeHandle, treeParams.sgc);
+		anyBranchGrown = anyBranchGrown || graphChanged;
+	}
+
+	// again, resort if the skeleton changed and recalculate child nodes
+	if (anyBranchGrown) {
+		skeleton.SortLists();
+		subNodes.clear();
+		std::stack<NodeHandle> nhstack;
+		nhstack.push(first);
+		while (!nhstack.empty()) {
+			const NodeHandle currNH = nhstack.top();
+			nhstack.pop();
+			if (!subNodes.count(currNH)) {
+				subNodes.insert(currNH);
+				std::vector<NodeHandle> children = skeleton.RefNode(currNH).RefChildHandles();
+				for (const auto& child : children) {
+					nhstack.push(child);
+				}
+			}
+		}
+	}
+	growPostProcess(anyBranchGrown || anyBranchPruned, skeleton, subNodes);
+
+	return anyBranchGrown || anyBranchPruned;
+}
+
+void TreeNode::SubTreeAllocateShootVigor(const NodeHandle& first, std::unordered_set<NodeHandle> subNodes, const ShootGrowthController& shootGrowthParameters) {
+	// Commenting out all the parts that subtract vigor, as we don't want the growing of the subtree to shrivel the rest of the tree
+	
+	//Go from rooting point to all end nodes
+	ShootSkeleton& m_shootSkeleton = treeModel.RefShootSkeleton();
+	const float apicalControl = shootGrowthParameters.m_apicalControl;
+	float remainingVigor = m_shootSkeleton.m_data.m_vigor;
+
+	const float leafMaintenanceVigor = glm::min(remainingVigor, m_shootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor);
+	remainingVigor -= leafMaintenanceVigor;
+	float leafMaintenanceVigorFillingRate = 0.0f;
+	if (m_shootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor != 0.0f)
+		leafMaintenanceVigorFillingRate = leafMaintenanceVigor / m_shootSkeleton.m_data.m_vigorRequirement.m_leafMaintenanceVigor;
+
+	const float leafDevelopmentVigor = glm::min(remainingVigor, m_shootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor);
+	remainingVigor -= leafDevelopmentVigor;
+	float leafDevelopmentVigorFillingRate = 0.0f;
+	if (m_shootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor != 0.0f)
+		leafDevelopmentVigorFillingRate = leafDevelopmentVigor / m_shootSkeleton.m_data.m_vigorRequirement.m_leafDevelopmentalVigor;
+
+	const float fruitMaintenanceVigor = glm::min(remainingVigor, m_shootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor);
+	remainingVigor -= fruitMaintenanceVigor;
+	float fruitMaintenanceVigorFillingRate = 0.0f;
+	if (m_shootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor != 0.0f)
+		fruitMaintenanceVigorFillingRate = fruitMaintenanceVigor / m_shootSkeleton.m_data.m_vigorRequirement.m_fruitMaintenanceVigor;
+
+	const float fruitDevelopmentVigor = glm::min(remainingVigor, m_shootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor);
+	remainingVigor -= fruitDevelopmentVigor;
+	float fruitDevelopmentVigorFillingRate = 0.0f;
+	if (m_shootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor != 0.0f)
+		fruitDevelopmentVigorFillingRate = fruitDevelopmentVigor / m_shootSkeleton.m_data.m_vigorRequirement.m_fruitDevelopmentalVigor;
+
+	const float nodeDevelopmentVigor = glm::min(remainingVigor, m_shootSkeleton.m_data.m_vigorRequirement.m_nodeDevelopmentalVigor);
+	if (m_shootSkeleton.m_data.m_vigorRequirement.m_nodeDevelopmentalVigor != 0.0f) {
+		treeModel.m_internodeDevelopmentRate = nodeDevelopmentVigor / m_shootSkeleton.m_data.m_vigorRequirement.m_nodeDevelopmentalVigor;
+	}
+
+	for (const auto& internodeHandle : subNodes) {
+		auto& internode = m_shootSkeleton.RefNode(internodeHandle);
+		auto& internodeData = internode.m_data;
+		auto& internodeVigorFlow = internodeData.m_vigorFlow;
+		//1. Allocate maintenance vigor first
+		for (auto& bud : internodeData.m_buds) {
+			switch (bud.m_type)
+			{
+			case BudType::Leaf:
+			{
+				bud.m_vigorSink.AddVigor(leafMaintenanceVigorFillingRate * bud.m_vigorSink.GetMaintenanceVigorRequirement());
+				bud.m_vigorSink.AddVigor(leafDevelopmentVigorFillingRate * bud.m_vigorSink.GetMaxVigorRequirement());
+			}break;
+			case BudType::Fruit:
+			{
+				bud.m_vigorSink.AddVigor(fruitMaintenanceVigorFillingRate * bud.m_vigorSink.GetMaintenanceVigorRequirement());
+				bud.m_vigorSink.AddVigor(fruitDevelopmentVigorFillingRate * bud.m_vigorSink.GetMaxVigorRequirement());
+			}break;
+			default:break;
+			}
+
+		}
+		//2. Allocate development vigor for structural growth
+		//If this is the first node (node at the rooting point)
+		if (internode.GetParentHandle() == -1) {
+		//if (internodeHandle == first) {
+			MGlobal::displayInfo("FIRST");
+			internodeVigorFlow.m_allocatedVigor = 0.0f;
+			internodeVigorFlow.m_subTreeAllocatedVigor = 0.0f;
+			if (m_shootSkeleton.m_data.m_vigorRequirement.m_nodeDevelopmentalVigor != 0.0f) {
+				/*for (const auto& bud : internodeData.m_buds) {
+					if (bud.m_type == BudType::Apical) {
+						internodeVigorFlow.m_vigorRequirementWeight += bud.m_vigorSink.GetDesiredDevelopmentalVigorRequirement();
+					}
+				}
+				NodeHandle root = m_shootSkeleton.RefSortedNodeList()[0];
+				const auto rootData = m_shootSkeleton.PeekNode(root).m_data;*/
+				const float totalRequirement = internodeVigorFlow.m_vigorRequirementWeight + internodeVigorFlow.m_subtreeVigorRequirementWeight;
+				if (totalRequirement != 0.0f) {
+					//The root internode firstly extract it's own resources needed for itself.
+					internodeVigorFlow.m_allocatedVigor = nodeDevelopmentVigor * internodeVigorFlow.m_vigorRequirementWeight / totalRequirement;
+				}
+				//internodeVigorFlow.m_allocatedVigor = nodeDevelopmentVigor * 0.5;
+				//The rest resource will be distributed to the descendants. 
+				internodeVigorFlow.m_subTreeAllocatedVigor = nodeDevelopmentVigor - internodeVigorFlow.m_allocatedVigor;
+			}
+
+		}
+		//The buds will get its own resources
+		for (auto& bud : internodeData.m_buds) {
+			if (bud.m_type == BudType::Apical && internodeVigorFlow.m_vigorRequirementWeight != 0.0f) {
+				//The vigor gets allocated and stored eventually into the buds
+
+				// Added by Avi, because m_allocatedVigor keeps being 0
+				int distToFirst = 0;
+				auto currHand = internodeHandle;
+				while (currHand != first) {
+					currHand = m_shootSkeleton.PeekNode(currHand).GetParentHandle();
+					++distToFirst;
+				}
+				float num = 1.0;
+				num -= (distToFirst * 0.1);
+				num = glm::clamp(num, 0.f, 1.5f);
+				float vigorRatio = glm::clamp((float)(subNodes.size() - distToFirst * 0.5) / (float)m_shootSkeleton.RefSortedNodeList().size(), 0.f, 10.f);// (float)numParents / (float)subNodes.size() * 2.f;
+				const float budAllocatedVigor = num * bud.m_vigorSink.GetMaxVigorRequirement() / internodeVigorFlow.m_vigorRequirementWeight;
+				//const float budAllocatedVigor = internodeVigorFlow.m_allocatedVigor *
+				//	bud.m_vigorSink.GetMaxVigorRequirement() / internodeVigorFlow.m_vigorRequirementWeight;
+				bud.m_vigorSink.AddVigor(budAllocatedVigor);
+			}
+		}
+
+		if (internodeVigorFlow.m_subTreeAllocatedVigor != 0.0f) {
+			float childDevelopmentalVigorRequirementWeightSum = 0.0f;
+			for (const auto& i : internode.RefChildHandles()) {
+				const auto& childInternode = m_shootSkeleton.RefNode(i);
+				const auto& childInternodeData = childInternode.m_data;
+				auto& childInternodeVigorFlow = childInternodeData.m_vigorFlow;
+				float childDevelopmentalVigorRequirementWeight = 0.0f;
+				if (internodeVigorFlow.m_subtreeVigorRequirementWeight != 0.0f)childDevelopmentalVigorRequirementWeight = (childInternodeVigorFlow.m_vigorRequirementWeight + childInternodeVigorFlow.m_subtreeVigorRequirementWeight)
+					/ internodeVigorFlow.m_subtreeVigorRequirementWeight;
+				//Perform Apical control here.
+				if (childInternodeData.m_isMaxChild) childDevelopmentalVigorRequirementWeight *= apicalControl;
+				childDevelopmentalVigorRequirementWeightSum += childDevelopmentalVigorRequirementWeight;
+			}
+			for (const auto& i : internode.RefChildHandles()) {
+				auto& childInternode = m_shootSkeleton.RefNode(i);
+				auto& childInternodeData = childInternode.m_data;
+				auto& childInternodeVigorFlow = childInternodeData.m_vigorFlow;
+				float childDevelopmentalVigorRequirementWeight = 0.0f;
+				if (internodeVigorFlow.m_subtreeVigorRequirementWeight != 0.0f)
+					childDevelopmentalVigorRequirementWeight = (childInternodeVigorFlow.m_vigorRequirementWeight + childInternodeVigorFlow.m_subtreeVigorRequirementWeight)
+					/ internodeVigorFlow.m_subtreeVigorRequirementWeight;
+
+				//Re-perform apical control.
+				if (childInternodeData.m_isMaxChild) childDevelopmentalVigorRequirementWeight *= apicalControl;
+
+				//Calculate total amount of development vigor belongs to this child from internode received vigor for its children.
+				float childTotalAllocatedDevelopmentVigor = 0.0f;
+				if (childDevelopmentalVigorRequirementWeightSum != 0.0f) childTotalAllocatedDevelopmentVigor = internodeVigorFlow.m_subTreeAllocatedVigor *
+					childDevelopmentalVigorRequirementWeight / childDevelopmentalVigorRequirementWeightSum;
+
+				//Calculate allocated vigor.
+				childInternodeVigorFlow.m_allocatedVigor = 0.0f;
+				if (childInternodeVigorFlow.m_vigorRequirementWeight + childInternodeVigorFlow.m_subtreeVigorRequirementWeight != 0.0f) {
+					childInternodeVigorFlow.m_allocatedVigor += childTotalAllocatedDevelopmentVigor *
+						childInternodeVigorFlow.m_vigorRequirementWeight
+						/ (childInternodeVigorFlow.m_vigorRequirementWeight + childInternodeVigorFlow.m_subtreeVigorRequirementWeight);
+				}
+				childInternodeVigorFlow.m_subTreeAllocatedVigor = childTotalAllocatedDevelopmentVigor - childInternodeVigorFlow.m_allocatedVigor;
+			}
+		}
+		else
+		{
+			for (const auto& i : internode.RefChildHandles())
+			{
+				auto& childInternode = m_shootSkeleton.RefNode(i);
+				auto& childInternodeData = childInternode.m_data;
+				auto& childInternodeVigorFlow = childInternodeData.m_vigorFlow;
+				childInternodeVigorFlow.m_allocatedVigor = childInternodeVigorFlow.m_subTreeAllocatedVigor = 0.0f;
+			}
+		}
+	}
+}
+
+void TreeNode::growPostProcess(bool treeStructureChanged, ShootSkeleton& m_shootSkeleton, std::unordered_set<NodeHandle> subNodes) {
+	PlantGrowthRequirement newShootGrowthRequirement;
+	{
+		m_shootSkeleton.m_min = glm::vec3(FLT_MAX);
+		m_shootSkeleton.m_max = glm::vec3(FLT_MIN);
+		for (auto nh : subNodes) {
+			treeModel.CalculateThicknessAndSagging(nh, treeParams.sgc);
+		}
+
+		for (const auto& internodeHandle : subNodes) {
+			auto& internode = m_shootSkeleton.RefNode(internodeHandle);
+			auto& internodeData = internode.m_data;
+			auto& internodeInfo = internode.m_info;
+
+			if (internode.GetParentHandle() == -1) {
+				internodeInfo.m_globalPosition = glm::vec3(0.0f);
+				internodeInfo.m_localRotation = glm::vec3(0.0f);
+				internodeInfo.m_globalRotation = internodeInfo.m_regulatedGlobalRotation = glm::vec3(glm::radians(90.0f), 0.0f, 0.0f);
+
+				internodeData.m_rootDistance =
+					internodeInfo.m_length / treeParams.sgc.m_internodeLength;
+			}
+			else {
+				auto& parentInternode = m_shootSkeleton.RefNode(internode.GetParentHandle());
+				internodeData.m_rootDistance = parentInternode.m_data.m_rootDistance + internodeInfo.m_length /
+					treeParams.sgc.m_internodeLength;
+				internodeInfo.m_globalRotation =
+					parentInternode.m_info.m_globalRotation * internodeInfo.m_localRotation;
+#pragma region Apply Sagging
+				const auto& parentNode = m_shootSkeleton.RefNode(
+					internode.GetParentHandle());
+				auto parentGlobalRotation = parentNode.m_info.m_globalRotation;
+				internodeInfo.m_globalRotation = parentGlobalRotation * internodeData.m_desiredLocalRotation;
+				auto front = internodeInfo.m_globalRotation * glm::vec3(0, 0, -1);
+				auto up = internodeInfo.m_globalRotation * glm::vec3(0, 1, 0);
+				float dotP = glm::abs(glm::dot(front, treeModel.m_currentGravityDirection));
+				TreeModel::ApplyTropism(treeModel.m_currentGravityDirection, internodeData.m_sagging * (1.0f - dotP), front, up);
+				internodeInfo.m_globalRotation = glm::quatLookAt(front, up);
+				internodeInfo.m_localRotation = glm::inverse(parentGlobalRotation) * internodeInfo.m_globalRotation;
+
+				auto parentRegulatedUp = parentNode.m_info.m_regulatedGlobalRotation * glm::vec3(0, 1, 0);
+				auto regulatedUp = glm::normalize(glm::cross(glm::cross(front, parentRegulatedUp), front));
+				internodeInfo.m_regulatedGlobalRotation = glm::quatLookAt(front, regulatedUp);
+#pragma endregion
+
+				internodeInfo.m_globalPosition =
+					parentInternode.m_info.m_globalPosition + parentInternode.m_info.m_length *
+					(parentInternode.m_info.m_globalRotation *
+						glm::vec3(0, 0, -1));
+
+
+			}
+
+			m_shootSkeleton.m_min = glm::min(m_shootSkeleton.m_min, internodeInfo.m_globalPosition);
+			m_shootSkeleton.m_max = glm::max(m_shootSkeleton.m_max, internodeInfo.m_globalPosition);
+			const auto endPosition = internodeInfo.m_globalPosition + internodeInfo.m_length *
+				(internodeInfo.m_globalRotation *
+					glm::vec3(0, 0, -1));
+			m_shootSkeleton.m_min = glm::min(m_shootSkeleton.m_min, endPosition);
+			m_shootSkeleton.m_max = glm::max(m_shootSkeleton.m_max, endPosition);
+		}
+		treeModel.SampleTemperature(glm::mat4(), treeParams.cm);
+		treeModel.CalculateVigorRequirement(treeParams.sgc, newShootGrowthRequirement);
+
+	};
+
+	// uncomment this if want to mess with collision detection here
+	/*if (m_treeGrowthSettings.m_enableBranchCollisionDetection)
+	{
+		const float minRadius = treeParams.sgc.m_endNodeThickness * 4.0f;
+		CollisionDetection(minRadius, m_shootSkeleton.m_data.m_octree, m_shootSkeleton);
+	}*/
+	treeModel.m_internodeOrderCounts.clear();
+	treeModel.m_fruitCount = treeModel.m_leafCount = 0;
+	{
+		int maxOrder = 0;
+		const auto& sortedFlowList = m_shootSkeleton.RefSortedFlowList();
+		for (const auto& flowHandle : sortedFlowList) {
+			auto& flow = m_shootSkeleton.RefFlow(flowHandle);
+			auto& flowData = flow.m_data;
+			if (flow.GetParentHandle() == -1) {
+				flowData.m_order = 0;
+			}
+			else {
+				auto& parentFlow = m_shootSkeleton.RefFlow(flow.GetParentHandle());
+				if (flow.IsApical()) flowData.m_order = parentFlow.m_data.m_order;
+				else flowData.m_order = parentFlow.m_data.m_order + 1;
+			}
+			maxOrder = glm::max(maxOrder, flowData.m_order);
+		}
+		treeModel.m_internodeOrderCounts.resize(maxOrder + 1);
+		std::fill(treeModel.m_internodeOrderCounts.begin(), treeModel.m_internodeOrderCounts.end(), 0);
+		const auto& sortedInternodeList = m_shootSkeleton.RefSortedNodeList();
+		for (const auto& internodeHandle : sortedInternodeList)
+		{
+			auto& internode = m_shootSkeleton.RefNode(internodeHandle);
+			const auto order = m_shootSkeleton.RefFlow(internode.GetFlowHandle()).m_data.m_order;
+			internode.m_data.m_order = order;
+			treeModel.m_internodeOrderCounts[order]++;
+
+			for (const auto& bud : internode.m_data.m_buds)
+			{
+				if (bud.m_status != BudStatus::Flushed || bud.m_reproductiveModule.m_maturity <= 0) continue;
+				if (bud.m_type == BudType::Fruit)
+				{
+					treeModel.m_fruitCount++;
+				}
+				else if (bud.m_type == BudType::Leaf)
+				{
+					treeModel.m_leafCount++;
+				}
+			}
+
+		}
+		m_shootSkeleton.CalculateFlows();
+	}
+	m_shootSkeleton.m_data.m_vigorRequirement = newShootGrowthRequirement;
+}
 
 MString TreeNode::getLoadBar(int curr, int tot) {
 	int pct = curr * 100 / tot;

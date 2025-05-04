@@ -31,7 +31,7 @@ global proc createTreeUI() {
         deleteUI treeUI;
     }
     
-    window -title "Tree Controls" -widthHeight 250 220 treeUI;
+    window -title "Tree Controls" -widthHeight 250 420 treeUI;
     
     columnLayout -adjustableColumn true;
     
@@ -42,7 +42,6 @@ global proc createTreeUI() {
                   -maxValue 100.0 
                   -value 50.0 
                   -step 0.5
-                  -dragCommand "updateRate" 
                   -changeCommand "updateRate"
 				  -annotation "Controls how fast each growth is calculated"
                   rateSlider;
@@ -52,10 +51,9 @@ global proc createTreeUI() {
 	intSliderGrp -label "Growth Amount" 
 					  -field true 
 					  -minValue 0 
-					  -maxValue 1000 
+					  -maxValue 500 
 					  -value 0 
 					  -step 1
-					  -dragCommand "updateGrowth" 
 					  -changeCommand "updateGrowth"
 					  -annotation "Controls how much the tree grows with each calculation"
 					  growthSlider;
@@ -68,7 +66,6 @@ global proc createTreeUI() {
 					  -maxValue 50.0 
 					  -value 1.0 
 					  -step 0.2
-					  -dragCommand "updateRad" 
 					  -changeCommand "updateRad"
 				      -annotation "Adjusts tree radius with this multiplier"
 					  radSlider;
@@ -92,6 +89,59 @@ global proc createTreeUI() {
 	// Display total growth time
 	text -label "Total Grow Time:";
     textField -editable false -text (`getAttr TN1.growTime`) growTimeField;
+
+	separator - style "none" - height 15;
+    separator - style "in" - height 5;
+    separator - style "none" - height 15;
+	text -label "Node Editing";
+	separator - style "in" -height 5;
+
+	// Display total flow node num
+	text -label "Number of Tree Nodes:";
+    textField -editable false -text (`getAttr TN1.numNodes`) nodeNumField;
+
+	// Edit this specific node
+	text -label "Selected Node";
+	intSliderGrp	-label "Select Node"
+					-field true
+					-minValue 0
+					-maxValue 0
+					-value 0
+					-step 1
+					-dragCommand "updateSelectedNode"
+					-changeCommand "updateSelectedNode"
+					-annotation "Select the node to edit"
+					nodeSelectSlider;
+	
+	intSliderGrp -label "Subtree Growth Amount" 
+					  -field true 
+					  -minValue 0
+					  -maxValue 500
+					  -value 0
+					  -step 1
+					  -changeCommand "setSubGrowth"
+				      -annotation "Controls how much the subtree (with the selected node as its root) grows with each calculation"
+					  subGrowSlider;
+
+	separator -height 10;
+
+	// button to initialize growth
+	button	-label "Grow Subtree Once" 
+			-command "subGrow"
+			-backgroundColor 0.2 0.6 0.2;
+	
+	separator -height 10;
+
+	button	-label "Prune Subtree"
+			-command "prune"
+			-backgroundColor 0.8 0.7 0.2;
+
+	separator -height 10;
+	
+	button	-label "Play"
+			-command "subPlayPause"
+			-backgroundColor 0.8 0.3 0.3
+			subPlayButton;
     
     // Add cleanup when window closes
     scriptJob -uiDeleted "treeUI" "onTreeUIClose";
@@ -99,9 +149,67 @@ global proc createTreeUI() {
 	showWindow treeUI;
 }
 
+global proc subPlayPause() {
+    // Check if we're currently playing
+    int $isPlaying = `optionVar -exists "subGrowPlaying"` ? `optionVar -q "subGrowPlaying"` : 0;
+    
+    if ($isPlaying) {
+        // Pause the playback
+        int $jobNum = `optionVar -q "subJob"`;
+        scriptJob -kill $jobNum -force;
+        optionVar -remove "subJob";
+        optionVar -iv "subGrowPlaying" 0;
+        
+        // Update button label
+        button -edit -label "Play" -backgroundColor 0.8 0.3 0.3 subPlayButton;
+        print "Playback paused\n";
+    } else {
+        // Start playing
+        int $jobNum = `scriptJob -event "idle" "subGrow"`;
+        optionVar -iv "subJob" $jobNum;
+        optionVar -iv "subGrowPlaying" 1;
+        
+        // Update button label
+        button -edit -label "Pause" -backgroundColor 0.3 0.4 0.6 subPlayButton;
+        print "Playback started\n";
+    }
+}
+
+global proc prune() {
+	print("Pruning");
+	setAttr TN1.pruneNode true;
+	
+	refresh -force;
+	updateNodeNum;
+}
+
+global proc setSubGrowth() {
+	int $value = `intSliderGrp -query -value subGrowSlider`;
+	setAttr TN1.numSubGrows $value;
+}
+
+global proc subGrow() {
+	setAttr TN1.growNode true;
+
+	refresh -force;
+	updateNodeNum;
+}
+
+global proc updateSelectedNode() {
+	int $uiVal = `intSliderGrp -query -value nodeSelectSlider`;
+	setAttr TN1.selectedNode $uiVal;
+}
+
 global proc updateGrowTime() {
-	float $curr = `getAttr TN1.growTime`;
-    textField -edit -text $curr growTimeField;
+	float $currT = `getAttr TN1.growTime`;
+    textField -edit -text $currT growTimeField;
+}
+
+global proc updateNodeNum() {
+	int $curr = `getAttr TN1.numNodes`;
+    textField -edit -text $curr nodeNumField;
+	// setting the maximum value of node selection to this
+	intSliderGrp -edit -maxValue $curr nodeSelectSlider;
 }
 
 global proc updateRate() {
@@ -126,6 +234,7 @@ global proc toggleGrow() {
 
 	refresh -force;
 	updateGrowTime;
+	updateNodeNum;
 }
 
 global proc playPause() {
@@ -202,13 +311,24 @@ global proc createSunLoc(string $tree) {
 
 global proc createTreeNode(string $file) {
 	createNode transform -n TSys1;
+	createNode transform -n TSys2;			// the 2s are for the highlighted node
 	createNode mesh -n TShape1 -p TSys1;
+	createNode mesh -n TShape2 -p TSys2;
 	sets -add initialShadingGroup TShape1;
+
+	// making second shape have a red shade for highlighting
+	shadingNode -asShader lambert -n "RedShader";
+	setAttr RedShader.color -type double3 1 0 0;
+	shadingNode -asUtility shadingEngine -n "RedShaderSG";
+	connectAttr -f "RedShader.outColor" "RedShaderSG.surfaceShader";
+	sets -e -forceElement "RedShaderSG" "TShape2";
+
 	string $treeNode = `createNode TreeNode -n TN1`;
     if($file != "") {
         eval("setAttr -type \"string\" TN1.treeDataFile \"" + $file + "\"");
     }
 	connectAttr TN1.outputMesh TShape1.inMesh;
+	connectAttr TN1.outputNodeMesh TShape2.inMesh;
 
 	// creating Sun Direction locator
 	createSunLoc($treeNode);

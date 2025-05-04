@@ -33,6 +33,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <stack>
+#include <unordered_set>
 
 #define mPrint(msg) MGlobal::displayInfo(msg)
 
@@ -162,6 +164,28 @@ private:
 	/// Stores the initialized tree params
 	/// </summary>
 	Controllers treeParams;
+
+	/// <summary>
+	/// Due to Maya being Maya, this is the best way of checking if Radius was changed...
+	/// </summary>
+	float prevRad = 1.0;
+
+	/// <summary>
+	/// Builds a cylinder mesh into the input arrays
+	/// </summary>
+	/// <param name="start">start loc</param>
+	/// <param name="end">end loc</param>
+	/// <param name="sRad">start rad</param>
+	/// <param name="eRad">end rad</param>
+	/// <param name="sDir">start normal</param>
+	/// <param name="eDir">end normal</param>
+	/// <param name="points"></param>
+	/// <param name="faceCounts"></param>
+	/// <param name="faceConns"></param>
+	/// <param name="drawTop"></param>
+	/// <param name="drawBot"></param>
+	void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
+		MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, bool drawTop, bool drawBot);
 	
 	/// <summary>
 	/// Creates a cylinder between each node in the input skeleton and appends them to the mesh
@@ -190,8 +214,48 @@ private:
 	/// </summary>
 	/// <param name="curr"></param>
 	/// <param name="tot"></param>
+	/// <param name="lightDir"></param>
 	/// <returns></returns>
 	MString getLoadBar(int curr, int tot);
+
+	void developSubtree(ShootSkeleton& skeleton, const NodeHandle& first, glm::vec3& lightDir);
+
+	/// <summary>
+	/// Prunes the entire subtree from the skeleton
+	/// </summary>
+	/// <param name="skeleton"></param>
+	/// <param name="first"></param>
+	void pruneSubtree(ShootSkeleton& skeleton, const NodeHandle& first);
+
+	/// <summary>
+	/// Performs growShoots on the subtree
+	/// </summary>
+	/// <param name="globalTransform"></param>
+	/// <param name="first"></param>
+	/// <param name="subNodes"></param>
+	/// <param name="climateModel"></param>
+	/// <param name="shootGrowthParameters"></param>
+	/// <param name="newShootGrowthRequirement"></param>
+	/// <returns></returns>
+	bool growSubShoots(const glm::mat4& globalTransform, const NodeHandle& first, std::unordered_set<NodeHandle> subNodes,
+		ClimateModel& climateModel, const ShootGrowthController& shootGrowthParameters, PlantGrowthRequirement& newShootGrowthRequirement);
+
+	/// <summary>
+	/// Allocates shoot vigor to the subtree
+	/// </summary>
+	/// <param name="first"></param>
+	/// <param name="subNodes"></param>
+	/// <param name="shootGrowthParameters"></param>
+	void SubTreeAllocateShootVigor(const NodeHandle& first, std::unordered_set<NodeHandle> subNodes, const ShootGrowthController& shootGrowthParameters);
+
+	/// <summary>
+	/// The post process part of growth.
+	/// Used when growing the subtree.
+	/// </summary>
+	/// <param name="treeStructureChanged"></param>
+	/// <param name="m_shootSkeleton"></param>
+	/// <param name="subNodes"></param>
+	void growPostProcess(bool treeStructureChanged, ShootSkeleton& m_shootSkeleton, std::unordered_set<NodeHandle> subNodes);
 public:
 	TreeNode() {};
 	~TreeNode() override {};
@@ -232,4 +296,17 @@ public:
 	static MObject sunDir;
 	// used to keep track of how much the tree has grown
 	static MObject growTime;
+
+	// number of flow nodes
+	static MObject numNodes;
+	// selected node
+	static MObject selectedNode;
+	// how many times we want to grow the subnode
+	static MObject numSubGrows;
+	// the mesh for the node
+	static MObject outputNodeMesh;
+	// a bool to check if only node stuff should be updated
+	static MObject growNode;
+	// a bool to check if we want to prune the subtree
+	static MObject pruneNode;
 };

@@ -111,6 +111,12 @@ namespace EcoSysLab {
 	template <typename VoxelData>
 	const VoxelData& VoxelGrid<VoxelData>::Peek(const int index) const
 	{
+		if (index < 0) {				// added by avi to just default to root shadow data when this is bugged for some reason.
+			return m_data[0];
+		}
+		else if (index >= m_data.size()) {
+			return m_data[m_data.size() - 1];
+		}
 		return m_data[index];
 	}
 
