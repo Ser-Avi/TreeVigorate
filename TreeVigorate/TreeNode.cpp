@@ -321,14 +321,14 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MGlobal::displayInfo(std::to_string(r).c_str());
 		
 		StrandManager strandManager;
-		strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 6, r);
+		strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 3, r);
 		std::unordered_map<NodeHandle, DelauneyData> nodeToDelauneyData;
 		//for now, draw each plane
 
 		for (auto& handle : treeModel.RefShootSkeleton().RefRawNodes()) {
 			std::unordered_map<NodeHandle, glm::vec3> positions = strandManager.getGlobalNodeParticlePositions(handle.GetHandle(), treeModel.RefShootSkeleton());
 			//todo :: what should max edge actually be?
-			if (positions.size() > 2) {
+			if (false && positions.size() > 2) {
 				DelauneyData delauneyData = strandManager.getPlaneTriangleIdx(handle.GetHandle(), 999999, points.length());
 				//for (int i = 0; i < 5; ++i) {
 				//strandManager.resolvePbd(treeModel.RefShootSkeleton(), handle.GetHandle(), delauneyData, r);
@@ -358,18 +358,18 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			}
 		}
 
-		std::vector<int> bridgeIndices = strandManager.getBridgeTriangleIdx(treeModel.RefShootSkeleton(), nodeToDelauneyData);
-		for (int i = 0; i < bridgeIndices.size(); i += 3) {
+		//std::vector<int> bridgeIndices = strandManager.getBridgeTriangleIdx(treeModel.RefShootSkeleton(), nodeToDelauneyData);
+		//for (int i = 0; i < bridgeIndices.size(); i += 3) {
 		//	faceCounts.append(3);
 		//	faceConns.append(bridgeIndices[i]);
 		//	faceConns.append(bridgeIndices[i + 1]);
 		//	faceConns.append(bridgeIndices[i + 2]);
-		}
+		//}
 
 		// Creating cylinders
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
 		if (shoots.RefSortedNodeList().size() != 0) {
-			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, strandManager, r * 0.05);
+			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, strandManager, r, 4);
 		}
 
 		// setting growTime to new val
@@ -563,7 +563,7 @@ void TreeNode::buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float e
 	}
 }
 
-bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, StrandManager& strandManager, double radius) {
+bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, StrandManager& strandManager, double radius, int segments) {
 #define FLOW true;
 #if FLOW
 	// First we get all end nodes
@@ -582,12 +582,12 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 		for (const auto& particle : particles.at(nh)) {
 			auto currFlowHand = skeleton.PeekNode(nh).GetFlowHandle();
 			auto currFlow = skeleton.PeekFlow(currFlowHand);
-			auto nextFlow = skeleton.PeekFlow(currFlow.GetParentHandle());
+			auto nextFlow = currFlow.GetParentHandle() > -1 ? skeleton.PeekFlow(currFlow.GetParentHandle()) : currFlow;
 			auto prevFlow = currFlow;
 			do {
 				auto currNodeHand = currFlow.RefNodeHandles()[currFlow.RefNodeHandles().size() - 1];
 				auto currNode = skeleton.PeekNode(currNodeHand);
-				auto nextNodeHand = nextFlow.RefNodeHandles()[nextFlow.RefNodeHandles().size() - 1];
+				auto nextNodeHand = currFlow.GetParentHandle() > -1 ? nextFlow.RefNodeHandles()[nextFlow.RefNodeHandles().size() - 1] : currFlow.RefNodeHandles()[0];
 				auto nextNode = skeleton.PeekNode(nextNodeHand);
 				auto prevNodeHand = prevFlow.RefNodeHandles()[prevFlow.RefNodeHandles().size() - 1];
 				auto prevNode = skeleton.PeekNode(prevNodeHand);
@@ -622,17 +622,45 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 				// Drawing cylinders
 				glm::vec3 sDir;
 				sDir = glm::vec3(0, 1, 0);
-
 				MPoint start(b0[0], b0[1], b0[2]);
 				MPoint end(b3[0], b3[1], b3[2]);
 
 				//	glm::vec3 eDir = parentPos - currPos;
-				buildCylinderMesh(start, end, nextNode.m_info.m_thickness * radius, currNode.m_info.m_thickness * radius,
-					b3 - b0, b3 - b0, points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
+				//buildCylinderMesh(start, end, currNode.m_info.m_thickness * radius, nextNode.m_info.m_thickness * radius,
+				//	b3 - b0, b3 - b0, points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
+
+				
+				for (int seg = 0; seg < segments; ++seg) {
+					float u1 = seg / (double) segments;
+					float u2 = (seg + 1) / (double) segments;
+
+					glm::vec3 pos1 = 
+						b0 * (float) glm::pow((1 - u1), 3) 
+						+ b1 * 3.f* u1 * (float)glm::pow((1 - u1), 2) 
+						+ b2 * 3.f * (float)glm::pow((u1), 2) * (1 - u1)
+						+ b3 * (float)glm::pow((u1), 3);
+
+					glm::vec3 pos2 =
+						b0 * (float)glm::pow((1 - u2), 3)
+						+ b1 * 3.f * u2 * (float)glm::pow((1 - u2), 2)
+						+ b2 * 3.f * (float)glm::pow((u2), 2) * (1 - u2)
+						+ b3 * (float)glm::pow((u2), 3);
+
+					MPoint start(pos1[0], pos1[1], pos1[2]);
+					MPoint end(pos2[0], pos2[1], pos2[2]);
+
+
+					float rad1 = (1 - u1) * currNode.m_info.m_thickness * radius + u1 * nextNode.m_info.m_thickness * radius;
+					float rad2 = (1 - u2) * currNode.m_info.m_thickness * radius + u2 * nextNode.m_info.m_thickness * radius;
+
+					buildCylinderMesh(start, end, rad1, rad2,
+						s0, s1, points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
+				}
+				
 
 				prevFlow = currFlow;
 				currFlow = nextFlow;
-				nextFlow = skeleton.PeekFlow(currFlow.GetParentHandle());
+				nextFlow = currFlow.GetParentHandle() > -1 ? skeleton.PeekFlow(currFlow.GetParentHandle()) : nextFlow;
 			} while (currFlow.GetParentHandle() != -1);
 			// will we still need to draw the very last one??
 		}
