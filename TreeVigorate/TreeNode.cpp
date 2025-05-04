@@ -369,7 +369,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		// Creating cylinders
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
 		if (shoots.RefSortedNodeList().size() != 0) {
-			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, strandManager, r);
+			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, strandManager, r * 0.05);
 		}
 
 		// setting growTime to new val
@@ -563,10 +563,93 @@ void TreeNode::buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float e
 	}
 }
 
-bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, StrandManager strandManager, double radius) {
-#define FLOW false;
+bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, ShootSkeleton& skeleton, StrandManager& strandManager, double radius) {
+#define FLOW true;
 #if FLOW
-	for (int i = 0; i < skeleton.RefSortedFlowList().size(); ++i)
+	// First we get all end nodes
+	std::unordered_set<NodeHandle> endNodeHandles;
+	for (const auto& fh: skeleton.RefSortedFlowList()) {
+		const auto& flow = skeleton.RefFlow(fh);
+		if (flow.RefChildHandles().size() == 0) {
+			endNodeHandles.insert(flow.RefNodeHandles()[flow.RefNodeHandles().size() - 1]);
+		}
+	}
+
+	// Then, for each particle in each end node
+	for (const auto& nh : endNodeHandles) {
+		//auto& currNode = skeleton.RefNode(nh);
+		const auto& particles = strandManager.getNodeToParticlesMap();
+		for (const auto& particle : particles.at(nh)) {
+			auto currFlowHand = skeleton.PeekNode(nh).GetFlowHandle();
+			auto currFlow = skeleton.PeekFlow(currFlowHand);
+			auto nextFlow = skeleton.PeekFlow(currFlow.GetParentHandle());
+			auto prevFlow = currFlow;
+			do {
+				auto currNodeHand = currFlow.RefNodeHandles()[currFlow.RefNodeHandles().size() - 1];
+				auto currNode = skeleton.PeekNode(currNodeHand);
+				auto nextNodeHand = nextFlow.RefNodeHandles()[nextFlow.RefNodeHandles().size() - 1];
+				auto nextNode = skeleton.PeekNode(nextNodeHand);
+				auto prevNodeHand = prevFlow.RefNodeHandles()[prevFlow.RefNodeHandles().size() - 1];
+				auto prevNode = skeleton.PeekNode(prevNodeHand);
+				auto nextnextFlowHand = nextFlow.GetParentHandle();
+
+
+				std::unordered_map<int, glm::vec3> thisNodePositions = strandManager.getGlobalNodeParticlePositions(currNodeHand, skeleton);
+				glm::vec3 b0 = thisNodePositions[particle.getIndex()];
+				std::unordered_map<int, glm::vec3> nextNodePositions = strandManager.getGlobalNodeParticlePositions(nextNodeHand, skeleton);
+				glm::vec3 b3 = nextNodePositions[particle.getIndex()];
+
+				std::unordered_map<int, glm::vec3> prevNodePositions = strandManager.getGlobalNodeParticlePositions(prevNodeHand, skeleton);
+				glm::vec3 prevPos = prevNodePositions[particle.getIndex()];
+				glm::vec3 s0 = (b3 - prevPos) * 0.5f;
+				glm::vec3 b1 = b0 + (1.f / 3.f) * s0;
+				
+				glm::vec3 s1;
+				if (nextnextFlowHand != -1) {
+					auto nextnextFlow = skeleton.PeekFlow(nextnextFlowHand);
+					auto nextnextNodeHand = nextnextFlow.RefNodeHandles()[nextnextFlow.RefNodeHandles().size() - 1];
+					auto nextnextNode = skeleton.PeekNode(nextnextNodeHand);
+					std::unordered_map<int, glm::vec3> nextnextNodePositions = strandManager.getGlobalNodeParticlePositions(nextnextNodeHand, skeleton);
+					glm::vec3 nextnextPos = nextnextNodePositions[particle.getIndex()];
+					s1 = (nextnextPos - b0) * 0.5f;
+				}
+				else {
+					s1 = glm::vec3(0, -1, 0);
+				}
+				glm::vec3 b2 = b3 - (1.f / 3.f) * s1;
+
+
+				// Drawing cylinders
+				glm::vec3 sDir;
+				sDir = glm::vec3(0, 1, 0);
+
+				MPoint start(b0[0], b0[1], b0[2]);
+				MPoint end(b3[0], b3[1], b3[2]);
+
+				//	glm::vec3 eDir = parentPos - currPos;
+				buildCylinderMesh(start, end, nextNode.m_info.m_thickness * radius, currNode.m_info.m_thickness * radius,
+					b3 - b0, b3 - b0, points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
+
+				prevFlow = currFlow;
+				currFlow = nextFlow;
+				nextFlow = skeleton.PeekFlow(currFlow.GetParentHandle());
+			} while (currFlow.GetParentHandle() != -1);
+			// will we still need to draw the very last one??
+		}
+	}
+	// loop down by getting the "next" (or prev...)
+	// construct bezier curve between
+			// b0 = this strand
+			// b1 = b0 + 1/3 S0. -> S0 = (strand +1 (b3) - strand -1) / 2. If no - then do + and curr.
+			// b2 = b3 - 1/3 S1 -> S1 = (strand +2 - strand (b0)) / 2. If no +, then lock into horizontal-> 0, 1, 0.
+			// b3 = next strand.
+			// To get next flow particle strand: next, get node, check if this node "IsFlowStartNode()", until it is.
+	// draw cylinder depending on "fineness" input int -> 1 is 1 cylinder per flow, with no interp
+
+
+
+
+	/*for (int i = 0; i < skeleton.RefSortedFlowList().size(); ++i)
 	{
 		int currHandle = skeleton.RefSortedFlowList()[i];
 		auto& curr = skeleton.PeekFlow(currHandle);
@@ -583,7 +666,7 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 		}
 			glm::vec3 eDir = parentPos - currPos;
 		buildCylinderMesh(start, end, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, sDir, eDir,
-			points, faceCounts, faceConns, node.RefChildHandles().size() == 0, false);
+			points, faceCounts, faceConns, node.RefChildHandles().size() == 0, false);*/
 		//CylinderMesh cyl(start, end);
 		//cyl.appendToMesh(points, faceCounts, faceConns, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, curr.m_info.m_globalStartRotation, curr.m_info.m_globalEndRotation);
 
@@ -793,26 +876,6 @@ void TreeNode::developSubtree(ShootSkeleton& m_shootSkeleton, const NodeHandle& 
 }
 
 void TreeNode::pruneSubtree(ShootSkeleton& skeleton, const NodeHandle& first) {
-
-	//std::stack<NodeHandle> nhstack;
-	//std::unordered_set<NodeHandle> subNodes;
-	//nhstack.push(first);
-	//while (!nhstack.empty()) {
-	//	const NodeHandle currNH = nhstack.top();
-	//	nhstack.pop();
-	//	if (!subNodes.count(currNH)) {
-	//		subNodes.insert(currNH);
-	//		std::vector<NodeHandle> children = skeleton.RefNode(currNH).RefChildHandles();
-	//		for (const auto& child : children) {
-	//			nhstack.push(child);
-	//		}
-	//	}
-	//}
-
-	//for (const auto& internodeHandle : subNodes) {
-	//	//if (skeleton.RefNode(internodeHandle).IsRecycled()) continue;
-	//	treeModel.PruneInternode(internodeHandle);
-	//}
 	treeModel.PruneInternode(first);
 	skeleton.SortLists();
 }

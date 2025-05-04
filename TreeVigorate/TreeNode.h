@@ -197,7 +197,7 @@ private:
 	/// <param name="skeleton"> skeleton storing the nodes</param>
 	/// <param name="rad"> radius multiplier of cylinders</param>
 	/// <returns>true</returns>
-	bool appendNodeCylindersToMesh( MPointArray& vertices, MIntArray& tris, MIntArray& edges, ShootSkeleton& skeleton, StrandManager strandManager, double rad);
+	bool appendNodeCylindersToMesh( MPointArray& vertices, MIntArray& tris, MIntArray& edges, ShootSkeleton& skeleton, StrandManager& strandManager, double rad);
 
 
 	/// <summary>
