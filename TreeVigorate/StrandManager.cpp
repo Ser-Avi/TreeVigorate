@@ -60,7 +60,7 @@ void StrandManager::populateStrandsFromChildNode(Node<InternodeGrowthData>& chil
 					}
 				}
 				if (maxRadiusNodeHandle != childNode.GetHandle()) {
-					calculatedPosition += offsetVector;
+					calculatedPosition + (offsetVector);
 				}
 			}
 			StrandParticle newParentParticle(particle.getIndex(), calculatedPosition, receiverNode.GetHandle());
