@@ -447,7 +447,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		//float vigor = curr.m_data.m_buds[0].m_vigorSink.GetVigor();
 
 		// highlighting selected flow
-		float r = data.inputValue(radius).asDouble() + 0.2;
+		float r = data.inputValue(radius).asDouble() * 6.2;
 		glm::vec3 currPos = currFlow.m_info.m_globalStartPosition;
 		glm::vec3 parentPos = currFlow.m_info.m_globalEndPosition;
 		MPoint start(currPos[0], currPos[1], currPos[2]);
@@ -464,7 +464,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MIntArray faceCounts;
 		MIntArray faceConns;
 		buildCylinderMesh(start, end, currFlow.m_info.m_startThickness * r, currFlow.m_info.m_endThickness * r, sDir, eDir,
-			points, faceCounts, faceConns);
+			points, faceCounts, faceConns, true, true);
 
 		// create output object
 		MDataHandle outputHandle = data.outputValue(outputNodeMesh, &returnStatus);
@@ -489,7 +489,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 /// <summary>
 /// Based on the cylinder class method
 /// </summary>
-void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
+void TreeNode::buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
 	MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, bool drawTop, bool drawBot) {
 	int startIndex = points.length();
 	int numSlices = 10;
@@ -583,7 +583,7 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 		}
 			glm::vec3 eDir = parentPos - currPos;
 		buildCylinderMesh(start, end, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, sDir, eDir,
-			points, faceCounts, faceConns);
+			points, faceCounts, faceConns, node.RefChildHandles().size() == 0, false);
 		//CylinderMesh cyl(start, end);
 		//cyl.appendToMesh(points, faceCounts, faceConns, curr.m_info.m_startThickness * radius, curr.m_info.m_endThickness * radius, curr.m_info.m_globalStartRotation, curr.m_info.m_globalEndRotation);
 
@@ -607,7 +607,8 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 			MPoint end(endPosition[0], endPosition[1], endPosition[2]);
 
 		//	glm::vec3 eDir = parentPos - currPos;
-			buildCylinderMesh(start, end, parentNode.m_info.m_thickness * radius, node.m_info.m_thickness * radius, endPosition - startPosition, endPosition - startPosition, points, faceCounts, faceConns, node.RefChildHandles().size() == 0, false);
+			buildCylinderMesh(start, end, parentNode.m_info.m_thickness * radius, node.m_info.m_thickness * radius, 
+				endPosition - startPosition, endPosition - startPosition, points, faceCounts, faceConns, (node.RefChildHandles().size() == 0), false);
 		}	
 	}
 

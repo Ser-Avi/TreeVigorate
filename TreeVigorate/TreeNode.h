@@ -182,8 +182,10 @@ private:
 	/// <param name="points"></param>
 	/// <param name="faceCounts"></param>
 	/// <param name="faceConns"></param>
+	/// <param name="drawTop"></param>
+	/// <param name="drawBot"></param>
 	void buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float eRad, glm::vec3 sDir, glm::vec3 eDir,
-		MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns);
+		MPointArray& points, MIntArray& faceCounts, MIntArray& faceConns, bool drawTop, bool drawBot);
 	
 	/// <summary>
 	/// Creates a cylinder between each node in the input skeleton and appends them to the mesh

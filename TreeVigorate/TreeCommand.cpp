@@ -31,7 +31,7 @@ global proc createTreeUI() {
         deleteUI treeUI;
     }
     
-    window -title "Tree Controls" -widthHeight 250 220 treeUI;
+    window -title "Tree Controls" -widthHeight 250 420 treeUI;
     
     columnLayout -adjustableColumn true;
     
