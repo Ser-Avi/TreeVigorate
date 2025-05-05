@@ -31,7 +31,7 @@ global proc createTreeUI() {
         deleteUI treeUI;
     }
     
-    window -title "Tree Controls" -widthHeight 250 420 treeUI;
+    window -title "Tree Controls" -widthHeight 300 470 treeUI;
     
     columnLayout -adjustableColumn true;
     
@@ -48,7 +48,7 @@ global proc createTreeUI() {
     
     separator -height 10;
 
-	intSliderGrp -label "Growth Amount" 
+	intSliderGrp -label "Growth Amount"
 					  -field true 
 					  -minValue 0 
 					  -maxValue 500 
@@ -60,7 +60,7 @@ global proc createTreeUI() {
     
     separator -height 10;
 
-	floatSliderGrp -label "Radius Adjuster" 
+	floatSliderGrp -label "Adjust Radius" 
 					  -field true 
 					  -minValue 0.2
 					  -maxValue 50.0 
@@ -69,6 +69,18 @@ global proc createTreeUI() {
 					  -changeCommand "updateRad"
 				      -annotation "Adjusts tree radius with this multiplier"
 					  radSlider;
+    
+    separator -height 10;
+
+	intSliderGrp -label "Smooth Tree" 
+					  -field true 
+					  -minValue 1
+					  -maxValue 10
+					  -value 1
+					  -step 1
+					  -changeCommand "updateSeg"
+				      -annotation "Creates this amount of extra segments on tree branches"
+					  segSlider;
     
     separator -height 10;
 
@@ -104,8 +116,8 @@ global proc createTreeUI() {
 	text -label "Selected Node";
 	intSliderGrp	-label "Select Node"
 					-field true
-					-minValue 0
-					-maxValue 0
+					-minValue 1
+					-maxValue 1
 					-value 0
 					-step 1
 					-dragCommand "updateSelectedNode"
@@ -215,6 +227,11 @@ global proc updateNodeNum() {
 global proc updateRate() {
     float $value = `floatSliderGrp -query -value rateSlider`;
 	setAttr TN1.deltaTime ( 1 / $value);
+}
+
+global proc updateSeg() {
+	float $val = `intSliderGrp -query -value segSlider`;
+	setAttr TN1.segments $val;
 }
 
 global proc updateRad() {
@@ -513,14 +530,14 @@ menuItem
 	-label "Tree Controls"
 	-command("createTreeUI")
 		systemItem1;
-menuItem
-	-label "Iterate Growth"
-	-command("createTreeGrowthUI")
-		systemItem2;
-menuItem
-	-label "Create Test Mesh"
-	-command("createTestMeshNode")
-		systemItem3;
+//menuItem
+//	-label "Iterate Growth"
+//	-command("createTreeGrowthUI")
+//		systemItem2;
+//menuItem
+//	-label "Create Test Mesh"
+//	-command("createTestMeshNode")
+//		systemItem3;
 )";
 
 	MGlobal::executeCommand(treeUIcmd);

@@ -171,6 +171,11 @@ private:
 	float prevRad = 1.0;
 
 	/// <summary>
+	/// Due to Maya being Maya, this is to keep track of only segment changing
+	/// </summary>
+	int prevSeg = 1;
+
+	/// <summary>
 	/// Builds a cylinder mesh into the input arrays
 	/// </summary>
 	/// <param name="start">start loc</param>
@@ -296,6 +301,8 @@ public:
 	static MObject sunDir;
 	// used to keep track of how much the tree has grown
 	static MObject growTime;
+	// how many segments to do per flow when interpolating positions
+	static MObject segments;
 
 	// number of flow nodes
 	static MObject numNodes;

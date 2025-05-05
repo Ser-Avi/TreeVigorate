@@ -1272,10 +1272,6 @@ inline void TreeModel::AllocateShootVigor(const ShootGrowthController& shootGrow
 		for (auto& bud : internodeData.m_buds) {
 			if (bud.m_type == BudType::Apical && internodeVigorFlow.m_vigorRequirementWeight != 0.0f) {
 				//The vigor gets allocated and stored eventually into the buds
-
-
-				MGlobal::displayInfo("Allocated Vigor: ");
-				MGlobal::displayInfo(std::to_string(internodeVigorFlow.m_allocatedVigor).c_str());
 				const float budAllocatedVigor = internodeVigorFlow.m_allocatedVigor *
 					bud.m_vigorSink.GetMaxVigorRequirement() / internodeVigorFlow.m_vigorRequirementWeight;
 				bud.m_vigorSink.AddVigor(budAllocatedVigor);
