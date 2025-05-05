@@ -614,7 +614,8 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 					s1 = (nextnextPos - b0) * 0.5f;
 				}
 				else {
-					s1 = glm::vec3(0, -1, 0);
+					glm::vec3 b3tob0 = b3 - b0;
+					s1 = glm::vec3(0, b3tob0.y / 5.f, 0);
 				}
 				glm::vec3 b2 = b3 - (1.f / 3.f) * s1;
 
@@ -655,13 +656,13 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 
 					buildCylinderMesh(start, end, rad1, rad2,
 						s0, s1, points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
-				}
-				
+				}			
 
 				prevFlow = currFlow;
+				currFlowHand = currFlow.GetParentHandle();
 				currFlow = nextFlow;
 				nextFlow = currFlow.GetParentHandle() > -1 ? skeleton.PeekFlow(currFlow.GetParentHandle()) : nextFlow;
-			} while (currFlow.GetParentHandle() != -1);
+			} while (currFlow.GetParentHandle() != -1 || currFlowHand > -1);
 			// will we still need to draw the very last one??
 		}
 	}

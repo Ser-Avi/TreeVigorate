@@ -34,7 +34,7 @@ void StrandManager::populateStrandsFromChildNode(Node<InternodeGrowthData>& chil
 	float radius = receiverNode.m_info.m_thickness;
 	
 	glm::vec2 projectedVector = glm::vec2(childNode.m_info.m_globalPosition.x - receiverNode.m_info.m_globalPosition.x, childNode.m_info.m_globalPosition.z - receiverNode.m_info.m_globalPosition.z);
-	float offsetRadii = (childNode.m_info.m_thickness + receiverNode.m_info.m_thickness) * (1 + r);
+	float offsetRadii = glm::pow(childNode.m_info.m_thickness + receiverNode.m_info.m_thickness,2) * glm::sqrt(1 + r);
 	glm::vec2 offsetVector = glm::normalize(projectedVector) * offsetRadii;
 	
 	std::vector<StrandParticle> childParticles = nodeToParticlesMap[childNode.GetHandle()];
