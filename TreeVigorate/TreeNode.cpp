@@ -21,6 +21,7 @@ MObject TreeNode::treeDataFile;
 MObject TreeNode::makeGrow;
 MObject TreeNode::sunDir;
 MObject TreeNode::growTime;
+MObject TreeNode::segments;
 
 
 MObject TreeNode::numNodes;
@@ -62,6 +63,9 @@ MStatus TreeNode::initialize()
 	TreeNode::makeGrow = numAttr.create("makeGrow", "mg", MFnNumericData::kBoolean, false, &returnStatus);
 	McheckErr(returnStatus, "Error creating makeGrow attribute\n");
 
+	TreeNode::segments = numAttr.create("segments", "s", MFnNumericData::kInt, 1, &returnStatus);
+	McheckErr(returnStatus, "Error creating segments attribute\n");
+
 	TreeNode::sunDir = numAttr.create("sunDir", "sd", MFnNumericData::k3Double, 0, &returnStatus);
 	numAttr.setNiceNameOverride("Light Direction");
 	numAttr.setDefault(0.0, 1.0, 0.0);
@@ -89,7 +93,7 @@ MStatus TreeNode::initialize()
 	numAttr.setWritable(true);
 	numAttr.setReadable(true);
 	numAttr.setKeyable(false);
-	TreeNode::selectedNode = numAttr.create("selectedNode", "sn", MFnNumericData::kInt, 0, &returnStatus);
+	TreeNode::selectedNode = numAttr.create("selectedNode", "sn", MFnNumericData::kInt, -1, &returnStatus);
 	TreeNode::numSubGrows = numAttr.create("numSubGrows", "nsg", MFnNumericData::kInt, 0, &returnStatus);
 	McheckErr(returnStatus, "Error creating selectedVigor attrib\n");
 	TreeNode::outputNodeMesh = typedAttr.create("outputNodeMesh", "outNode",
@@ -113,6 +117,9 @@ MStatus TreeNode::initialize()
 
 	returnStatus = addAttribute(TreeNode::radius);
 	McheckErr(returnStatus, "ERROR adding radius attribute\n");
+
+	returnStatus = addAttribute(TreeNode::segments);
+	McheckErr(returnStatus, "ERROR adding segments attribute\n");
 
 	returnStatus = addAttribute(TreeNode::treeDataFile);
 	McheckErr(returnStatus, "ERROR adding treeDataFile attribute\n");
@@ -150,6 +157,8 @@ MStatus TreeNode::initialize()
 		TreeNode::outputMesh);
 	returnStatus = attributeAffects(TreeNode::pruneNode,
 		TreeNode::outputMesh);
+	returnStatus = attributeAffects(TreeNode::segments,
+		TreeNode::outputMesh);
 	// everything that affects the outputMesh, needs to also affect the outputnodeMesh, as any change in the above
 	// will affect the highlighted node. Could this just be making outputMesh affect outputnodeMesh?
 	// No, because Maya.
@@ -184,6 +193,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		double fDTime = data.inputValue(deltaTime).asDouble();
 		int nGrows = data.inputValue(numGrows).asInt();
 		float r = data.inputValue(radius).asDouble();
+		float seg = data.inputValue(segments).asInt();
 		double3& sunDirVal = data.inputValue(sunDir).asDouble3();
 		glm::vec3 sunVec = glm::normalize(glm::vec3(sunDirVal[0], sunDirVal[1], sunDirVal[2]));
 		bool isNodeChanged = data.inputValue(growNode).asBool();
@@ -218,7 +228,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MIntArray faceConns;
 
 		// Growing tree
-		if (!isNodeChanged && abs(r - prevRad) <= 0.01 && !isPruning) {
+		if (!isNodeChanged && abs(r - prevRad) <= 0.01 && !isPruning && seg == prevSeg) {
 			MGlobal::displayInfo("Abt to Grow, stand back!!");
 			// if we aren't changing node vigor, we grow normally
 			for (int i = 0; i < nGrows; ++i) {
@@ -315,10 +325,10 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			MDataHandle boolHand = data.outputValue(pruneNode);
 			boolHand.set(false);
 			boolHand.setClean();
-			MGlobal::displayInfo("finish pruning");
+			MGlobal::displayInfo("finished pruning");
 		}
-		MGlobal::displayInfo("Rad:");
-		MGlobal::displayInfo(std::to_string(r).c_str());
+		//MGlobal::displayInfo("Rad:");
+		//MGlobal::displayInfo(std::to_string(r).c_str());
 		
 		StrandManager strandManager;
 		strandManager.generateParticlesForTree(treeModel.RefShootSkeleton(), 3, r);
@@ -369,7 +379,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		// Creating cylinders
 		ShootSkeleton shoots = treeModel.RefShootSkeleton();
 		if (shoots.RefSortedNodeList().size() != 0) {
-			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, strandManager, r, 4);
+			bool isAdd = appendNodeCylindersToMesh(points, faceCounts, faceConns, shoots, strandManager, r, seg);
 		}
 
 		// setting growTime to new val
@@ -381,18 +391,19 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		int flows = shoots.RefSortedFlowList().size();
 		nodeNumHandle.set(flows);
 		nodeNumHandle.setClean();
-		MGlobal::displayInfo("Flows: ");
+		/*MGlobal::displayInfo("Flows: ");
 		MGlobal::displayInfo(MString(std::to_string(flows).c_str()));
 		int nodes = shoots.RefSortedNodeList().size();
 		MGlobal::displayInfo("Nodes: ");
-		MGlobal::displayInfo(std::to_string(nodes).c_str());
+		MGlobal::displayInfo(std::to_string(nodes).c_str());*/
 
 		MFnMesh mesh;
 		mesh.create(points.length(), faceCounts.length(), points, faceCounts, faceConns, newOutputData, &returnStatus);
 		McheckErr(returnStatus, "ERROR creating new Mesh");
 
-		// store rad...
+		// store rad and segments
 		prevRad = r;
+		prevSeg = seg;
 
 		MGlobal::displayInfo("[##########] 100%");
 
@@ -401,8 +412,8 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 	}
 	else if (plug == outputNodeMesh) {
 		int currNode = data.inputValue(selectedNode).asInt() - 1;
-		if (currNode < 0) {
-			MGlobal::displayError("Node Index Invalid");
+		if (currNode <= 0) {
+			//MGlobal::displayError("Node Index Invalid");
 
 			data.setClean(plug);
 			return MS::kSuccess;
@@ -447,7 +458,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		//float vigor = curr.m_data.m_buds[0].m_vigorSink.GetVigor();
 
 		// highlighting selected flow
-		float r = data.inputValue(radius).asDouble() * 6.2;
+		float r = data.inputValue(radius).asDouble() * 2.2;
 		glm::vec3 currPos = currFlow.m_info.m_globalStartPosition;
 		glm::vec3 parentPos = currFlow.m_info.m_globalEndPosition;
 		MPoint start(currPos[0], currPos[1], currPos[2]);
@@ -571,7 +582,13 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 	for (const auto& fh: skeleton.RefSortedFlowList()) {
 		const auto& flow = skeleton.RefFlow(fh);
 		if (flow.RefChildHandles().size() == 0) {
-			endNodeHandles.insert(flow.RefNodeHandles()[flow.RefNodeHandles().size() - 1]);
+			if (flow.RefNodeHandles().size() > 0) {
+				endNodeHandles.insert(flow.RefNodeHandles()[flow.RefNodeHandles().size() - 1]);
+			}
+			else if (flow.GetParentHandle() >= 0) {
+				const auto& parent = skeleton.RefFlow(flow.GetParentHandle());
+				endNodeHandles.insert(parent.RefNodeHandles()[parent.RefNodeHandles().size() - 1]);
+			}
 		}
 	}
 
