@@ -10,7 +10,7 @@ void StrandManager::populateStrandsFromNode(Node<InternodeGrowthData>& sourceNod
 		return;
 	}
 	
-	float radius = sourceNode.m_info.m_thickness * (1.0 + r);
+	float radius = sourceNode.m_info.m_thickness * (r) / 2.f;
 	std::vector<int> generatedIndices;
 
 ;	for (int i = 0; i < particleCount; ++i) {
@@ -28,13 +28,17 @@ void StrandManager::populateStrandsFromNode(Node<InternodeGrowthData>& sourceNod
 		Node<InternodeGrowthData>& parentNode = skeleton.RefNode(sourceNode.GetParentHandle());
 		populateStrandsFromChildNode(sourceNode, parentNode, skeleton, generatedIndices, r);
 	}
+
+	for (auto& particle : nodeToParticlesMap[sourceNode.GetHandle()]) {
+		particle.setLocalPosition(particle.getLocalPosition());
+	}
 }
 
-void StrandManager::populateStrandsFromChildNode(Node<InternodeGrowthData>& childNode, Node<InternodeGrowthData>& receiverNode, ShootSkeleton& skeleton, std::vector<int> particleIndices, float r) {
-	float radius = receiverNode.m_info.m_thickness;
+void StrandManager::populateStrandsFromChildNode(Node<InternodeGrowthData>& childNode, Node<InternodeGrowthData>& receiverNode, ShootSkeleton& skeleton, std::vector<int> particleIndices, float r) {	
+	
 	
 	glm::vec2 projectedVector = glm::vec2(childNode.m_info.m_globalPosition.x - receiverNode.m_info.m_globalPosition.x, childNode.m_info.m_globalPosition.z - receiverNode.m_info.m_globalPosition.z);
-	float offsetRadii = glm::pow(childNode.m_info.m_thickness + receiverNode.m_info.m_thickness,2) * glm::sqrt(1 + r);
+	float offsetRadii = nodeToParticlesMap[receiverNode.GetHandle()].size() > 0 ? glm::pow(childNode.m_info.m_thickness + receiverNode.m_info.m_thickness,2) * glm::sqrt(r) : 0;
 	glm::vec2 offsetVector = glm::normalize(projectedVector) * offsetRadii;
 	
 	std::vector<StrandParticle> childParticles = nodeToParticlesMap[childNode.GetHandle()];

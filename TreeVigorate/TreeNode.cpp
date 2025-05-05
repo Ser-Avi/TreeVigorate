@@ -688,7 +688,9 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 					float rad2 = (1 - u2) * currNode.m_info.m_thickness * radius + u2 * nextNode.m_info.m_thickness * radius;
 
 					buildCylinderMesh(start, end, rad1, rad2,
-						seg == 0 ? -glm::normalize(s0) : glm::normalize(posneg1 - pos2), seg == segMins -1 ? -glm::normalize(s1) : glm::normalize(pos1 - pos3), points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
+						seg == 0 ? -glm::normalize(s0) : glm::normalize(posneg1 - pos2), seg == segMins - 1 ? -glm::normalize(s1) : glm::normalize(pos1 - pos3),
+						points, faceCounts, faceConns, currFlow.GetParentHandle() == -1, (currNode.RefChildHandles().size() == 0));
+
 				}			
 
 				prevFlow = currFlow;
