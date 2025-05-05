@@ -647,13 +647,13 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 				//buildCylinderMesh(start, end, currNode.m_info.m_thickness * radius, nextNode.m_info.m_thickness * radius,
 				//	b3 - b0, b3 - b0, points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
 
-				
-				for (int seg = 0; seg < segments; ++seg) {
-					float uneg1 = ((seg - 1) / (double)segments);
-					float u3 = ((seg + 2) / (double)segments);
+				int segMins = glm::min(segments, (int)currFlow.RefNodeHandles().size());
+				for (int seg = 0; seg < segMins; ++seg) {
+					float uneg1 = ((seg - 1) / (double)segMins);
+					float u3 = ((seg + 2) / (double)segMins);
 
-					float u1 = seg / (double) segments;
-					float u2 = (seg + 1) / (double) segments;
+					float u1 = seg / (double)segMins;
+					float u2 = (seg + 1) / (double)segMins;
 
 					glm::vec3 posneg1 =
 						b0 * (float)glm::pow((1 - uneg1), 3)
@@ -688,7 +688,7 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 					float rad2 = (1 - u2) * currNode.m_info.m_thickness * radius + u2 * nextNode.m_info.m_thickness * radius;
 
 					buildCylinderMesh(start, end, rad1, rad2,
-						seg == 0 ? s0 : glm::normalize(posneg1 - pos2), seg == segments-1 ? s1 : glm::normalize(pos1 - pos3), points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
+						seg == 0 ? -glm::normalize(s0) : glm::normalize(posneg1 - pos2), seg == segMins -1 ? -glm::normalize(s1) : glm::normalize(pos1 - pos3), points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
 				}			
 
 				prevFlow = currFlow;
