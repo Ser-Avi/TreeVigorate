@@ -412,7 +412,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 	}
 	else if (plug == outputNodeMesh) {
 		int currNode = data.inputValue(selectedNode).asInt() - 1;
-		if (currNode <= 0) {
+		if (currNode < 0) {
 			//MGlobal::displayError("Node Index Invalid");
 
 			data.setClean(plug);
