@@ -649,8 +649,18 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 
 				
 				for (int seg = 0; seg < segments; ++seg) {
+					float uneg1 = ((seg - 1) / (double)segments);
+					float u3 = ((seg + 2) / (double)segments);
+
 					float u1 = seg / (double) segments;
 					float u2 = (seg + 1) / (double) segments;
+
+					glm::vec3 posneg1 =
+						b0 * (float)glm::pow((1 - uneg1), 3)
+						+ b1 * 3.f * uneg1 * (float)glm::pow((1 - uneg1), 2)
+						+ b2 * 3.f * (float)glm::pow((uneg1), 2) * (1 - uneg1)
+						+ b3 * (float)glm::pow((uneg1), 3);
+
 
 					glm::vec3 pos1 = 
 						b0 * (float) glm::pow((1 - u1), 3) 
@@ -664,6 +674,12 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 						+ b2 * 3.f * (float)glm::pow((u2), 2) * (1 - u2)
 						+ b3 * (float)glm::pow((u2), 3);
 
+					glm::vec3 pos3 =
+						b0 * (float)glm::pow((1 - u3), 3)
+						+ b1 * 3.f * u3 * (float)glm::pow((1 - u3), 2)
+						+ b2 * 3.f * (float)glm::pow((u3), 2) * (1 - u3)
+						+ b3 * (float)glm::pow((u3), 3);
+
 					MPoint start(pos1[0], pos1[1], pos1[2]);
 					MPoint end(pos2[0], pos2[1], pos2[2]);
 
@@ -672,7 +688,7 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 					float rad2 = (1 - u2) * currNode.m_info.m_thickness * radius + u2 * nextNode.m_info.m_thickness * radius;
 
 					buildCylinderMesh(start, end, rad1, rad2,
-						s0, s1, points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
+						seg == 0 ? s0 : glm::normalize(posneg1 - pos2), seg == segments-1 ? s1 : glm::normalize(pos1 - pos3), points, faceCounts, faceConns, (currNode.RefChildHandles().size() == 0), false);
 				}			
 
 				prevFlow = currFlow;
