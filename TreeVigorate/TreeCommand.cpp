@@ -104,7 +104,11 @@ global proc createTreeUI() {
 
 	separator - style "none" - height 15;
     separator - style "in" - height 5;
-    separator - style "none" - height 15;
+    separator - style "none" - height 15;\
+
+	
+	// NODE EDITING
+	
 	text -label "Node Editing";
 	separator - style "in" -height 5;
 
@@ -143,17 +147,60 @@ global proc createTreeUI() {
 			-backgroundColor 0.2 0.6 0.2;
 	
 	separator -height 10;
-
-	button	-label "Prune Subtree"
-			-command "prune"
-			-backgroundColor 0.8 0.7 0.2;
-
-	separator -height 10;
 	
 	button	-label "Play"
 			-command "subPlayPause"
 			-backgroundColor 0.8 0.3 0.3
 			subPlayButton;
+	
+	button	-label "Prune Subtree"
+			-command "prune"
+			-backgroundColor 0.8 0.7 0.2;
+
+	separator - style "none" - height 15;
+    separator - style "in" - height 5;
+    separator - style "none" - height 15;
+
+
+	// ADVANCED SETTINGS
+	frameLayout -labelVisible true -borderVisible true -marginWidth 5 -marginHeight 5 
+                -visible true -collapsable true -collapse false -label "Advanced Settings"
+				-annotation "Advanced settings for tree growth parameters"
+                -width 300 -height 120 optionsFrame;
+	
+	columnLayout -columnAttach "left" 10 -rowSpacing 5;
+
+	intSliderGrp	-label "Internode Growth Rate"
+					-field true
+					-minValue 1
+					-maxValue 15
+					-value 0
+					-step 1
+					-dragCommand "updateSelectedNode"
+					-changeCommand "updateSelectedNode"
+					-annotation "Select the node to edit"
+					nodeSelectSlider;
+    
+    rowLayout -numberOfColumns 3 -columnWidth3 100 10 150;
+        text -label "Precision A:";
+        separator -style "none" -width 10;
+        floatField -precision 10 -value 0.0 -width 20 fieldA;
+    setParent..;
+    
+    rowLayout -numberOfColumns 3 -columnWidth3 100 10 150;
+        text -label "Precision B:";
+        separator -style "none" -width 10;
+        floatField -precision 10 -value 0.0 -width 20 fieldB;
+    setParent..;
+
+    rowLayout -numberOfColumns 3 -columnWidth3 100 10 150;
+        text -label "Precision C:";
+        separator -style "none" -width 10;
+        floatField -precision 10 -value 0.0 -width 20 fieldC;
+    setParent..;
+    
+    setParent..; // End columnLayout
+    setParent..; // End frameLayout
     
     // Add cleanup when window closes
     scriptJob -uiDeleted "treeUI" "onTreeUIClose";
