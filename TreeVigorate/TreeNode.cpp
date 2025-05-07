@@ -508,7 +508,9 @@ void TreeNode::buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float e
 	glm::quat sRot = glm::rotation(glm::vec3(0, 1.f, 0), sDir);
 	glm::quat eRot = glm::rotation(glm::vec3(0, 1.f, 0), eDir);
 
-	bool needFaceReverse = (end.y - start.y) > 0;
+	// determine if cylinder is facing downwards, which needs different vertex indices
+	glm::vec3 cylinderDir = glm::normalize(glm::vec3(end.x - start.x, end.y - start.y, end.z - start.z));
+	bool needFaceReverse = glm::dot(cylinderDir, glm::vec3(0, 1.f, 0)) < 0;
 	
 	// starting circle points
 	for (int i = 0; i < numSlices; ++i) {
@@ -530,7 +532,7 @@ void TreeNode::buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float e
 	// setting endcap 1 indices
 	for (int i = 0; i < numSlices && drawBot; ++i) {
 		faceCounts.append(3);
-		if (!needFaceReverse) {
+		if (needFaceReverse) {
 			faceConns.append(2 * numSlices + startIndex);  // Center
 			faceConns.append((i + 1) % numSlices + startIndex); 
 			faceConns.append(i + startIndex);              
@@ -544,7 +546,7 @@ void TreeNode::buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float e
 	// endcap 2 indices
 	for (int i = 0; i < numSlices && drawTop; ++i) {
 		faceCounts.append(3);
-		if (needFaceReverse) {
+		if (!needFaceReverse) {
 			faceConns.append(2 * numSlices + 1 + startIndex);  // Center
 			faceConns.append(numSlices + (i + 1) % numSlices + startIndex);
 			faceConns.append(numSlices + i + startIndex);
@@ -559,7 +561,7 @@ void TreeNode::buildCylinderMesh(MPoint& start, MPoint& end, float sRad, float e
 	for (int i = 0; i < numSlices; ++i) {
 		faceCounts.append(4);
 		int next = (i + 1) % numSlices;
-		if (needFaceReverse) {
+		if (false) {
 			faceConns.append(i + startIndex);                   // Start circle, current
 			faceConns.append(numSlices + i + startIndex);       // End circle, current
 			faceConns.append(numSlices + next + startIndex);  // End circle, next
@@ -690,7 +692,6 @@ bool TreeNode::appendNodeCylindersToMesh(MPointArray& points, MIntArray& faceCou
 					buildCylinderMesh(start, end, rad1, rad2,
 						seg == 0 ? -glm::normalize(s0) : glm::normalize(posneg1 - pos2), seg == segMins - 1 ? -glm::normalize(s1) : glm::normalize(pos1 - pos3),
 						points, faceCounts, faceConns, currFlow.GetParentHandle() == -1, (currNode.RefChildHandles().size() == 0));
-
 				}			
 
 				prevFlow = currFlow;
