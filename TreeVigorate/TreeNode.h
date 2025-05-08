@@ -153,7 +153,7 @@ private:
 	/// <param name="m_rootGrowthParameters"></param>
 	/// <param name="m_shootGrowthParameters"></param>
 	void InitializeMVars(const std::string& tree, SoilModel &m_soilModel, ClimateModel& m_climateModel,
-		RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters);
+		RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters, MDataBlock& data);
 	
 	/// <summary>
 	/// The tree model that we're updating. This is a member var and I hope this works well like this.
@@ -261,6 +261,18 @@ private:
 	/// <param name="m_shootSkeleton"></param>
 	/// <param name="subNodes"></param>
 	void growPostProcess(bool treeStructureChanged, ShootSkeleton& m_shootSkeleton, std::unordered_set<NodeHandle> subNodes);
+
+	/// <summary>
+	/// Sets new set of parameters for this tree's settings
+	/// </summary>
+	/// <param name="tp">tree parameters to change</param>
+	/// <param name="internodeGrow">internode growth rate</param>
+	/// <param name="meanAngVar">branching mean angle variance</param>
+	/// <param name="apicAngVar">apical angle variance</param>
+	/// <param name="g">gravitropism</param>
+	/// <param name="p">phototropism</param>
+	/// <param name="apicDom">apical dominance</param>
+	void setNewParams(Controllers& tp, int internodeGrow, glm::vec2 meanAngVar, float apicAngVar, float g, float p, float apicDom);
 public:
 	TreeNode() {};
 	~TreeNode() override {};
@@ -282,7 +294,7 @@ public:
 	/// <param name="m_shootGrowthParameters"></param>
 	/// <param name="cm"></param>
 	/// <returns>true if reading was successful</returns>
-	bool ReadTreeParams(const std::string& fileName, RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters, ClimateModel& cm, bool fromFile);
+	bool ReadTreeParams(const std::string& fileName, RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters, ClimateModel& cm, bool fromFile, MDataBlock& data);
 
 	static MObject	outputMesh;
 	static MTypeId	id;
@@ -316,4 +328,14 @@ public:
 	static MObject growNode;
 	// a bool to check if we want to prune the subtree
 	static MObject pruneNode;
+
+	// ADVANCED TREE PARAM STUFF
+	static MObject internodeGrowth;
+	static MObject meanAngleVar1;
+	static MObject meanAngleVar2;
+	static MObject apicalAngleVar;
+	static MObject gravitrope;
+	static MObject photo;
+	static MObject apicDom;
+	static MObject isParamChanged;
 };

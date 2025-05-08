@@ -31,7 +31,7 @@ global proc createTreeUI() {
         deleteUI treeUI;
     }
     
-    window -title "Tree Controls" -widthHeight 300 470 treeUI;
+    window -title "Tree Controls" -widthHeight 300 520 treeUI;
     
     columnLayout -adjustableColumn true;
     
@@ -104,9 +104,13 @@ global proc createTreeUI() {
 
 	separator - style "none" - height 15;
     separator - style "in" - height 5;
-    separator - style "none" - height 15;
-	text -label "Node Editing";
-	separator - style "in" -height 5;
+    separator - style "none" - height 10;
+
+	
+	// NODE EDITING
+	
+	text -label "NODE EDITING";
+	separator - style "in" -height 10;
 
 	// Display total flow node num
 	text -label "Number of Tree Nodes:";
@@ -143,22 +147,130 @@ global proc createTreeUI() {
 			-backgroundColor 0.2 0.6 0.2;
 	
 	separator -height 10;
-
-	button	-label "Prune Subtree"
-			-command "prune"
-			-backgroundColor 0.8 0.7 0.2;
-
-	separator -height 10;
 	
 	button	-label "Play"
 			-command "subPlayPause"
 			-backgroundColor 0.8 0.3 0.3
 			subPlayButton;
+	
+	separator -height 10;
+
+	button	-label "Prune Subtree"
+			-command "prune"
+			-backgroundColor 0.8 0.7 0.2;
+
+    separator - style "in" - height 5;
+
+
+	// ADVANCED SETTINGS
+	frameLayout -labelVisible true -borderVisible true -marginWidth 5 -marginHeight 5 
+                -visible true -collapsable true -collapse true -label "Advanced Settings"
+				-annotation "Advanced settings for tree growth parameters"
+                -width 300 -height 220 optionsFrame;
+	
+	columnLayout -columnAttach "left" 10 -rowSpacing 5;
+
+	intSliderGrp	-label "Internode Growth Rate"
+					-field true
+					-minValue 1
+					-maxValue 20
+					-value (`getAttr TN1.internodeGrowth`)
+					-step 1
+					-changeCommand "updateIntGrow"
+					-annotation "How easily branches grow"
+					intGrowSlider;
+    
+    rowLayout -numberOfColumns 5 -columnWidth3 100 10 150;
+        text -label "Branching Angle Variance" -annotation "The max and min values for branching angles";
+        separator -style "none" -width 5;
+        intField -value (`getAttr TN1.meanAngleVar1`) -width 30  -changeCommand "updateMinVar" maxAngVarField;
+        separator -style "none" -width 15;
+		intField -value (`getAttr TN1.meanAngleVar2`) -width 30  -changeCommand "updateMaxVar" minAngVarField;
+    setParent..;
+    
+    floatSliderGrp	-label "Apical Angle Variance"
+					-field true
+					-minValue 0.0
+					-maxValue 5.0
+					-value (`getAttr TN1.apicalAngleVar`)
+					-step 0.25
+					-changeCommand "updateApicAngVar"
+					-annotation "How varied branching angles are"
+					apicAngSlider;
+
+	floatSliderGrp	-label "Apical Dominance"
+					-field true
+					-minValue 0.0
+					-maxValue 5
+					-value (`getAttr TN1.apicDom`)
+					-step 0.25
+					-changeCommand "updateApicDom"
+					-annotation "The intensity for higher buds to dominate lower ones' growth potentials"
+					apicDomSlider;
+
+    rowLayout -numberOfColumns 3 -columnWidth3 100 10 150;
+        text -label "Gravitropism" -annotation "How intensely gravity affects the tree";
+        separator -style "none" -width 38;
+        floatField -precision 10 -value (`getAttr TN1.gravitrope`) -width 80 -changeCommand "updateGrav" gravField;
+    setParent..;
+	
+	rowLayout -numberOfColumns 3 -columnWidth3 100 10 150;
+        text -label "Phototropism" -annotation "How intensely light affects the tree";
+        separator -style "none" -width 38;
+        floatField -precision 10 -value (`getAttr TN1.photo`) -width 80 -changeCommand "updatePhoto" photoField;
+    setParent..;
+
+	
+    
+    setParent..; // End columnLayout
+    setParent..; // End frameLayout
     
     // Add cleanup when window closes
     scriptJob -uiDeleted "treeUI" "onTreeUIClose";
 
 	showWindow treeUI;
+}
+
+global proc updateIntGrow() {
+	int $value = `intSliderGrp -query -value intGrowSlider`;
+	setAttr TN1.internodeGrowth $value;
+	setAttr TN1.isParamChanged true;
+}
+
+global proc updateMinVar() {
+	int $value = `intField -query -value minAngVarField`;
+	setAttr TN1.meanAngleVar2 $value;
+	setAttr TN1.isParamChanged true;
+}
+
+global proc updateMaxVar() {
+	int $value = `intField -query -value maxAngVarField`;
+	setAttr TN1.meanAngleVar1 $value;
+	setAttr TN1.isParamChanged true;
+}
+
+global proc updateApicAngVar() {
+	int $value = `floatSliderGrp -query -value apicAngSlider`;
+	setAttr TN1.apicalAngleVar $value;
+	setAttr TN1.isParamChanged true;
+}
+
+global proc updateApicDom() {
+	int $value = `floatSliderGrp -query -value apicDomSlider`;
+	setAttr TN1.apicDom $value;
+	setAttr TN1.isParamChanged true;
+}
+
+global proc updateGrav() {
+	int $value = `floatField -query -value gravField`;
+	setAttr TN1.gravitrope $value;
+	setAttr TN1.isParamChanged true;
+}
+
+global proc updatePhoto() {
+	int $value = `floatField -query -value photoField`;
+	setAttr TN1.photo $value;
+	setAttr TN1.isParamChanged true;
 }
 
 global proc subPlayPause() {
@@ -188,7 +300,6 @@ global proc subPlayPause() {
 }
 
 global proc prune() {
-	print("Pruning");
 	setAttr TN1.pruneNode true;
 	
 	refresh -force;
@@ -349,6 +460,7 @@ global proc createTreeNode(string $file) {
 
 	// creating Sun Direction locator
 	createSunLoc($treeNode);
+	refresh -force;				// this is so that initial tree values load in before we grab them
 	createTreeUI;
 };
 
@@ -416,7 +528,7 @@ global proc createTreeGeneratorWindow() {
 	text - label "Select Custom Tree File";
     separator - style "none" - height 5;
     rowLayout - numberOfColumns 2 - columnWidth2 290 60;
-		textField - editable false - width 190 treeSpeciesField;
+		textField - editable false - width 300 treeSpeciesField;
 		button - label "Browse" - command("browseTreeSpeciesFile");
     setParent ..;
 

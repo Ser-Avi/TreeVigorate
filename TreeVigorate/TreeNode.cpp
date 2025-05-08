@@ -31,6 +31,16 @@ MObject TreeNode::growNode;
 MObject TreeNode::pruneNode;
 MObject TreeNode::outputNodeMesh;
 
+// ADVANCED TREE PARAM STUFF
+MObject TreeNode::internodeGrowth;
+MObject TreeNode::meanAngleVar1;
+MObject TreeNode::meanAngleVar2;
+MObject TreeNode::apicalAngleVar;
+MObject TreeNode::gravitrope;
+MObject TreeNode::photo;
+MObject TreeNode::apicDom;
+MObject TreeNode::isParamChanged;
+
 void* TreeNode::creator()
 {
 	return new TreeNode;
@@ -172,6 +182,38 @@ MStatus TreeNode::initialize()
 		TreeNode::outputNodeMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
+	// ADVANCED TREE PARAM STUFF
+	TreeNode::internodeGrowth = numAttr.create("internodeGrowth", "ing", MFnNumericData::kInt, 10, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::meanAngleVar1 = numAttr.create("meanAngleVar1", "mav1", MFnNumericData::kInt, 60, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::meanAngleVar2 = numAttr.create("meanAngleVar2", "mav2", MFnNumericData::kInt, 3, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::apicalAngleVar = numAttr.create("apicalAngleVar", "aav", MFnNumericData::kFloat, 2.0, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::gravitrope = numAttr.create("gravitrope", "grt", MFnNumericData::kFloat, 0.01f, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::photo = numAttr.create("photo", "ph", MFnNumericData::kFloat, 0.003, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::apicDom = numAttr.create("apicDom", "aad", MFnNumericData::kFloat, 0.0, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::isParamChanged = numAttr.create("isParamChanged", "ipc", MFnNumericData::kBoolean, false, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	returnStatus = addAttribute(TreeNode::internodeGrowth);
+	returnStatus = addAttribute(TreeNode::meanAngleVar1);
+	returnStatus = addAttribute(TreeNode::meanAngleVar2);
+	returnStatus = addAttribute(TreeNode::apicalAngleVar);
+	returnStatus = addAttribute(TreeNode::gravitrope);
+	returnStatus = addAttribute(TreeNode::photo);
+	returnStatus = addAttribute(TreeNode::apicDom);
+	returnStatus = addAttribute(TreeNode::isParamChanged);
+	returnStatus = attributeAffects(TreeNode::isParamChanged,
+		TreeNode::outputNodeMesh);
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
+	returnStatus = attributeAffects(TreeNode::isParamChanged,
+		TreeNode::outputNodeMesh);
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
+
 	return MS::kSuccess;
 }
 
@@ -198,6 +240,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		glm::vec3 sunVec = glm::normalize(glm::vec3(sunDirVal[0], sunDirVal[1], sunDirVal[2]));
 		bool isNodeChanged = data.inputValue(growNode).asBool();
 		bool isPruning = data.inputValue(pruneNode).asBool();
+		bool isParam = data.inputValue(isParamChanged).asBool();
 
 		// For keeping track of total grow time
 		MDataHandle growTimeHandle = data.outputValue(growTime);
@@ -212,7 +255,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		if (!treeParams.isInit) {
 			MString treeInfo = data.inputValue(treeDataFile).asString();
 			treeParams.isInit = true;
-			InitializeMVars(treeInfo.asChar(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc);
+			InitializeMVars(treeInfo.asChar(), treeParams.sm, treeParams.cm, treeParams.rgc, treeParams.sgc, data);
 		}
 
 		// create output object
@@ -228,7 +271,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MIntArray faceConns;
 
 		// Growing tree
-		if (!isNodeChanged && abs(r - prevRad) <= 0.01 && !isPruning && seg == prevSeg) {
+		if (!isNodeChanged && abs(r - prevRad) <= 0.01 && !isPruning && seg == prevSeg && !isParam) {
 			MGlobal::displayInfo("Abt to Grow, stand back!!");
 			// if we aren't changing node vigor, we grow normally
 			for (int i = 0; i < nGrows; ++i) {
@@ -327,6 +370,29 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			boolHand.setClean();
 			MGlobal::displayInfo("finished pruning");
 		}
+		else if (isParam) {
+			// getting all params -> it is easier to set all of them than to check which changed
+			int intNodeGrow = data.inputValue(internodeGrowth).asInt();
+			int mav1 = data.inputValue(meanAngleVar1).asInt();
+			int mav2 = data.inputValue(meanAngleVar2).asInt();
+			glm::vec2 mav(mav1, mav2);
+			float apicAng = data.inputValue(apicalAngleVar).asFloat();
+			float gr = data.inputValue(gravitrope).asFloat();
+			float ph = data.inputValue(photo).asFloat();
+			float apicD = data.inputValue(apicDom).asFloat();
+			
+			setNewParams(treeParams, intNodeGrow, mav, apicAng, gr, ph, apicD);
+
+			// reset bool to false
+			MDataHandle boolHand = data.outputValue(isParamChanged);
+			boolHand.set(false);
+			boolHand.setClean();
+			MGlobal::displayInfo("Params Changed");
+		}
+
+
+
+
 		//MGlobal::displayInfo("Rad:");
 		//MGlobal::displayInfo(std::to_string(r).c_str());
 		
@@ -1686,8 +1752,35 @@ void TreeNode::SetSoilLayer(SoilLayer& sl) {
 	sl.m_thickness = [](const glm::vec2& position) {return 1000.f; };
 }
 
+void TreeNode::setNewParams(Controllers& tp, int internodeGrow, glm::vec2 meanAngVar, float apicAngVar, float g, float p, float apicDom) {
+	tp.sgc.m_internodeGrowthRate = internodeGrow;
+	tp.sgc.m_branchingAngle = [=](const Node<InternodeGrowthData>& internode)
+		{
+			return glm::gaussRand(meanAngVar.x, meanAngVar.y);
+		};
+	tp.sgc.m_apicalAngle = [=](const Node<InternodeGrowthData>& internode)
+		{
+			return glm::gaussRand(0.f, apicAngVar);
+		};
+	tp.sgc.m_gravitropism = [=](const Node<InternodeGrowthData>& internode)
+		{
+			return g;
+		};
+	tp.sgc.m_phototropism = [=](const Node<InternodeGrowthData>& internode)
+		{
+			return p;
+		};
+	tp.sgc.m_apicalControl =
+		1.0f + apicDom * glm::exp(-0.100000001 * treeModel.m_age);
+
+	tp.sgc.m_apicalDominance = [=](const Node<InternodeGrowthData>& internode)
+		{
+			return apicDom * glm::exp(0.100000001 * treeModel.m_age);
+		};
+}
+
 bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters,
-	ClimateModel& cm, bool fromFile) {
+	ClimateModel& cm, bool fromFile, MDataBlock& data) {
 	PlantParameters params;
 	if (fromFile) {
 		if (!parseConfigFile(treeName, params)) {
@@ -1697,10 +1790,30 @@ bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController&
 	else if (!fromFile) {
 		initializeParams(treeName, params);
 	}
+	
+	// Setting the maya node vals to these intial ones
+	MDataHandle interHand = data.outputValue(internodeGrowth);
+	interHand.set(params.sg.m_internodeGrowthRate);
+	interHand.setClean();
+	MDataHandle mean1Hand = data.outputValue(meanAngleVar1);
+	mean1Hand.set((int)params.sg.m_branchingAngleMeanVariance[0]);
+	mean1Hand.setClean();
+	MDataHandle mean2Hand = data.outputValue(meanAngleVar2);
+	mean2Hand.set((int)params.sg.m_branchingAngleMeanVariance[1]);
+	mean2Hand.setClean();
+	MDataHandle apicAngHand = data.outputValue(apicalAngleVar);
+	apicAngHand.set(params.sg.m_apicalAngleMeanVariance[1]);
+	apicAngHand.setClean();
+	MDataHandle gravHand = data.outputValue(gravitrope);
+	gravHand.set(params.sg.m_gravitropism);
+	gravHand.setClean();
+	MDataHandle photoHand = data.outputValue(photo);
+	photoHand.set(params.sg.m_phototropism);
+	photoHand.setClean();
+	MDataHandle apicDomHand = data.outputValue(apicDom);
+	apicDomHand.set(params.sg.m_apicalDominance);
+	apicDomHand.setClean();
 
-	size_t f = sizeof(params);
-
-	std::cout << f << std::endl;
 
 	MGlobal::displayInfo("Reading Tree File");
 	// ROOT
@@ -1912,7 +2025,7 @@ bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController&
 }
 
 void TreeNode::InitializeMVars(const std::string& treeName, SoilModel& m_soilModel, ClimateModel& m_climateModel,
-	RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters) {
+	RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters, MDataBlock& data) {
 	// SOIL
 	SoilParameters sp = SoilParameters();
 	SoilSurface sf = SoilSurface();
@@ -1936,9 +2049,9 @@ void TreeNode::InitializeMVars(const std::string& treeName, SoilModel& m_soilMod
 	bool fromFile = treeName != "Birch" && treeName != "Spruce";
 
 	// if we don't define a file path or couldn't read the file, we will initialize it as a birch
-	if (treeName == "" || !ReadTreeParams(treeName, m_rootGrowthParameters, m_shootGrowthParameters, m_climateModel, fromFile)) {
+	if (treeName == "" || !ReadTreeParams(treeName, m_rootGrowthParameters, m_shootGrowthParameters, m_climateModel, fromFile, data)) {
 		MGlobal::displayInfo("default Birch vals");
-		ReadTreeParams("Birch", m_rootGrowthParameters, m_shootGrowthParameters, m_climateModel, false);
+		ReadTreeParams("Birch", m_rootGrowthParameters, m_shootGrowthParameters, m_climateModel, false, data);
 	}
 
 	MGlobal::displayInfo("Tree Initialized");
