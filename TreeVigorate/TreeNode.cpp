@@ -36,7 +36,7 @@ MObject TreeNode::internodeGrowth;
 MObject TreeNode::meanAngleVar1;
 MObject TreeNode::meanAngleVar2;
 MObject TreeNode::apicalAngleVar;
-MObject TreeNode::gravi;
+MObject TreeNode::gravitrope;
 MObject TreeNode::photo;
 MObject TreeNode::apicDom;
 MObject TreeNode::isParamChanged;
@@ -183,14 +183,30 @@ MStatus TreeNode::initialize()
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
 	// ADVANCED TREE PARAM STUFF
-	TreeNode::internodeGrowth = numAttr.create("internodeGrowth", "ing", MFnNumericData::kInt, 10);
-	TreeNode::meanAngleVar1 = numAttr.create("meanAngVar1", "mav1", MFnNumericData::kInt, 60);
-	TreeNode::meanAngleVar2 = numAttr.create("meanAngVar2", "mav2", MFnNumericData::kInt, 3);
-	TreeNode::apicalAngleVar = numAttr.create("apicalAngleVar", "aav", MFnNumericData::kFloat, 2.0);
-	TreeNode::gravi = numAttr.create("gravi", "gt", MFnNumericData::kFloat, 0.01);
-	TreeNode::photo = numAttr.create("photo", "ph", MFnNumericData::kFloat, 0.003);
-	TreeNode::apicDom = numAttr.create("apicDom", "aad", MFnNumericData::kFloat, 0.0);
-	TreeNode::isParamChanged = numAttr.create("isParamChanged", "ipc", MFnNumericData::kBoolean, false);
+	TreeNode::internodeGrowth = numAttr.create("internodeGrowth", "ing", MFnNumericData::kInt, 10, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::meanAngleVar1 = numAttr.create("meanAngleVar1", "mav1", MFnNumericData::kInt, 60, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::meanAngleVar2 = numAttr.create("meanAngleVar2", "mav2", MFnNumericData::kInt, 3, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::apicalAngleVar = numAttr.create("apicalAngleVar", "aav", MFnNumericData::kFloat, 2.0, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::gravitrope = numAttr.create("gravitrope", "grt", MFnNumericData::kFloat, 0.01f, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::photo = numAttr.create("photo", "ph", MFnNumericData::kFloat, 0.003, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::apicDom = numAttr.create("apicDom", "aad", MFnNumericData::kFloat, 0.0, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::isParamChanged = numAttr.create("isParamChanged", "ipc", MFnNumericData::kBoolean, false, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	returnStatus = addAttribute(TreeNode::internodeGrowth);
+	returnStatus = addAttribute(TreeNode::meanAngleVar1);
+	returnStatus = addAttribute(TreeNode::meanAngleVar2);
+	returnStatus = addAttribute(TreeNode::apicalAngleVar);
+	returnStatus = addAttribute(TreeNode::gravitrope);
+	returnStatus = addAttribute(TreeNode::photo);
+	returnStatus = addAttribute(TreeNode::apicDom);
+	returnStatus = addAttribute(TreeNode::isParamChanged);
 	returnStatus = attributeAffects(TreeNode::isParamChanged,
 		TreeNode::outputNodeMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
@@ -361,7 +377,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			int mav2 = data.inputValue(meanAngleVar2).asInt();
 			glm::vec2 mav(mav1, mav2);
 			float apicAng = data.inputValue(apicalAngleVar).asFloat();
-			float gr = data.inputValue(gravi).asFloat();
+			float gr = data.inputValue(gravitrope).asFloat();
 			float ph = data.inputValue(photo).asFloat();
 			float apicD = data.inputValue(apicDom).asFloat();
 			
@@ -1774,31 +1790,23 @@ bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController&
 	else if (!fromFile) {
 		initializeParams(treeName, params);
 	}
-
-	static MObject internodeGrowth;
-	static MObject meanAngleVar1;
-	static MObject meanAngleVar2;
-	static MObject apicalAngleVar;
-	static MObject gravi;
-	static MObject photo;
-	static MObject apicDom;
 	
 	// Setting the maya node vals to these intial ones
 	MDataHandle interHand = data.outputValue(internodeGrowth);
 	interHand.set(params.sg.m_internodeGrowthRate);
 	interHand.setClean();
 	MDataHandle mean1Hand = data.outputValue(meanAngleVar1);
-	mean1Hand.set(params.sg.m_branchingAngleMeanVariance[0]);
+	mean1Hand.set((int)params.sg.m_branchingAngleMeanVariance[0]);
 	mean1Hand.setClean();
 	MDataHandle mean2Hand = data.outputValue(meanAngleVar2);
-	mean2Hand.set(params.sg.m_branchingAngleMeanVariance[1]);
+	mean2Hand.set((int)params.sg.m_branchingAngleMeanVariance[1]);
 	mean2Hand.setClean();
 	MDataHandle apicAngHand = data.outputValue(apicalAngleVar);
 	apicAngHand.set(params.sg.m_apicalAngleMeanVariance[1]);
 	apicAngHand.setClean();
-	MDataHandle graviHand = data.outputValue(gravi);
-	graviHand.set(params.sg.m_gravitropism);
-	graviHand.setClean();
+	MDataHandle gravHand = data.outputValue(gravitrope);
+	gravHand.set(params.sg.m_gravitropism);
+	gravHand.setClean();
 	MDataHandle photoHand = data.outputValue(photo);
 	photoHand.set(params.sg.m_phototropism);
 	photoHand.setClean();

@@ -334,7 +334,7 @@ public:
 	static MObject meanAngleVar1;
 	static MObject meanAngleVar2;
 	static MObject apicalAngleVar;
-	static MObject gravi;
+	static MObject gravitrope;
 	static MObject photo;
 	static MObject apicDom;
 	static MObject isParamChanged;

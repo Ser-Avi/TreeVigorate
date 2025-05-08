@@ -31,6 +31,7 @@ MStatus initializePlugin(MObject obj) {
 		TreeNode::creator, TreeNode::initialize);
 	if (!status) {
 		status.perror("registerNode");
+		MGlobal::displayError("Can't register TreeNode");
 		return status;
 	}
 
