@@ -569,16 +569,16 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		float r = data.inputValue(radius).asDouble() * 2.2;
 		glm::vec3 currPos = currFlow.m_info.m_globalStartPosition;
 		glm::vec3 parentPos = currFlow.m_info.m_globalEndPosition;
-		MPoint start(currPos[0], currPos[1], currPos[2]);
-		MPoint end(parentPos[0], parentPos[1], parentPos[2]);
-		glm::vec3 sDir;
+		MPoint end(currPos[0], currPos[1], currPos[2]);
+		MPoint start(parentPos[0], parentPos[1], parentPos[2]);
+		glm::vec3 eDir;
 		if (currFlow.GetParentHandle() >= 0) {
-			sDir = currPos - skeleton.PeekFlow(currFlow.GetParentHandle()).m_info.m_globalStartPosition;
+			eDir = currPos - skeleton.PeekFlow(currFlow.GetParentHandle()).m_info.m_globalStartPosition;
 		}
 		else {
-			sDir = glm::vec3(0, 1, 0);
+			eDir = glm::vec3(0, 1, 0);
 		}
-		glm::vec3 eDir = parentPos - currPos;
+		glm::vec3 sDir = parentPos - currPos;
 		MPointArray points;
 		MIntArray faceCounts;
 		MIntArray faceConns;
