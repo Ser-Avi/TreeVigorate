@@ -41,6 +41,10 @@ MObject TreeNode::photo;
 MObject TreeNode::apicDom;
 MObject TreeNode::isParamChanged;
 
+//leaves
+MObject TreeNode::writeLeaves;
+MObject TreeNode::leafLocation;
+
 void* TreeNode::creator()
 {
 	return new TreeNode;
@@ -214,16 +218,49 @@ MStatus TreeNode::initialize()
 		TreeNode::outputNodeMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
 
+	// LEAVES
+	TreeNode::leafLocation = typedAttr.create("leafLocation", "ll", MFnData::kString, MObject::kNullObj, &returnStatus);
+	McheckErr(returnStatus, "Error creating leafLocation attribute \n");
+	typedAttr.setHidden(true);
+	TreeNode::writeLeaves = numAttr.create("writeLeaves", "wrtl", MFnNumericData::kBoolean, false, &returnStatus);
+	McheckErr(returnStatus, "Error creating writeLeaves attribute\n");
+
+	returnStatus = addAttribute(TreeNode::writeLeaves);
+	McheckErr(returnStatus, "ERROR adding writeLeaves attribute\n");
+	returnStatus = addAttribute(TreeNode::leafLocation);
+	McheckErr(returnStatus, "ERROR in leaf location\n");
+	returnStatus = attributeAffects(TreeNode::writeLeaves,
+		outputMesh);
+	McheckErr(returnStatus, "ERROR in attributeAffects\n");
+
 	return MS::kSuccess;
 }
 
-void TreeNode::appendLeavesToMesh(ShootSkeleton& skeleton, StrandManager strandManager, double rad)
+void TreeNode::saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& data)
 {
-	for (auto& node : skeleton.RefRawNodes()) {
-		for (auto& leaf : node.m_data.m_leaves) {
+	MString leafFilePath = data.inputValue(leafLocation).asString();
+	std::ofstream file(leafFilePath.asChar());
+	if (!file.is_open())
+		MGlobal::displayError("Can't access leaf file path");
 
+	file << "# Matrix data file\n";
+	file << "# Format: 16 space-separated numbers per line (row-major order)\n";
+
+	for (auto& node : skeleton.RefRawNodes()) {
+		for (auto& bud : node.m_data.m_buds) {
+			if (bud.m_type == BudType::Leaf) {
+				const float* values = glm::value_ptr(node.m_info.m_globalPosition * bud.m_localRotation);
+				for (int j = 0; j < 16; j++)
+				{
+					file << values[j];
+					if (j < 15) file << " ";
+				}
+				file << "\n";
+			}
 		}
 	}
+
+	return;
 }
 
 MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
@@ -241,6 +278,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		bool isNodeChanged = data.inputValue(growNode).asBool();
 		bool isPruning = data.inputValue(pruneNode).asBool();
 		bool isParam = data.inputValue(isParamChanged).asBool();
+		bool isLeaf = data.inputValue(writeLeaves).asBool();
 
 		// For keeping track of total grow time
 		MDataHandle growTimeHandle = data.outputValue(growTime);
@@ -271,7 +309,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 		MIntArray faceConns;
 
 		// Growing tree
-		if (!isNodeChanged && abs(r - prevRad) <= 0.01 && !isPruning && seg == prevSeg && !isParam) {
+		if (!isNodeChanged && abs(r - prevRad) <= 0.01 && !isPruning && seg == prevSeg && !isParam && !isLeaf) {
 			MGlobal::displayInfo("Abt to Grow, stand back!!");
 			// if we aren't changing node vigor, we grow normally
 			for (int i = 0; i < nGrows; ++i) {
@@ -389,9 +427,13 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			boolHand.setClean();
 			MGlobal::displayInfo("Params Changed");
 		}
-
-
-
+		else if (isLeaf) {
+			// reset bool to false
+			MDataHandle boolHand = data.outputValue(writeLeaves);
+			boolHand.set(false);
+			boolHand.setClean();
+			saveLeafToFile(treeModel.RefShootSkeleton(), 0.0, data);
+		}
 
 		//MGlobal::displayInfo("Rad:");
 		//MGlobal::displayInfo(std::to_string(r).c_str());

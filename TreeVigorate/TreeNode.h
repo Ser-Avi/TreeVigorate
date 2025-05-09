@@ -35,6 +35,7 @@
 #include <vector>
 #include <stack>
 #include <unordered_set>
+#include <glm/gtc/type_ptr.hpp >
 
 #define mPrint(msg) MGlobal::displayInfo(msg)
 
@@ -211,7 +212,7 @@ private:
 	/// <param name="skeleton"></param>
 	/// <param name="strandManager"></param>
 	/// <param name="rad"></param>
-	void appendLeavesToMesh(ShootSkeleton& skeleton, StrandManager strandManager, double rad);
+	void saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& data);
 
 	/// <summary>
 	/// Outputs an MString loading bar to be displayed in the console.
@@ -338,4 +339,8 @@ public:
 	static MObject photo;
 	static MObject apicDom;
 	static MObject isParamChanged;
+
+	// Leaf Stuff
+	static MObject writeLeaves;
+	static MObject leafLocation;
 };

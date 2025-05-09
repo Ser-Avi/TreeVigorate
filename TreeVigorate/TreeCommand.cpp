@@ -102,6 +102,13 @@ global proc createTreeUI() {
 	text -label "Total Grow Time:";
     textField -editable false -text (`getAttr TN1.growTime`) growTimeField;
 
+	separator -height 15;
+
+	button	-label "Export Leaf Matrices"
+			-command "createLeafUI"
+			-backgroundColor 0.2 0.5 0.1
+			leafButton;
+
 	separator - style "none" - height 15;
     separator - style "in" - height 5;
     separator - style "none" - height 10;
@@ -540,6 +547,50 @@ global proc createTreeGeneratorWindow() {
 }
 )";
 
+	const char* exportLeafUI = R"(
+	global proc browseLeafDir() {
+		string $filePath[] = `fileDialog2 -fileMode 0 -caption "Select Leaf Data Output File Path"`;
+		if (size($filePath) > 0) {
+			textField -e -text ($filePath[0]) leafDirField;
+		}
+	}
+
+	global proc exportLeaves() {
+		string $dir = `textField -q -text leafDirField`;
+
+		print("Exporting Leaves to:");
+		print($dir);
+
+		setAttr TN1.writeLeaves true;
+		eval("setAttr -type \"string\" TN1.leafLocation \"" + $dir + "\"");
+
+		// Close the UI Window
+		if (`window -exists leafWindow`) {
+			deleteUI leafWindow;
+		}
+    
+	}
+
+	global proc createLeafUI() {
+		if (`window -exists leafWindow`) {
+			deleteUI leafWindow;
+		}
+
+		window -title "Generate Tree" -widthHeight 100 50 leafWindow;
+		columnLayout -adjustableColumn true;
+		// File Path Selection
+		text - label "Select Export Path";
+		separator - style "none" - height 5;
+		rowLayout - numberOfColumns 2 - columnWidth2 290 60;
+			textField - editable false - width 300 leafDirField;
+			button - label "Browse" - command("browseLeafDir");
+		setParent ..;
+
+		button - label "Export Leaves" - command("exportLeaves") - height 50 -width 290;
+		showWindow leafWindow;
+	}
+	)";
+
 	const char* iterationCmds = R"(
 		global proc createTreeGrowthUI() {
 			// Window name
@@ -651,7 +702,7 @@ menuItem
 //	-command("createTestMeshNode")
 //		systemItem3;
 )";
-
+	MGlobal::executeCommand(exportLeafUI);
 	MGlobal::executeCommand(treeUIcmd);
 	MGlobal::executeCommand(windowCommand);
 	MGlobal::executeCommand(menuCommand);
