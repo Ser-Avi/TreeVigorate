@@ -39,6 +39,7 @@ MObject TreeNode::apicalAngleVar;
 MObject TreeNode::gravitrope;
 MObject TreeNode::photo;
 MObject TreeNode::apicDom;
+MObject TreeNode::lowPrune;
 MObject TreeNode::isParamChanged;
 
 //leaves
@@ -201,6 +202,8 @@ MStatus TreeNode::initialize()
 	McheckErr(returnStatus, "Error creating tree param attribute\n");
 	TreeNode::apicDom = numAttr.create("apicDom", "aad", MFnNumericData::kFloat, 0.0, &returnStatus);
 	McheckErr(returnStatus, "Error creating tree param attribute\n");
+	TreeNode::lowPrune = numAttr.create("lowPrune", "lwp", MFnNumericData::kFloat, 0.0, &returnStatus);
+	McheckErr(returnStatus, "Error creating tree param attribute\n");
 	TreeNode::isParamChanged = numAttr.create("isParamChanged", "ipc", MFnNumericData::kBoolean, false, &returnStatus);
 	McheckErr(returnStatus, "Error creating tree param attribute\n");
 	returnStatus = addAttribute(TreeNode::internodeGrowth);
@@ -210,6 +213,7 @@ MStatus TreeNode::initialize()
 	returnStatus = addAttribute(TreeNode::gravitrope);
 	returnStatus = addAttribute(TreeNode::photo);
 	returnStatus = addAttribute(TreeNode::apicDom);
+	returnStatus = addAttribute(TreeNode::lowPrune);
 	returnStatus = addAttribute(TreeNode::isParamChanged);
 	returnStatus = attributeAffects(TreeNode::isParamChanged,
 		TreeNode::outputNodeMesh);
@@ -418,8 +422,9 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			float gr = data.inputValue(gravitrope).asFloat();
 			float ph = data.inputValue(photo).asFloat();
 			float apicD = data.inputValue(apicDom).asFloat();
+			float lp = data.inputValue(lowPrune).asFloat();
 			
-			setNewParams(treeParams, intNodeGrow, mav, apicAng, gr, ph, apicD);
+			setNewParams(treeParams, intNodeGrow, mav, apicAng, gr, ph, apicD, lp);
 
 			// reset bool to false
 			MDataHandle boolHand = data.outputValue(isParamChanged);
@@ -520,14 +525,14 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 	}
 	else if (plug == outputNodeMesh) {
 		int currNode = data.inputValue(selectedNode).asInt() - 1;
-		if (currNode < 0) {
-			//MGlobal::displayError("Node Index Invalid");
+		Skeleton skeleton = treeModel.RefShootSkeleton();
+		if (currNode < 0 || currNode >= skeleton.RefSortedFlowList().size()) {
+			MGlobal::displayError("Node Index Invalid");
 
 			data.setClean(plug);
 			return MS::kSuccess;
 		}
 
-		Skeleton skeleton = treeModel.RefShootSkeleton();
 		NodeHandle currHandle = skeleton.RefSortedFlowList()[currNode];
 		Flow currFlow = skeleton.RefFlow(currHandle);
 
@@ -1394,7 +1399,11 @@ void TreeNode::growPostProcess(bool treeStructureChanged, ShootSkeleton& m_shoot
 		for (const auto& internodeHandle : sortedInternodeList)
 		{
 			auto& internode = m_shootSkeleton.RefNode(internodeHandle);
-			const auto order = m_shootSkeleton.RefFlow(internode.GetFlowHandle()).m_data.m_order;
+			const auto& flowHand = internode.GetFlowHandle();
+			if (flowHand < 0 || flowHand >= m_shootSkeleton.RefSortedFlowList().size()) {
+				continue;
+			}
+			const auto order = m_shootSkeleton.RefFlow(flowHand).m_data.m_order;
 			internode.m_data.m_order = order;
 			treeModel.m_internodeOrderCounts[order]++;
 
@@ -1794,7 +1803,7 @@ void TreeNode::SetSoilLayer(SoilLayer& sl) {
 	sl.m_thickness = [](const glm::vec2& position) {return 1000.f; };
 }
 
-void TreeNode::setNewParams(Controllers& tp, int internodeGrow, glm::vec2 meanAngVar, float apicAngVar, float g, float p, float apicDom) {
+void TreeNode::setNewParams(Controllers& tp, int internodeGrow, glm::vec2 meanAngVar, float apicAngVar, float g, float p, float apicDom, float lp) {
 	tp.sgc.m_internodeGrowthRate = internodeGrow;
 	tp.sgc.m_branchingAngle = [=](const Node<InternodeGrowthData>& internode)
 		{
@@ -1819,6 +1828,8 @@ void TreeNode::setNewParams(Controllers& tp, int internodeGrow, glm::vec2 meanAn
 		{
 			return apicDom * glm::exp(0.100000001 * treeModel.m_age);
 		};
+
+	tp.sgc.m_lowBranchPruning = lp;
 }
 
 bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController& m_rootGrowthParameters, ShootGrowthController& m_shootGrowthParameters,
@@ -1855,6 +1866,9 @@ bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController&
 	MDataHandle apicDomHand = data.outputValue(apicDom);
 	apicDomHand.set(params.sg.m_apicalDominance);
 	apicDomHand.setClean();
+	MDataHandle lpHand = data.outputValue(lowPrune);
+	lpHand.set(params.sg.m_lowBranchPruning);
+	lpHand.setClean();
 
 
 	MGlobal::displayInfo("Reading Tree File");

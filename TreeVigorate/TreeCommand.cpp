@@ -173,7 +173,7 @@ global proc createTreeUI() {
 	frameLayout -labelVisible true -borderVisible true -marginWidth 5 -marginHeight 5 
                 -visible true -collapsable true -collapse true -label "Advanced Settings"
 				-annotation "Advanced settings for tree growth parameters"
-                -width 300 -height 220 optionsFrame;
+                -width 300 -height 245 optionsFrame;
 	
 	columnLayout -columnAttach "left" 10 -rowSpacing 5;
 
@@ -227,7 +227,11 @@ global proc createTreeUI() {
         floatField -precision 10 -value (`getAttr TN1.photo`) -width 80 -changeCommand "updatePhoto" photoField;
     setParent..;
 
-	
+	rowLayout -numberOfColumns 3 -columnWidth3 100 10 150;
+        text -label "Branch Pruning" -annotation "How likely low branches will get pruned";
+        separator -style "none" -width 38;
+        floatField -precision 10 -value (`getAttr TN1.lowPrune`) -width 80 -changeCommand "updateLowP" lowPField;
+    setParent..;	
     
     setParent..; // End columnLayout
     setParent..; // End frameLayout
@@ -257,25 +261,31 @@ global proc updateMaxVar() {
 }
 
 global proc updateApicAngVar() {
-	int $value = `floatSliderGrp -query -value apicAngSlider`;
+	float $value = `floatSliderGrp -query -value apicAngSlider`;
 	setAttr TN1.apicalAngleVar $value;
 	setAttr TN1.isParamChanged true;
 }
 
 global proc updateApicDom() {
-	int $value = `floatSliderGrp -query -value apicDomSlider`;
+	float $value = `floatSliderGrp -query -value apicDomSlider`;
 	setAttr TN1.apicDom $value;
 	setAttr TN1.isParamChanged true;
 }
 
+global proc updateLowP() {
+	float $value = `floatField -query -value lowPField`;
+	setAttr TN1.lowPrune $value;
+	setAttr TN1.isParamChanged true;
+}
+
 global proc updateGrav() {
-	int $value = `floatField -query -value gravField`;
+	float $value = `floatField -query -value gravField`;
 	setAttr TN1.gravitrope $value;
 	setAttr TN1.isParamChanged true;
 }
 
 global proc updatePhoto() {
-	int $value = `floatField -query -value photoField`;
+	float $value = `floatField -query -value photoField`;
 	setAttr TN1.photo $value;
 	setAttr TN1.isParamChanged true;
 }
@@ -405,6 +415,12 @@ global proc onTreeUIClose() {
         scriptJob -kill $jobNum -force;
         optionVar -remove "treeJob";
         optionVar -remove "growPlaying";
+    }
+	if (`optionVar -exists "subGrowPlaying"` && `optionVar -q "subGrowPlaying"`) {
+        int $jobNum = `optionVar -q "subJob"`;
+        scriptJob -kill $jobNum -force;
+        optionVar -remove "subJob";
+        optionVar -remove "subGrowPlaying";
     }
 }
 	)";

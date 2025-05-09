@@ -847,6 +847,9 @@ namespace EcoSysLab {
     void Skeleton<SkeletonData, FlowData, NodeData>::CalculateFlows() {
         for (const auto &flowHandle: m_sortedFlowList) {
             auto &flow = m_flows[flowHandle];
+            if (flow.m_nodes.size() <= 0) {
+                continue;
+            }
             auto &firstNode = m_nodes[flow.m_nodes.front()];
             auto &lastNode = m_nodes[flow.m_nodes.back()];
             flow.m_info.m_startThickness = firstNode.m_info.m_thickness;

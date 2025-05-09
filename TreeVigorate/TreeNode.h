@@ -273,7 +273,8 @@ private:
 	/// <param name="g">gravitropism</param>
 	/// <param name="p">phototropism</param>
 	/// <param name="apicDom">apical dominance</param>
-	void setNewParams(Controllers& tp, int internodeGrow, glm::vec2 meanAngVar, float apicAngVar, float g, float p, float apicDom);
+	/// <param name="pr">lowbranch pruning</param>
+	void setNewParams(Controllers& tp, int internodeGrow, glm::vec2 meanAngVar, float apicAngVar, float g, float p, float apicDom, float pr);
 public:
 	TreeNode() {};
 	~TreeNode() override {};
@@ -338,6 +339,7 @@ public:
 	static MObject gravitrope;
 	static MObject photo;
 	static MObject apicDom;
+	static MObject lowPrune;
 	static MObject isParamChanged;
 
 	// Leaf Stuff
