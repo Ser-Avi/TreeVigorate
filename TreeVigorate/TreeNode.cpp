@@ -1,4 +1,5 @@
 #include "TreeNode.h"
+#include <glm/gtx/euler_angles.hpp>
 /*
 MEL Script to initialize this with:
 global proc createTreeNode() {
@@ -45,6 +46,7 @@ MObject TreeNode::isParamChanged;
 //leaves
 MObject TreeNode::writeLeaves;
 MObject TreeNode::leafLocation;
+MObject TreeNode::leafLocations;
 
 void* TreeNode::creator()
 {
@@ -229,10 +231,16 @@ MStatus TreeNode::initialize()
 	TreeNode::writeLeaves = numAttr.create("writeLeaves", "wrtl", MFnNumericData::kBoolean, false, &returnStatus);
 	McheckErr(returnStatus, "Error creating writeLeaves attribute\n");
 
+	TreeNode::leafLocations = typedAttr.create("leafLocations", "lls", MFnArrayAttrsData::kDynArrayAttrs, MObject::kNullObj, &returnStatus);
+
 	returnStatus = addAttribute(TreeNode::writeLeaves);
 	McheckErr(returnStatus, "ERROR adding writeLeaves attribute\n");
 	returnStatus = addAttribute(TreeNode::leafLocation);
 	McheckErr(returnStatus, "ERROR in leaf location\n");
+
+	returnStatus = addAttribute(TreeNode::leafLocations);
+	McheckErr(returnStatus, "ERROR in leaf locations\n");
+
 	returnStatus = attributeAffects(TreeNode::writeLeaves,
 		outputMesh);
 	McheckErr(returnStatus, "ERROR in attributeAffects\n");
@@ -240,7 +248,7 @@ MStatus TreeNode::initialize()
 	return MS::kSuccess;
 }
 
-void TreeNode::saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& data)
+void TreeNode::saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& data, MStatus &returnStatus)
 {
 	MString leafFilePath = data.inputValue(leafLocation).asString();
 	std::ofstream file(leafFilePath.asChar());
@@ -250,19 +258,59 @@ void TreeNode::saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& d
 	file << "# Matrix data file\n";
 	file << "# Format: 16 space-separated numbers per line (row-major order)\n";
 
+	MFnArrayAttrsData fnArrayAttrsData;
+	MObject arrayAttrsObj = fnArrayAttrsData.create(&returnStatus);
+
+	MVectorArray positions = fnArrayAttrsData.vectorArray("position", &returnStatus);
+	MDoubleArray ids = fnArrayAttrsData.doubleArray("ids", &returnStatus);
+	MVectorArray rotations = fnArrayAttrsData.vectorArray("rotation", &returnStatus);
+
+
+	int leafId = 0;
 	for (auto& node : skeleton.RefRawNodes()) {
 		for (auto& bud : node.m_data.m_buds) {
-			if (bud.m_type == BudType::Leaf) {
-				const float* values = glm::value_ptr(node.m_info.m_globalPosition * bud.m_localRotation);
-				for (int j = 0; j < 16; j++)
-				{
-					file << values[j];
-					if (j < 15) file << " ";
+			if (bud.m_type == BudType::Leaf && bud.m_status == BudStatus::Flushed) {
+				if (bud.m_reproductiveModule.m_transform[3][1] > 0.1) {
+					positions.append(MVector(node.m_info.m_globalPosition.x, node.m_info.m_globalPosition.y, node.m_info.m_globalPosition.z));
+
+					glm::quat rotation = glm::quat(bud.m_reproductiveModule.m_transform);
+					glm::vec3 eulerAngles = glm::eulerAngles(rotation);
+					rotations.append(MVector(eulerAngles.x * 57.2958, eulerAngles.z * 57.2958 * 2, eulerAngles.z * 57.2958 / 4));
+
+					ids.append(leafId);
+					leafId++;
+
+					const float* values = glm::value_ptr(node.m_info.m_globalPosition * bud.m_localRotation);
+					for (int j = 0; j < 16; j++)
+					{
+						file << values[j];
+						if (j < 15) file << " ";
+					}
+
+					file << "\n";
 				}
-				file << "\n";
+
 			}
 		}
 	}
+
+	MDagPath meshDagPath;
+	MSelectionList selection;
+	
+	MGlobal::getActiveSelectionList(selection);
+	if (selection.length() > 0) {
+		selection.getDagPath(0, meshDagPath);
+		if (meshDagPath.hasFn(MFn::kMesh)) {
+			MFnDagNode transformFn(meshDagPath);
+			MGlobal::displayInfo("First selected mesh: " + transformFn.name());
+			//std::string instanceLeaves = std::string("instancer; connectAttr ") + transformFn.name().asChar() + ".matrix instancer1.inputHierarchy[0]; connectAttr TN1.leafLocations instancer1.inputPoints; ";
+			//MGlobal::executeCommand(MString(instanceLeaves.c_str()));
+		}
+	}
+
+	MDataHandle outputHandle = data.outputValue(leafLocations, &returnStatus);
+	outputHandle.set(arrayAttrsObj);
+	data.setClean(TreeNode::leafLocations);
 
 	return;
 }
@@ -437,7 +485,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			MDataHandle boolHand = data.outputValue(writeLeaves);
 			boolHand.set(false);
 			boolHand.setClean();
-			saveLeafToFile(treeModel.RefShootSkeleton(), 0.0, data);
+			saveLeafToFile(treeModel.RefShootSkeleton(), 0.0, data, returnStatus);
 		}
 
 		//MGlobal::displayInfo("Rad:");
@@ -2047,7 +2095,7 @@ bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController&
 			const auto& internodeData = internode.m_data;
 			float leafDamage = 0.0f;
 			//shootGrowthParameters.m_leafChlorophyllSynthesisFactorTemperature is 65
-			if (cm.m_time - glm::floor(cm.m_time) > 0.5f && internodeData.m_temperature < 65)
+			if (internodeData.m_temperature < 65 && std::rand()%2 != 0)
 			{
 				//4 is m_leafChlorophyllLoss
 				leafDamage += params.sg.m_leafChlorophyllLoss;

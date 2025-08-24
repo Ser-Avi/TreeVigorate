@@ -157,21 +157,6 @@ std::unordered_map<int, glm::vec3> StrandManager::getGlobalNodeParticlePositions
 
 	return particleIdToPosition;
 }
-/*
-std::size_t nextHalfedge(std::size_t i) {
-	return (i % 3 == 2) ? i - 2 : i + 1;
-}
-std::size_t prevHalfedge(std::size_t i) {
-	return (i % 3 == 0) ? i + 2 : i - 1;
-}
-
-bool noSym(std::size_t i, const std::vector<size_t>& HEs) {
-	return HEs[i] < 0 || HEs[i] > HEs.size() + 1;
-}
-*/
-
-
-
 
 DelauneyData StrandManager::getPlaneTriangleIdx(NodeHandle handle, float maxEdge, int indexOffset)
 {

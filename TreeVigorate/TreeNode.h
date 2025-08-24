@@ -20,6 +20,14 @@
 #include <maya/MFnMeshData.h>
 #include <maya/MFnStringData.h>
 #include <maya/MIOStream.h>
+#include <maya/MTransformationMatrix.h>
+#include <maya/MMatrix.h>
+#include <maya/MFnMatrixArrayData.h>
+#include <maya/MArrayDataBuilder.h>
+#include <maya/MFnArrayAttrsData.h>
+#include <maya/MDagPath.h>
+#include <maya/MSelectionList.h>
+
 #include <cylinder.h>
 
 #include "Rhizocode/TreeModel.hpp"
@@ -212,7 +220,7 @@ private:
 	/// <param name="skeleton"></param>
 	/// <param name="strandManager"></param>
 	/// <param name="rad"></param>
-	void saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& data);
+	void saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& data, MStatus& returnStatus);
 
 	/// <summary>
 	/// Outputs an MString loading bar to be displayed in the console.
@@ -345,4 +353,5 @@ public:
 	// Leaf Stuff
 	static MObject writeLeaves;
 	static MObject leafLocation;
+	static MObject leafLocations;
 };

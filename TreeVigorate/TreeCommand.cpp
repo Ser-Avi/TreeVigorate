@@ -584,7 +584,6 @@ global proc createTreeGeneratorWindow() {
 		if (`window -exists leafWindow`) {
 			deleteUI leafWindow;
 		}
-    
 	}
 
 	global proc createLeafUI() {
@@ -931,7 +930,7 @@ MStatus TreeCmd::doIt(const MArgList& args)
 			const auto& internodeData = internode.m_data;
 			float leafDamage = 0.0f;
 			//shootGrowthParameters.m_leafChlorophyllSynthesisFactorTemperature is 65
-			if (m_climateModel.m_time - glm::floor(m_climateModel.m_time) > 0.5f && internodeData.m_temperature < 65)
+			if (internodeData.m_temperature < 65 && std::rand() % 2 != 0)
 			{
 				//4 is m_leafChlorophyllLoss
 				leafDamage += 4;
