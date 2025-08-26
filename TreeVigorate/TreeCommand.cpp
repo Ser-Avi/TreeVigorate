@@ -31,9 +31,14 @@ global proc createTreeUI() {
         deleteUI treeUI;
     }
     
-    window -title "Tree Controls" -widthHeight 300 520 treeUI;
+    window -title "Tree Controls" -widthHeight 300 540 treeUI;
     
     columnLayout -adjustableColumn true;
+
+	// GROWTH CONTROLS
+	separator - style "in" -height 10;
+	text -label "GROWTH CONTROLS";
+	separator - style "in" -height 10;
     
     // Float slider for more interactive control
     floatSliderGrp -label "Growth Rate" 
@@ -102,16 +107,27 @@ global proc createTreeUI() {
 	text -label "Total Grow Time:";
     textField -editable false -text (`getAttr TN1.growTime`) growTimeField;
 
-	separator -height 15;
+    separator - style "in" - height 10;
+    separator - style "none" - height 5;
+
+	text -label "LEAVES";
+	separator - style "in" -height 10;
+
+	button	-label "Instance Leaves"
+			-command "instanceLeaves"
+			-annotation "Creates an instancer that places the Leaf object at each leaf location"
+			-backgroundColor 0.2 0.5 0.1
+			leafInstButton;
+
+	separator -height 10;
 
 	button	-label "Export Leaf Matrices"
 			-command "createLeafUI"
 			-backgroundColor 0.2 0.5 0.1
 			leafButton;
 
-	separator - style "none" - height 15;
-    separator - style "in" - height 5;
-    separator - style "none" - height 10;
+    separator - style "in" - height 10;
+    separator - style "none" - height 5;
 
 	
 	// NODE EDITING
@@ -563,7 +579,33 @@ global proc createTreeGeneratorWindow() {
 }
 )";
 
-	const char* exportLeafUI = R"(
+	const char* leafCmds = R"(
+	global proc instanceLeaves() {
+		// first we check if a leaf item exists
+		string $objectName = "Leaf";
+		if (!`objExists $objectName`) {
+			print("Leaf object does not exist. Please create one.");
+			return;
+		}
+		
+		// then we make the tree node generate the locations with the directory set to "generate"
+		setAttr TN1.writeLeaves true;
+		string $dir = "generate";
+		eval("setAttr -type \"string\" TN1.leafLocation \"" + $dir + "\"");
+
+		// force a refresh to let the node generate the leaves
+		refresh -force;
+		// delete instancer1 if it already exists
+		string $instancerName = "instancer1";
+		if (`objExists $instancerName`) {
+			delete $instancerName;
+		}
+		// generate leaf instances
+		instancer;
+		connectAttr Leaf.matrix instancer1.inputHierarchy[0];
+		connectAttr TN1.leafLocations instancer1.inputPoints;
+	}
+
 	global proc browseLeafDir() {
 		string $filePath[] = `fileDialog2 -fileMode 0 -caption "Select Leaf Data Output File Path"`;
 		if (size($filePath) > 0) {
@@ -591,7 +633,7 @@ global proc createTreeGeneratorWindow() {
 			deleteUI leafWindow;
 		}
 
-		window -title "Generate Tree" -widthHeight 100 50 leafWindow;
+		window -title "Export Leaves" -widthHeight 100 50 leafWindow;
 		columnLayout -adjustableColumn true;
 		// File Path Selection
 		text - label "Select Export Path";
@@ -717,7 +759,7 @@ menuItem
 //	-command("createTestMeshNode")
 //		systemItem3;
 )";
-	MGlobal::executeCommand(exportLeafUI);
+	MGlobal::executeCommand(leafCmds);
 	MGlobal::executeCommand(treeUIcmd);
 	MGlobal::executeCommand(windowCommand);
 	MGlobal::executeCommand(menuCommand);

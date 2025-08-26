@@ -215,12 +215,14 @@ private:
 
 
 	/// <summary>
-	/// 
+	/// Generates leaf matrices and outputs them to a file if path is specified
+	/// if path is "generate" then it executes without the file writing
 	/// </summary>
 	/// <param name="skeleton"></param>
-	/// <param name="strandManager"></param>
 	/// <param name="rad"></param>
-	void saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& data, MStatus& returnStatus);
+	/// <param name="data"></param>
+	/// <param name="returnStatus"></param>
+	void generateLeaves(ShootSkeleton& skeleton, double rad, MDataBlock& data, MStatus& returnStatus);
 
 	/// <summary>
 	/// Outputs an MString loading bar to be displayed in the console.

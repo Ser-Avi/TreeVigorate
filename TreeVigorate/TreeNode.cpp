@@ -248,15 +248,20 @@ MStatus TreeNode::initialize()
 	return MS::kSuccess;
 }
 
-void TreeNode::saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& data, MStatus &returnStatus)
+void TreeNode::generateLeaves(ShootSkeleton& skeleton, double rad, MDataBlock& data, MStatus &returnStatus)
 {
 	MString leafFilePath = data.inputValue(leafLocation).asString();
+	bool isGen = leafFilePath == "generate";
 	std::ofstream file(leafFilePath.asChar());
-	if (!file.is_open())
+	if (!file.is_open() && !isGen) {
 		MGlobal::displayError("Can't access leaf file path");
+		return;
+	}
 
-	file << "# Matrix data file\n";
-	file << "# Format: 16 space-separated numbers per line (row-major order)\n";
+	if (!isGen) {
+		file << "# Matrix data file\n";
+		file << "# Format: 16 space-separated numbers per line (row-major order)\n";
+	}
 
 	MFnArrayAttrsData fnArrayAttrsData;
 	MObject arrayAttrsObj = fnArrayAttrsData.create(&returnStatus);
@@ -273,12 +278,18 @@ void TreeNode::saveLeafToFile(ShootSkeleton& skeleton, double rad, MDataBlock& d
 				if (bud.m_reproductiveModule.m_transform[3][1] > 0.1) {
 					positions.append(MVector(node.m_info.m_globalPosition.x, node.m_info.m_globalPosition.y, node.m_info.m_globalPosition.z));
 
-					glm::quat rotation = glm::quat(bud.m_reproductiveModule.m_transform);
-					glm::vec3 eulerAngles = glm::eulerAngles(rotation);
-					rotations.append(MVector(eulerAngles.x * 57.2958, eulerAngles.z * 57.2958 * 2, eulerAngles.z * 57.2958 / 4));
+					//glm::quat rotation = glm::quat(bud.m_reproductiveModule.m_transform);
+					//glm::vec3 eulerAngles = glm::eulerAngles(rotation);
+					//rotations.append(MVector(eulerAngles.x * 57.2958, eulerAngles.z * 57.2958 * 2, eulerAngles.z * 57.2958 / 4));
+					float roll = glm::linearRand(-50, 50);
+					float pitch = glm::linearRand(-35, 35);
+					float yaw = glm::linearRand(0, 360);
+					rotations.append(MVector(roll, yaw, pitch));
 
 					ids.append(leafId);
 					leafId++;
+
+					if (isGen) continue;
 
 					const float* values = glm::value_ptr(node.m_info.m_globalPosition * bud.m_localRotation);
 					for (int j = 0; j < 16; j++)
@@ -485,7 +496,7 @@ MStatus TreeNode::compute(const MPlug& plug, MDataBlock& data)
 			MDataHandle boolHand = data.outputValue(writeLeaves);
 			boolHand.set(false);
 			boolHand.setClean();
-			saveLeafToFile(treeModel.RefShootSkeleton(), 0.0, data, returnStatus);
+			generateLeaves(treeModel.RefShootSkeleton(), 0.0, data, returnStatus);
 		}
 
 		//MGlobal::displayInfo("Rad:");
@@ -2095,7 +2106,7 @@ bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController&
 			const auto& internodeData = internode.m_data;
 			float leafDamage = 0.0f;
 			//shootGrowthParameters.m_leafChlorophyllSynthesisFactorTemperature is 65
-			if (internodeData.m_temperature < 65 && std::rand()%2 != 0)
+			if (internodeData.m_temperature < 65 && std::rand()%4 == 0)
 			{
 				//4 is m_leafChlorophyllLoss
 				leafDamage += params.sg.m_leafChlorophyllLoss;
