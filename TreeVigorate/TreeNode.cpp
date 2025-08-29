@@ -1654,14 +1654,14 @@ void initializeParams(const std::string& treeName, PlantParameters& params) {
 		params.sg.m_lateralBudCount = 2.f;
 		params.sg.m_fruitBudCount = 1.f;
 		params.sg.m_leafBudCount = 1.f;
-		params.sg.m_branchingAngleMeanVariance[0] = 25.f;
-		params.sg.m_branchingAngleMeanVariance[1] = 2.f;
-		params.sg.m_rollAngleMeanVariance[0] = 120.f;
-		params.sg.m_rollAngleMeanVariance[1] = 2.f;
+		params.sg.m_branchingAngleMeanVariance[0] = 20.f;
+		params.sg.m_branchingAngleMeanVariance[1] = 1.f;
+		params.sg.m_rollAngleMeanVariance[0] = 30.f;
+		params.sg.m_rollAngleMeanVariance[1] = 1.f;
 		params.sg.m_apicalAngleMeanVariance[0] = 0.f;
-		params.sg.m_apicalAngleMeanVariance[1] = 2;
-		params.sg.m_gravitropism = 0.00999999978;
-		params.sg.m_phototropism = 0.0399999991;
+		params.sg.m_apicalAngleMeanVariance[1] = 1;
+		params.sg.m_gravitropism = 0.01999999978;
+		params.sg.m_phototropism = 0.0199999991;
 		params.sg.m_internodeLength = 0.0299999993;
 		params.sg.m_endNodeThickness = 0.00200000009;
 		params.sg.m_thicknessAccumulationFactor = 0.5;
@@ -1686,7 +1686,7 @@ void initializeParams(const std::string& treeName, PlantParameters& params) {
 		params.sg.m_apicalControlAgeFactor = 0.f;
 		params.sg.m_apicalDominance = 3.f;
 		params.sg.m_apicalDominanceAgeFactor = 0.f;
-		params.sg.m_apicalDominanceDistanceFactor = 0.970000029;
+		params.sg.m_apicalDominanceDistanceFactor = 0.999000013;
 		params.sg.m_apicalBudExtinctionRate = 0.f;
 		params.sg.m_lateralBudExtinctionRate = 0.f;
 		params.sg.m_leafBudExtinctionRate = 0.f;
@@ -1694,8 +1694,8 @@ void initializeParams(const std::string& treeName, PlantParameters& params) {
 		params.sg.m_leafVigorRequirement = 0.100000001;
 		params.sg.m_fruitVigorRequirement = 0.100000001;
 		params.sg.m_internodeVigorRequirement = 1.f;
-		params.sg.m_vigorRequirementAggregateLoss = 0.989999988;
-		params.sg.m_lowBranchPruning = 0.250000006;
+		params.sg.m_vigorRequirementAggregateLoss = 0.949999988;
+		params.sg.m_lowBranchPruning = 0.550000006;
 		params.sg.m_saggingFactorThicknessReductionMax[0] = 9.99999975e-06;
 		params.sg.m_saggingFactorThicknessReductionMax[1] = 2.f;
 		params.sg.m_saggingFactorThicknessReductionMax[2] = 0.5;
@@ -2106,7 +2106,7 @@ bool TreeNode::ReadTreeParams(const std::string& treeName, RootGrowthController&
 			const auto& internodeData = internode.m_data;
 			float leafDamage = 0.0f;
 			//shootGrowthParameters.m_leafChlorophyllSynthesisFactorTemperature is 65
-			if (internodeData.m_temperature < 65 && std::rand()%4 == 0)
+			if (internodeData.m_temperature < 65)
 			{
 				//4 is m_leafChlorophyllLoss
 				leafDamage += params.sg.m_leafChlorophyllLoss;
