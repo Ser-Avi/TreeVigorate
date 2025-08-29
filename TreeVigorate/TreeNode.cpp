@@ -1654,10 +1654,10 @@ void initializeParams(const std::string& treeName, PlantParameters& params) {
 		params.sg.m_lateralBudCount = 2.f;
 		params.sg.m_fruitBudCount = 1.f;
 		params.sg.m_leafBudCount = 1.f;
-		params.sg.m_branchingAngleMeanVariance[0] = 20.f;
-		params.sg.m_branchingAngleMeanVariance[1] = 1.f;
-		params.sg.m_rollAngleMeanVariance[0] = 30.f;
-		params.sg.m_rollAngleMeanVariance[1] = 1.f;
+		params.sg.m_branchingAngleMeanVariance[0] = 30.f;
+		params.sg.m_branchingAngleMeanVariance[1] = 2.f;
+		params.sg.m_rollAngleMeanVariance[0] = 45.f;
+		params.sg.m_rollAngleMeanVariance[1] = 2.f;
 		params.sg.m_apicalAngleMeanVariance[0] = 0.f;
 		params.sg.m_apicalAngleMeanVariance[1] = 1;
 		params.sg.m_gravitropism = 0.01999999978;
@@ -1695,7 +1695,7 @@ void initializeParams(const std::string& treeName, PlantParameters& params) {
 		params.sg.m_fruitVigorRequirement = 0.100000001;
 		params.sg.m_internodeVigorRequirement = 1.f;
 		params.sg.m_vigorRequirementAggregateLoss = 0.949999988;
-		params.sg.m_lowBranchPruning = 0.550000006;
+		params.sg.m_lowBranchPruning = 0.450000006;
 		params.sg.m_saggingFactorThicknessReductionMax[0] = 9.99999975e-06;
 		params.sg.m_saggingFactorThicknessReductionMax[1] = 2.f;
 		params.sg.m_saggingFactorThicknessReductionMax[2] = 0.5;
