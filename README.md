@@ -1,26 +1,24 @@
 
 # **TreeVigorate**
-<img width="1235" height="711" alt="tree" src="https://github.com/user-attachments/assets/4e819922-8ff9-4320-873f-ccbb0ec0432a" />
+[![TreeVigorate Demo](https://github.com/user-attachments/assets/4e819922-8ff9-4320-873f-ccbb0ec0432a)](https://vimeo.com/1104978689?fl=pl&fe=vl)
 
-Welcome to TreeVigorate, a procedural parameter driven foliage generator. We've built this Maya plugin tool for seamless integration into technical art pipelines. Simply hook the plugin into Maya, choose your tree genera, and watch the tree grow in accelerated real time.  
+Welcome to TreeVigorate, a procedural parameter driven foliage generator with artist control. We've built this Maya plugin tool for seamless integration into technical art pipelines. Simply hook the plugin into Maya, choose your tree genera, and edit your tree as you watch it grow in accelerated real time. For a quick video demo, just click the image above!
 
 ## **Contact**
 
-Eli Asimow : easimow@seas.upenn.edu, easimow.com 
+Eli Asimow : easimow@seas.upenn.edu, https://easimow.com 
 
 Avi Serebrenik : seravi@seas.upenn.edu, https://aviserebrenik.wixsite.com/cvsite
 
 ## **Built With**
 
-This tool is a direct implementation of the Siggraph paper:
+This tool is a direct implementation of the Siggraph paper *Interactive Invigoration: Volumetric Modeling of Trees with Strands* (2024),  Li, B., Schwarz, N. A., Palubicki, W., Pirk, S., and Benes, B. https://dl.acm.org/doi/10.1145/3658206
 
-Interactive Invigoration: Volumetric Modeling of Trees with Strands (2024),  Li, B., Schwarz, N. A., Palubicki, W., Pirk, S., and Benes, B.
-
-To achieve this, we utilized a codebase from the researchers’ prior work in Rhizomorph: The Coordinated Function of Shoots and Roots. 
+To achieve this, we utilized a codebase from the researchers’ prior work in [*Rhizomorph: The Coordinated Function of Shoots and Roots*](https://github.com/edisonlee0212/rhizomorph).
 
 ## **Installation**
 
-installation is straight forward. Simply connect the .mll plugin within your Maya environment.
+Installation is straight forward. Simply connect the .mll plugin within your Maya environment.
 
 <img width="512" height="272" alt="image" src="https://github.com/user-attachments/assets/47c89b68-48e7-4085-94aa-8524988af9ad" />
 
