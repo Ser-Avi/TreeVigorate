@@ -30,7 +30,7 @@ m_shootGrowthParameters:
   m_lateralBudExtinctionRate: 0
   m_leafBudExtinctionRate: 0
   m_fruitBudExtinctionRate: 0
-  m_leafVigorRequirement: 0.100000001
+  m_leafVigorRequirement: 0.001000001
   m_fruitVigorRequirement: 0.100000001
   m_internodeVigorRequirement: 1
   m_vigorRequirementAggregateLoss: 0.949999988
@@ -39,10 +39,10 @@ m_shootGrowthParameters:
   m_maxLeafSize: [0.0500000007, 0.5, 0.0500000007]
   m_leafPositionVariance: 0.5
   m_leafRandomRotation: 10
-  m_leafChlorophyllLoss: 4
+  m_leafChlorophyllLoss: 2
   m_leafChlorophyllSynthesisFactorTemperature: 65
-  m_leafFallProbability: 30
-  m_leafDistanceToBranchEndLimit: 10
+  m_leafFallProbability: 0.1
+  m_leafDistanceToBranchEndLimit: 50
   m_maxFruitSize: [0.0350000001, 0.0350000001, 0.0350000001]
   m_fruitPositionVariance: 0.5
   m_fruitRandomRotation: 10
