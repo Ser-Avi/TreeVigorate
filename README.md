@@ -18,7 +18,8 @@ To achieve this, we utilized a codebase from the researchers’ prior work in [*
 
 ## **Installation**
 
-Installation is straight forward. Simply connect the .mll plugin within your Maya environment.
+Installation is straight forward. Simply add this .mll to Maya through the Plugin Manager, and either use the tree description files provided, choose a preset, or write a custom one.
+[.mll download](https://github.com/Ser-Avi/TreeVigorate/raw/refs/heads/main/TreeVigorate-8-29-2025.mll) [Tree Descriptions](https://download-directory.github.io/?url=https://github.com/Ser-Avi/TreeVigorate/tree/main/TreeDescriptors)
 
 <img width="512" height="272" alt="image" src="https://github.com/user-attachments/assets/47c89b68-48e7-4085-94aa-8524988af9ad" />
 
