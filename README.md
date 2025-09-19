@@ -46,7 +46,7 @@ We found our source paper’s delauney based meshing method lacking in edge case
 *Initial Meshing algorithm with non manifold geometry removed. Not quite right.*
 
 
-As one of our priorities was a usable, manifold mesh for artists, this problem proved untenable. Instead, we build Bernstein polynomial splines through the thread of each individual strand particle, and mesh them separately as long tubes. This delivers a manifold mesh while still keeping the grooved look of a strand based tree. The only downside is the finalized mesh’s rather large vertex count. 
+As one of our priorities was a usable, manifold mesh for artists, this problem proved untenable. Instead, we build Bernstein polynomial splines through the thread of each individual strand particle, and mesh them separately as long tubes. This delivers a manifold mesh while still keeping the grooved look of a strand based tree. The only downside is the finalized mesh requires some post-process cleanup. 
 
 <img width="543" height="457" alt="image" src="https://github.com/user-attachments/assets/248c2f02-c2c7-4fc9-8f5d-d067ba89e08c" />
 
@@ -58,22 +58,33 @@ In the Interactive Invigoration authors’ recent publications, they too have tr
 
 ### **Artist Control**
 
-It was important that our tool be one of active artist participation, rather than a grow and check system. The average artist will have a specific tree in mind; it’s our tool's job to bend its procedural growth to fit that mold as closely as possible. To achieve this, we empower the artist with explicit control over the procedural growth of the tree.
+It was important that our tool be one of active artist participation, rather than a grow and check system. The average artist will have a specific tree in mind; it’s our tool's job to bend its procedural growth to fit that mold as closely as possible. To achieve this, we empower the artist with explicit control over the procedural growth of the tree. To enable this, we allow users to grow trees for a desired amount, either watching them grow slowly, allowing for edits as they mature, or growing a large, discreet amount, skipping ahead to modifying a fully grown tree.
+<img src="images/growth.png"  width = "40%"/>
 
-* Sun direction controls the bias of the tree’s directionality. This can be updated ad hoc, shifting the desired growth path of a tree even mid development.
+These same controls are available for our "subtree" modifications seen below:
 
-* Invigoration taps directly into the underlying Rhizomorph growth logic, spurring growth from any designated node. Artists can use this like a paint brush, adding length and density where they see fit.
+<img src="images/nodes.png"  width = "40%"/>
 
-* Pruning recursively removes all children of a selected branch node. This makes for easy selection and removal of lengthy undesirable paths.
+* **Invigoration** taps directly into the underlying Rhizomorph growth logic, spurring growth from any designated node. Artists can use this like a paint brush, adding length and density where they see fit.
 
-* Modifiable Tree parameters. Starting from a collection of preconfigured tree species, the artist can tune the growth behavior of their tree to achieve drastically different results. 
+<img src="images/pregrow.png" width="50%"/> <img src="images/grow.png" width = "50%"/>
 
+* **Pruning** recursively removes all children of a selected branch node. This makes for easy selection and removal of lengthy undesirable paths.
+
+<img src="images/preprune.png"  width = "50%"/> <img src="images/pruned.png"  width = "50%"/>
+
+* **Sun direction controls** the bias of the tree’s directionality. This can be updated ad hoc, shifting the desired growth path of a tree even mid development.
+<img src="images/sundir.png" width="70%"/>
+
+* **Modifiable Tree parameters**. Starting from a collection of preconfigured tree species, the artist can tune the growth behavior of their tree to achieve drastically different results. 
+<img src="images/advanced.png"  width = "50%"/>
 Together, these features make this a tool that controls how, where, and when the tree grows. 
 
 ### **Leaf Instancer Support**
 
 Once they are happy with their tree’s structure, an artist can use the "instance leaves" action to automatically generate a maya instancer node, configured with the calculated positions and rotations of the tree's leaves. For convenience, there is also an export csv option for use in other applications. 
 
+<img src="images/leaves.png"  width = "30%"/>
 <img width="749" height="663" alt="InstancedLeaves" src="https://github.com/user-attachments/assets/0c8365a8-797a-4ff4-a74e-dddb13d5d0e5" />
 
 *Tip: consider instancing a group with your leaf mesh as a child object, rather than instancing the leaf mesh itself. This allows for easy repositioning of the leaf pivot point.*
